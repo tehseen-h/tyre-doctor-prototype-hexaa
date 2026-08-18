@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --td-ground:#e9eff4;--td-ground-soft:#f2f6f9;--td-paper:#ffffff;
+    --td-ink:#111c24;--td-ink-2:#3d4d59;--td-ink-3:#65757f;
+    --td-line:#d3dde4;--td-line-strong:#b6c5cf;
+    --td-steel:#16303f;--td-steel-2:#1f4a63;--td-steel-ink:#eaf3f8;
+    --td-blue:#0d64ad;--td-blue-deep:#0a4d87;--td-blue-tint:#e7f1fb;
+    --td-hazard:#f5a300;--td-hazard-deep:#8a5a00;--td-hazard-tint:#fff6e2;--td-hazard-ink:#241a00;
+    --td-heat:#d2542c;--td-heat-deep:#a53a17;--td-heat-wash:#f6c1a6;
+    --td-pass:#1f8a4d;--td-pass-deep:#146035;--td-pass-tint:#e8f6ee;
+    --td-fail:#c02a22;--td-fail-deep:#8c1d16;--td-fail-tint:#fdedeb;
+    --td-rubber:#edebe9;--td-lug:#dad5d1;--td-rubber-deep:#2a2d2f;
+    --td-r-lg:22px;--td-r-md:14px;--td-r-sm:10px;
+    --td-card:0 1px 2px rgba(17,28,36,.06),0 8px 20px rgba(17,28,36,.06);
+    --td-lift:0 14px 34px rgba(17,28,36,.18);
+    --td-display:'Barlow Condensed',Impact,sans-serif;
+    --td-body:'Barlow',system-ui,sans-serif;
+    --td-mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--td-ground);color:var(--td-ink);font-family:var(--td-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:var(--td-blue);text-underline-offset:3px}
+  a:hover{color:var(--td-blue-deep)}
+  button,input,select,textarea{font-family:inherit}
+  ::selection{background:var(--td-blue-tint)}
+  @keyframes tdRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @keyframes tdRoll{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:
+  radial-gradient(1100px 520px at 88% -12%, rgba(13,100,173,.16), transparent 62%),
+  radial-gradient(700px 420px at 4% 8%, rgba(245,163,0,.13), transparent 60%),
+  var(--td-ground);">
+
+  <header style="max-width:1240px;margin:0 auto;padding:22px 40px;display:flex;align-items:center;gap:22px;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <svg viewBox="0 0 100 100" style="width:38px;height:38px;flex:none;" aria-hidden="true">
+        <circle cx="50" cy="50" r="44" fill="#23282b"></circle>
+        <circle cx="50" cy="50" r="36" fill="none" stroke="#4a5359" stroke-width="15" stroke-dasharray="10 7"></circle>
+        <circle cx="50" cy="50" r="26" fill="#3d4449"></circle>
+        <circle cx="50" cy="50" r="21" fill="#9aa6ad"></circle>
+        <circle cx="50" cy="50" r="21" fill="none" stroke="#77848c" stroke-width="1.5"></circle>
+        <circle cx="50" cy="50" r="7" fill="#6d7a82"></circle>
+      </svg>
+      <div>
+        <div style="font-family:var(--td-display);font-weight:700;font-size:23px;letter-spacing:.02em;text-transform:uppercase;line-height:1;white-space:nowrap;">Tyre Doctor</div>
+        <div style="font-family:var(--td-mono);font-size:11px;letter-spacing:.16em;color:var(--td-blue-deep);text-transform:uppercase;margin-top:2px;">TD One</div>
+      </div>
+    </div>
+    <span style="margin-left:auto;font-size:15px;color:var(--td-ink-2);">Mining and earthmoving tyre repair and rim testing — eight workshops</span>
+  </header>
+
+  <main style="max-width:1240px;margin:0 auto;padding:0 40px 90px;">
+
+    <section style="display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center;padding:44px 0 56px;animation:tdRise 520ms ease-out both;">
+      <div>
+        <div style="display:inline-flex;align-items:center;gap:9px;background:var(--td-hazard-tint);border:1px solid rgba(245,163,0,.5);color:var(--td-hazard-deep);padding:7px 14px;border-radius:999px;font-size:14px;font-weight:600;margin-bottom:22px;">
+          <span style="width:9px;height:9px;border-radius:50%;background:var(--td-hazard);"></span>
+          Tyre repair and rim NDT, in one place
+        </div>
+        <h1 style="font-family:var(--td-display);font-weight:700;font-size:70px;line-height:.98;letter-spacing:-.015em;margin:0 0 22px;max-width:16em;text-wrap:balance;">Every tyre and rim has one file, from the pit to dispatch.</h1>
+        <p style="font-size:19px;line-height:1.55;max-width:34em;color:var(--td-ink-2);margin:0 0 32px;">Photos stay with the stage they were taken at. Every step carries a time and a name. The workshop, sales and the mine all read the same page.</p>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;">
+          <a href="TD One - Who are you.dc.html" style="display:inline-flex;align-items:center;gap:12px;background:var(--td-blue);color:#fff;font-size:19px;font-weight:600;padding:17px 30px;border-radius:var(--td-r-md);text-decoration:none;box-shadow:0 10px 24px rgba(13,100,173,.3);white-space:nowrap;">Open the workshop <span style="font-size:22px;line-height:1;">→</span></a>
+          <a href="TD One - Customer Tracker.dc.html" style="display:inline-flex;align-items:center;background:var(--td-paper);border:1px solid var(--td-line-strong);color:var(--td-ink);font-size:17px;font-weight:600;padding:16px 24px;border-radius:var(--td-r-md);text-decoration:none;white-space:nowrap;">See the customer view</a>
+        </div>
+      </div>
+
+      <div style="border-radius:var(--td-r-lg);background:
+          repeating-linear-gradient(96deg, var(--td-lug) 0 8px, var(--td-rubber) 8px 19px) top/100% 18px no-repeat,
+          repeating-linear-gradient(96deg, var(--td-lug) 0 8px, var(--td-rubber) 8px 19px) bottom/100% 18px no-repeat,
+          var(--td-paper);
+        border:1px solid var(--td-line);box-shadow:var(--td-card);padding:34px 28px;">
+        <div style="font-size:15px;font-weight:600;color:var(--td-ink-3);margin-bottom:16px;">Where one job lives today</div>
+        <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:20px;">
+          <div style="display:flex;align-items:center;gap:13px;font-size:16px;"><span style="width:26px;height:26px;border-radius:50%;background:var(--td-fail-tint);color:var(--td-fail-deep);display:grid;place-items:center;font-family:var(--td-mono);font-size:12px;flex:none;">1</span>A row in a spreadsheet</div>
+          <div style="display:flex;align-items:center;gap:13px;font-size:16px;"><span style="width:26px;height:26px;border-radius:50%;background:var(--td-fail-tint);color:var(--td-fail-deep);display:grid;place-items:center;font-family:var(--td-mono);font-size:12px;flex:none;">2</span>Photos in a chat thread</div>
+          <div style="display:flex;align-items:center;gap:13px;font-size:16px;"><span style="width:26px;height:26px;border-radius:50%;background:var(--td-fail-tint);color:var(--td-fail-deep);display:grid;place-items:center;font-family:var(--td-mono);font-size:12px;flex:none;">3</span>A photograph of a paper sheet</div>
+          <div style="display:flex;align-items:center;gap:13px;font-size:16px;"><span style="width:26px;height:26px;border-radius:50%;background:var(--td-fail-tint);color:var(--td-fail-deep);display:grid;place-items:center;font-family:var(--td-mono);font-size:12px;flex:none;">4</span>The quote, somewhere else again</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:13px;background:var(--td-pass-tint);border:1px solid rgba(31,138,77,.4);border-radius:var(--td-r-sm);padding:14px 16px;">
+          <span style="width:26px;height:26px;border-radius:50%;background:var(--td-pass);color:#fff;display:grid;place-items:center;font-size:15px;flex:none;">✓</span>
+          <span style="font-size:16px;font-weight:600;color:var(--td-pass-deep);">One file, built as the work happens</span>
+        </div>
+      </div>
+    </section>
+
+    <section style="animation:tdRise 620ms ease-out 90ms both;margin-bottom:44px;">
+      <h2 style="font-family:var(--td-display);font-weight:700;font-size:30px;margin:0 0 4px;">The stages a tyre passes through</h2>
+      <p style="font-size:16px;color:var(--td-ink-2);margin:0 0 26px;">Twelve steps, each one a tap on the floor. The oven is where the repair cures.</p>
+      <div style="position:relative;padding-top:30px;">
+        <div style="position:absolute;left:3%;right:3%;top:37px;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--td-blue) 0%,var(--td-blue) 66%,var(--td-heat) 76%,var(--td-blue) 86%);"></div>
+        <div style="position:relative;display:grid;grid-template-columns:repeat(12,1fr);">
+          <sc-for list="{{ stages }}" as="s" hint-placeholder-count="12">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:11px;">
+              <span style="width:{{ s.size }}px;height:{{ s.size }}px;border-radius:50%;background:{{ s.fill }};border:3px solid {{ s.ring }};box-shadow:0 2px 8px rgba(17,28,36,.14);"></span>
+              <span style="font-family:var(--td-display);font-weight:600;font-size:17px;text-align:center;line-height:1.1;color:{{ s.text }};">{{ s.label }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px;animation:tdRise 700ms ease-out 160ms both;">
+      <div style="border-radius:var(--td-r-lg);background:
+          repeating-linear-gradient(96deg, var(--td-lug) 0 8px, var(--td-rubber) 8px 19px) top/100% 13px no-repeat,
+          var(--td-paper);border:1px solid var(--td-line);box-shadow:var(--td-card);padding:30px 24px 26px;">
+        <h3 style="font-family:var(--td-display);font-weight:600;font-size:27px;margin:0 0 10px;">One job file</h3>
+        <p style="margin:0;font-size:16px;line-height:1.55;color:var(--td-ink-2);">Serial, quote number, customer, site, branch and stage — with the photos attached to the step they came from.</p>
+      </div>
+      <div style="border-radius:var(--td-r-lg);background:
+          repeating-linear-gradient(96deg, var(--td-lug) 0 8px, var(--td-rubber) 8px 19px) top/100% 13px no-repeat,
+          var(--td-paper);border:1px solid var(--td-line);box-shadow:var(--td-card);padding:30px 24px 26px;">
+        <h3 style="font-family:var(--td-display);font-weight:600;font-size:27px;margin:0 0 10px;">Live status</h3>
+        <p style="margin:0;font-size:16px;line-height:1.55;color:var(--td-ink-2);">The workshop taps once per stage. Sales and the mine can see where a tyre is without ringing anybody.</p>
+      </div>
+      <div style="border-radius:var(--td-r-lg);background:
+          repeating-linear-gradient(96deg, var(--td-lug) 0 8px, var(--td-rubber) 8px 19px) top/100% 13px no-repeat,
+          var(--td-paper);border:1px solid var(--td-line);box-shadow:var(--td-card);padding:30px 24px 26px;">
+        <h3 style="font-family:var(--td-display);font-weight:600;font-size:27px;margin:0 0 10px;">Certificates</h3>
+        <p style="margin:0;font-size:16px;line-height:1.55;color:var(--td-ink-2);">Rim NDT and rim repair certificates, numbered, with the next test due in machine hours.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer style="border-top:1px solid var(--td-line);background:var(--td-ground-soft);">
+    <div style="max-width:1240px;margin:0 auto;padding:24px 40px;display:flex;gap:18px;flex-wrap:wrap;align-items:baseline;">
+      <span style="font-size:15px;font-weight:600;color:var(--td-ink-3);">Workshops</span>
+      <span style="font-size:15px;color:var(--td-ink-2);">Brisbane · Blackwater · Cobar · Kalgoorlie · Leeton · Mackay · Muswellbrook · West Wyalong</span>
+    </div>
+  </footer>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const labels = ['Triaged','Initial quote','Collected','Received','Washed','Inspected','Cut out','Repaired','Cooked','Final quote','Dispatched','Closed'];
+    return {
+      stages: labels.map((label) => {
+        const hot = label === 'Cooked';
+        return {
+          label, size: hot ? 22 : 16,
+          fill: hot ? 'var(--td-heat)' : 'var(--td-paper)',
+          ring: hot ? 'var(--td-heat-deep)' : 'var(--td-blue)',
+          text: hot ? 'var(--td-heat-deep)' : 'var(--td-ink)',
+        };
+      }),
+    };
+  }
+}
+
+</script>
+</body>
+</html>

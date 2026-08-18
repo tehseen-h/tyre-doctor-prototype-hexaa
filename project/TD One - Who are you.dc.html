@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --td-ground:#e9eff4;--td-ground-soft:#f2f6f9;--td-paper:#ffffff;
+    --td-ink:#111c24;--td-ink-2:#3d4d59;--td-ink-3:#65757f;
+    --td-line:#d3dde4;--td-line-strong:#b6c5cf;
+    --td-steel:#16303f;--td-steel-2:#1f4a63;--td-steel-ink:#eaf3f8;
+    --td-blue:#0d64ad;--td-blue-deep:#0a4d87;--td-blue-tint:#e7f1fb;
+    --td-hazard:#f5a300;--td-hazard-deep:#8a5a00;--td-hazard-tint:#fff6e2;--td-hazard-ink:#241a00;
+    --td-heat:#d2542c;--td-heat-deep:#a53a17;--td-heat-wash:#f6c1a6;
+    --td-pass:#1f8a4d;--td-pass-deep:#146035;--td-pass-tint:#e8f6ee;
+    --td-fail:#c02a22;--td-fail-deep:#8c1d16;--td-fail-tint:#fdedeb;
+    --td-rubber:#edebe9;--td-lug:#dad5d1;--td-rubber-deep:#2a2d2f;
+    --td-r-lg:22px;--td-r-md:14px;--td-r-sm:10px;
+    --td-card:0 1px 2px rgba(17,28,36,.06),0 8px 20px rgba(17,28,36,.06);
+    --td-lift:0 14px 34px rgba(17,28,36,.18);
+    --td-display:'Barlow Condensed',Impact,sans-serif;
+    --td-body:'Barlow',system-ui,sans-serif;
+    --td-mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--td-ground);color:var(--td-ink);font-family:var(--td-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:var(--td-blue)} a:hover{color:var(--td-blue-deep)}
+  button,input,select,textarea{font-family:inherit}
+  @keyframes tdRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:radial-gradient(900px 460px at 92% -14%, rgba(13,100,173,.14), transparent 60%),var(--td-ground);">
+
+  <header style="background:var(--td-steel);color:var(--td-steel-ink);">
+    <div style="max-width:1180px;margin:0 auto;padding:14px 40px;display:flex;align-items:center;gap:14px;">
+      <a href="TD One - Landing.dc.html" style="display:flex;align-items:center;gap:11px;text-decoration:none;color:inherit;">
+        <svg viewBox="0 0 100 100" style="width:30px;height:30px;flex:none;" aria-hidden="true">
+          <circle cx="50" cy="50" r="44" fill="#0d1a22"></circle>
+          <circle cx="50" cy="50" r="36" fill="none" stroke="#33495a" stroke-width="15" stroke-dasharray="10 7"></circle>
+          <circle cx="50" cy="50" r="26" fill="#2c3d47"></circle>
+          <circle cx="50" cy="50" r="21" fill="#8fa3af"></circle>
+          <circle cx="50" cy="50" r="7" fill="#5f7480"></circle>
+        </svg>
+        <span style="font-family:var(--td-display);font-weight:700;font-size:21px;text-transform:uppercase;white-space:nowrap;">Tyre Doctor</span>
+        <span style="font-family:var(--td-mono);font-size:11px;letter-spacing:.14em;color:#8fc0e8;text-transform:uppercase;white-space:nowrap;">TD One</span>
+      </a>
+    </div>
+  </header>
+
+  <main style="max-width:1180px;margin:0 auto;padding:52px 40px 90px;animation:tdRise 420ms ease-out both;">
+    <h1 style="font-family:var(--td-display);font-weight:700;font-size:52px;line-height:1.02;margin:0 0 12px;">Who are you today?</h1>
+    <p style="font-size:18px;color:var(--td-ink-2);margin:0 0 32px;max-width:44em;">TD One opens on the screen you use most. You can change it from the header at any time.</p>
+
+    <div style="display:flex;align-items:flex-end;gap:26px;flex-wrap:wrap;margin-bottom:32px;">
+      <label style="display:flex;flex-direction:column;gap:8px;">
+        <span style="font-size:15px;font-weight:600;color:var(--td-ink-2);">Your branch</span>
+        <select value="{{ branch }}" onChange="{{ onBranch }}" style="border:1px solid var(--td-line-strong);border-radius:var(--td-r-md);background:var(--td-paper);color:var(--td-ink);min-width:290px;font-size:17px;padding:14px 14px;box-shadow:var(--td-card);">
+          <option value="BNE">Brisbane — BNE</option>
+          <option value="BLW">Blackwater — BLW</option>
+          <option value="COB">Cobar — COB</option>
+          <option value="KAL">Kalgoorlie — KAL</option>
+          <option value="LTN">Leeton — LTN (head office)</option>
+          <option value="MKY">Mackay — MKY</option>
+          <option value="MUS">Muswellbrook — MUS</option>
+          <option value="WWY">West Wyalong — WWY</option>
+        </select>
+      </label>
+      <div style="font-size:16px;color:var(--td-ink-2);padding-bottom:14px;">Mackay has the busiest floor — start there.</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+      <sc-for list="{{ roles }}" as="role" hint-placeholder-count="6">
+        <a href="{{ role.href }}" style="text-decoration:none;color:inherit;border-radius:var(--td-r-lg);background:
+              repeating-linear-gradient(96deg, var(--td-lug) 0 8px, var(--td-rubber) 8px 19px) top/100% 14px no-repeat,
+              var(--td-paper);
+            border:1px solid var(--td-line);box-shadow:var(--td-card);padding:30px 22px 22px;display:flex;flex-direction:column;gap:11px;min-height:206px;transition:transform 150ms ease, box-shadow 150ms ease;" style-hover="transform:translateY(-3px);box-shadow:var(--td-lift);">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="width:11px;height:11px;border-radius:50%;background:{{ role.dot }};"></span>
+            <span style="font-size:14px;font-weight:600;color:var(--td-ink-3);">{{ role.world }}</span>
+          </div>
+          <h3 style="font-family:var(--td-display);font-weight:600;font-size:29px;line-height:1.06;margin:0;">{{ role.label }}</h3>
+          <p style="margin:0;font-size:15px;line-height:1.5;color:var(--td-ink-2);">{{ role.does }}</p>
+          <span style="margin-top:auto;display:inline-flex;align-items:center;gap:8px;font-size:16px;font-weight:600;color:var(--td-blue);">{{ role.opens }} <span style="font-size:19px;line-height:1;">→</span></span>
+        </a>
+      </sc-for>
+    </div>
+
+    <div style="margin-top:36px;display:flex;gap:14px;flex-wrap:wrap;">
+      <a href="TD One - Customer Tracker.dc.html" style="display:inline-flex;align-items:center;background:var(--td-paper);border:1px solid var(--td-line-strong);color:var(--td-ink);font-size:16px;font-weight:600;padding:14px 22px;border-radius:var(--td-r-md);text-decoration:none;white-space:nowrap;">Open the customer view</a>
+      <a href="TD One - Landing.dc.html" style="display:inline-flex;align-items:center;color:var(--td-ink-2);font-size:16px;font-weight:600;padding:14px 8px;text-decoration:none;white-space:nowrap;">Back to the front page</a>
+    </div>
+  </main>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { branch: 'MKY' };
+  componentDidMount() {
+    try { const b = localStorage.getItem('tdone.branch'); if (b) this.setState({ branch: b }); } catch (e) {}
+  }
+  onBranch = (e) => {
+    const branch = e.target.value;
+    this.setState({ branch });
+    try { localStorage.setItem('tdone.branch', branch); } catch (err) {}
+  };
+  renderVals() {
+    const roles = [
+      { label: 'Tyre repair manager', does: 'Triage a pile of tyres at the mine and start the jobs.', world: 'Mine site', dot: 'var(--td-hazard)', opens: 'New site visit', href: 'TD One - Field.dc.html' },
+      { label: 'Workshop repairer', does: 'Advance stages, take the stage photos, record cook time.', world: 'Workshop floor', dot: 'var(--td-blue)', opens: 'Branch console', href: 'TD One - Branch Console.dc.html' },
+      { label: 'Workshop supervisor', does: 'Receive goods, run the branch queue, override a blocked stage.', world: 'Workshop floor', dot: 'var(--td-blue)', opens: 'Branch console', href: 'TD One - Branch Console.dc.html' },
+      { label: 'NDT technician', does: 'Blast, test, record cracks, issue the certificates.', world: 'Workshop floor', dot: 'var(--td-blue)', opens: 'NDT bay', href: 'TD One - Rim.dc.html' },
+      { label: 'Sales', does: 'Read the job, raise the quote in NetSuite, answer the mine.', world: 'Office', dot: 'var(--td-pass)', opens: 'Branch console', href: 'TD One - Branch Console.dc.html' },
+      { label: 'Superintendent', does: 'Compare branches, man hours against repair hours.', world: 'Office', dot: 'var(--td-pass)', opens: 'Branch performance', href: 'TD One - Branch Performance.dc.html' },
+    ];
+    return { branch: this.state.branch, onBranch: this.onBranch, roles };
+  }
+}
+
+</script>
+</body>
+</html>

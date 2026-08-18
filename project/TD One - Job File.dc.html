@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --td-ground:#e9eff4;--td-ground-soft:#f2f6f9;--td-paper:#ffffff;
+    --td-ink:#111c24;--td-ink-2:#3d4d59;--td-ink-3:#65757f;
+    --td-line:#d3dde4;--td-line-strong:#b6c5cf;
+    --td-steel:#16303f;--td-steel-2:#1f4a63;--td-steel-ink:#eaf3f8;
+    --td-blue:#0d64ad;--td-blue-deep:#0a4d87;--td-blue-tint:#e7f1fb;
+    --td-hazard:#f5a300;--td-hazard-deep:#8a5a00;--td-hazard-tint:#fff6e2;--td-hazard-ink:#241a00;
+    --td-heat:#d2542c;--td-heat-deep:#a53a17;--td-heat-wash:#f6c1a6;
+    --td-pass:#1f8a4d;--td-pass-deep:#146035;--td-pass-tint:#e8f6ee;
+    --td-fail:#c02a22;--td-fail-deep:#8c1d16;--td-fail-tint:#fdedeb;
+    --td-rubber:#edebe9;--td-lug:#dad5d1;--td-rubber-deep:#2a2d2f;
+    --td-r-lg:22px;--td-r-md:14px;--td-r-sm:10px;
+    --td-card:0 1px 2px rgba(17,28,36,.06),0 8px 20px rgba(17,28,36,.06);
+    --td-lift:0 14px 34px rgba(17,28,36,.18);
+    --td-display:'Barlow Condensed',Impact,sans-serif;
+    --td-body:'Barlow',system-ui,sans-serif;
+    --td-mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--td-ground);color:var(--td-ink);font-family:var(--td-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:var(--td-blue)} a:hover{color:var(--td-blue-deep)}
+  button,input,select,textarea{font-family:inherit}
+  @keyframes tdRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  @keyframes tdSlideIn{from{transform:translateX(34px);opacity:0}to{transform:none;opacity:1}}
+  @keyframes tdHeat{0%,100%{opacity:.45}50%{opacity:.95}}
+  @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
+  @media print{.no-print{display:none !important}body{background:#fff}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:var(--td-ground);" data-screen-label="Job File">
+
+  <header class="no-print" style="position:sticky;top:0;z-index:40;background:var(--td-steel);color:var(--td-steel-ink);box-shadow:0 2px 14px rgba(17,28,36,.2);">
+    <div style="max-width:1520px;margin:0 auto;padding:11px 24px;display:flex;align-items:center;gap:16px;">
+      <a href="TD One - Landing.dc.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;">
+        <svg viewBox="0 0 100 100" style="width:28px;height:28px;flex:none;" aria-hidden="true">
+          <circle cx="50" cy="50" r="44" fill="#0d1a22"></circle>
+          <circle cx="50" cy="50" r="36" fill="none" stroke="#33495a" stroke-width="15" stroke-dasharray="10 7"></circle>
+          <circle cx="50" cy="50" r="26" fill="#2c3d47"></circle>
+          <circle cx="50" cy="50" r="21" fill="#8fa3af"></circle>
+          <circle cx="50" cy="50" r="7" fill="#5f7480"></circle>
+        </svg>
+        <span style="font-family:var(--td-display);font-weight:700;font-size:20px;text-transform:uppercase;white-space:nowrap;">Tyre Doctor</span>
+      </a>
+      <a href="TD One - Branch Console.dc.html" style="display:inline-flex;align-items:center;gap:8px;color:var(--td-steel-ink);background:rgba(234,243,248,.12);border-radius:var(--td-r-sm);padding:8px 14px;font-size:15px;font-weight:600;text-decoration:none;white-space:nowrap;">← Mackay floor</a>
+      <span style="margin-left:auto;font-family:var(--td-mono);font-size:15px;white-space:nowrap;">MKY-TR-26-0417</span>
+      <button onClick="{{ startTour }}" class="no-print" style="border:1px solid rgba(234,243,248,.34);border-radius:var(--td-r-sm);background:transparent;color:var(--td-steel-ink);font-size:15px;font-weight:600;padding:9px 15px;cursor:pointer;white-space:nowrap;">Show me around</button>
+    </div>
+  </header>
+
+  <sc-if value="{{ isFile }}" hint-placeholder-val="{{ true }}">
+    <main style="max-width:1520px;margin:0 auto;padding:22px 24px 90px;">
+
+      <div ref="{{ headerRef }}" style="border-radius:var(--td-r-lg);background:
+            repeating-linear-gradient(96deg, var(--td-lug) 0 8px, var(--td-rubber) 8px 19px) top/100% 16px no-repeat,
+            repeating-linear-gradient(96deg, var(--td-lug) 0 8px, var(--td-rubber) 8px 19px) bottom/100% 16px no-repeat,
+            var(--td-paper);
+          border:1px solid var(--td-line);box-shadow:var(--td-card);padding:30px 24px;margin-bottom:18px;">
+        <div style="display:flex;align-items:flex-start;gap:30px;flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:16px;">
+            <svg viewBox="0 0 100 100" style="width:74px;height:74px;flex:none;" aria-hidden="true">
+              <circle cx="50" cy="50" r="45" fill="#23282b"></circle>
+              <circle cx="50" cy="50" r="36" fill="none" stroke="#4a5359" stroke-width="16" stroke-dasharray="11 8"></circle>
+              <circle cx="50" cy="50" r="26" fill="#3d4449"></circle>
+              <circle cx="50" cy="50" r="21" fill="#9aa6ad"></circle>
+              <circle cx="50" cy="50" r="21" fill="none" stroke="#77848c" stroke-width="1.5"></circle>
+              <circle cx="50" cy="50" r="7" fill="#6d7a82"></circle>
+            </svg>
+            <div>
+              <div style="font-size:15px;font-weight:600;color:var(--td-ink-3);">Tyre repair — job file</div>
+              <h1 style="font-family:var(--td-mono);font-weight:600;font-size:31px;line-height:1.1;margin:2px 0 5px;">MKY-TR-26-0417</h1>
+              <div style="font-size:16px;color:var(--td-ink-2);">Kurrajong Coal — Ridgeview Pit</div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(4,auto);gap:18px 34px;">
+            <div><div style="font-size:14px;font-weight:600;color:var(--td-ink-3);">Tyre serial</div><div style="font-family:var(--td-mono);font-size:18px;font-weight:600;">BR7K48219</div></div>
+            <div><div style="font-size:14px;font-weight:600;color:var(--td-ink-3);">Make and size</div><div style="font-size:17px;white-space:nowrap;">Bridgestone <span style="font-family:var(--td-mono);">40.00R57</span></div></div>
+            <div><div style="font-size:14px;font-weight:600;color:var(--td-ink-3);">Quote no. (from NetSuite)</div><div style="font-family:var(--td-mono);font-size:18px;font-weight:600;">EST-10482</div></div>
+            <div><div style="font-size:14px;font-weight:600;color:var(--td-ink-3);">Branch</div><div style="font-size:17px;">Mackay · MKY</div></div>
+            <div><div style="font-size:14px;font-weight:600;color:var(--td-ink-3);">Fleet / machine</div><div style="font-family:var(--td-mono);font-size:18px;">HT-412</div></div>
+            <div><div style="font-size:14px;font-weight:600;color:var(--td-ink-3);">Repair category</div><div style="font-size:17px;font-weight:600;">Major</div></div>
+            <div><div style="font-size:14px;font-weight:600;color:var(--td-ink-3);">Site visit</div><div style="font-family:var(--td-mono);font-size:18px;">SV-26-0088</div></div>
+            <div><div style="font-size:14px;font-weight:600;color:var(--td-ink-3);">Stage</div><div style="font-size:17px;font-weight:600;">Cooked — 9 of 12</div></div>
+          </div>
+
+          <div style="margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:10px;">
+            <div style="display:flex;align-items:center;gap:12px;background:var(--td-steel);color:#fff;padding:11px 18px;border-radius:var(--td-r-md);">
+              <span style="width:11px;height:11px;border-radius:50%;background:var(--td-heat);box-shadow:0 0 10px var(--td-heat);"></span>
+              <span style="font-family:var(--td-display);font-weight:700;font-size:22px;white-space:nowrap;">In the oven</span>
+              <span style="font-family:var(--td-mono);font-size:19px;font-variant-numeric:tabular-nums;">{{ cookRemaining }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="no-print" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:24px;padding-top:20px;border-top:1px solid var(--td-line);">
+          <button ref="{{ advanceRef }}" onClick="{{ openDrawer }}" style="display:inline-flex;align-items:center;gap:12px;border:none;background:var(--td-blue);color:#fff;font-size:21px;font-weight:700;padding:18px 32px;border-radius:var(--td-r-md);cursor:pointer;box-shadow:0 10px 24px rgba(13,100,173,.32);white-space:nowrap;">Advance this tyre <span style="font-size:22px;line-height:1;">→</span></button>
+          <button onClick="{{ openEscalation }}" style="border:1px solid var(--td-line-strong);background:var(--td-paper);color:var(--td-ink);border-radius:var(--td-r-md);font-size:16px;font-weight:600;padding:14px 20px;cursor:pointer;white-space:nowrap;">Flag worse than quoted</button>
+          <button onClick="{{ openReport }}" style="border:1px solid var(--td-line-strong);background:var(--td-paper);color:var(--td-ink);border-radius:var(--td-r-md);font-size:16px;font-weight:600;padding:14px 20px;cursor:pointer;white-space:nowrap;">Build the job report</button>
+          <a href="TD One - Customer Tracker.dc.html" style="display:inline-flex;align-items:center;color:var(--td-blue);font-size:16px;font-weight:600;padding:14px 8px;text-decoration:none;white-space:nowrap;">See what the customer sees</a>
+        </div>
+      </div>
+
+      <div ref="{{ quoteRef }}" style="border-radius:var(--td-r-lg);background:var(--td-paper);border:1px solid var(--td-line);box-shadow:var(--td-card);padding:22px 24px;margin-bottom:18px;">
+        <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:16px;flex-wrap:wrap;">
+          <h2 style="font-family:var(--td-display);font-weight:700;font-size:28px;margin:0;">What happened to the quote</h2>
+          <span style="font-size:16px;color:var(--td-ink-2);"><span style="font-family:var(--td-mono);">EST-10482</span> — raised and revised in NetSuite by sales</span>
+          <span title="Quote statuses run Initial → Revised → Final. Source: the client's own words. TD One holds the number and the status only, never an amount." style="margin-left:auto;background:var(--td-blue-tint);color:var(--td-blue-deep);border-radius:999px;padding:5px 13px;font-size:14px;font-weight:600;cursor:help;white-space:nowrap;">Where these statuses come from</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1.6fr 1fr;gap:16px;align-items:stretch;">
+          <div style="border:1px solid rgba(31,138,77,.4);background:var(--td-pass-tint);border-radius:var(--td-r-md);padding:18px;">
+            <div style="display:inline-flex;align-items:center;gap:8px;background:var(--td-pass);color:#fff;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700;margin-bottom:10px;">1 · Initial</div>
+            <div style="font-family:var(--td-display);font-weight:600;font-size:24px;margin-bottom:4px;">Sent to the mine</div>
+            <div style="font-family:var(--td-mono);font-size:15px;color:var(--td-ink-2);">04 Aug 26 · 07:12</div>
+            <div style="font-size:15px;color:var(--td-ink-2);margin-top:8px;">D. Rennick, sales — quoted as Intermediate.</div>
+          </div>
+          <div style="border:2px solid var(--td-hazard);background:var(--td-hazard-tint);border-radius:var(--td-r-md);padding:18px;display:flex;gap:18px;">
+            <div style="flex:1;">
+              <div style="display:inline-flex;align-items:center;gap:8px;background:var(--td-hazard);color:var(--td-hazard-ink);border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700;margin-bottom:10px;">2 · Revised — and this is why</div>
+              <div style="font-family:var(--td-display);font-weight:600;font-size:24px;margin-bottom:4px;">The sidewall cut measured 168 mm</div>
+              <div style="font-family:var(--td-mono);font-size:15px;color:var(--td-ink-2);">06 Aug 26 · 14:38</div>
+              <div style="font-size:15px;color:var(--td-ink-2);margin-top:8px;">Belt damage confirmed at inspection, so a minor became a major. The revised quote went out and the tyre was un-paused the same afternoon.</div>
+            </div>
+            <div style="width:132px;flex:none;">
+              <div style="position:relative;height:100px;border-radius:var(--td-r-sm);overflow:hidden;background:radial-gradient(115% 95% at 30% 16%, #57616a 0%, #2d3439 58%, #191d21 100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.15), var(--td-card);">
+                <div style="position:absolute;inset:0;display:grid;place-items:center;">
+                  <svg viewBox="0 0 100 100" style="width:78px;height:78px;">
+                    <circle cx="50" cy="50" r="44" fill="#191d20"></circle>
+                    <circle cx="50" cy="50" r="36" fill="none" stroke="#404a50" stroke-width="15" stroke-dasharray="10 7"></circle>
+                    <circle cx="50" cy="50" r="26" fill="#343c41"></circle>
+                    <path d="M27 63 L48 39" stroke="#e3623a" stroke-width="7" stroke-linecap="round"></path>
+                    <path d="M27 63 L48 39" stroke="#ffbf9f" stroke-width="2.4" stroke-linecap="round"></path>
+                  </svg>
+                </div>
+                <div style="position:absolute;left:0;right:0;bottom:0;background:rgba(9,13,16,.8);padding:5px 7px;">
+                  <div style="font-family:var(--td-mono);font-size:10px;color:#fff;">14:22 · T. Barlow</div>
+                  <div style="font-family:var(--td-mono);font-size:10px;color:var(--td-hazard);">Inspected · Mackay</div>
+                </div>
+              </div>
+              <div style="font-size:13px;color:var(--td-hazard-deep);font-weight:600;margin-top:6px;line-height:1.3;">The photo that changed the quote</div>
+            </div>
+          </div>
+          <div style="border:1px dashed var(--td-line-strong);background:var(--td-ground-soft);border-radius:var(--td-r-md);padding:18px;">
+            <div style="display:inline-flex;align-items:center;gap:8px;background:var(--td-paper);border:1px solid var(--td-line-strong);color:var(--td-ink-2);border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700;margin-bottom:10px;">3 · Final</div>
+            <div style="font-family:var(--td-display);font-weight:600;font-size:24px;margin-bottom:4px;color:var(--td-ink-2);">Not sent yet</div>
+            <div style="font-size:15px;color:var(--td-ink-3);">Waiting on the cook being recorded.</div>
+            <div style="font-size:15px;color:var(--td-ink-2);margin-top:8px;">Sales sets the quote to Final, and the mine is told.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1.35fr 1fr;gap:18px;align-items:start;">
+
+        <div ref="{{ spineRef }}" style="border-radius:var(--td-r-lg);background:var(--td-paper);border:1px solid var(--td-line);box-shadow:var(--td-card);padding:24px;">
+          <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:22px;flex-wrap:wrap;">
+            <h2 style="font-family:var(--td-display);font-weight:700;font-size:28px;margin:0;">The story of this repair</h2>
+            <span style="font-size:16px;color:var(--td-ink-2);">every photo sits with the stage it came from</span>
+          </div>
+
+          <div>
+            <sc-for list="{{ spine }}" as="s" hint-placeholder-count="12">
+              <div style="display:grid;grid-template-columns:30px 1fr;gap:18px;">
+                <div style="display:flex;flex-direction:column;align-items:center;">
+                  <span style="width:{{ s.dotSize }}px;height:{{ s.dotSize }}px;border-radius:50%;background:{{ s.dot }};border:3px solid {{ s.ring }};flex:none;box-shadow:{{ s.glow }};"></span>
+                  <span style="flex:1;width:3px;border-radius:2px;background:{{ s.line }};min-height:20px;"></span>
+                </div>
+                <div style="padding-bottom:22px;">
+                  <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;">
+                    <span style="font-family:var(--td-display);font-weight:700;font-size:23px;line-height:1;color:{{ s.labelColor }};">{{ s.label }}</span>
+                    <span style="font-family:var(--td-mono);font-size:15px;color:var(--td-ink-3);">{{ s.at }}</span>
+                    <span style="font-size:16px;color:var(--td-ink-2);">{{ s.by }}</span>
+                    <sc-if value="{{ s.isCurrent }}" hint-placeholder-val="{{ false }}">
+                      <span style="background:var(--td-heat-deep);color:#fff;border-radius:999px;padding:3px 12px;font-size:14px;font-weight:700;white-space:nowrap;">happening now</span>
+                    </sc-if>
+                  </div>
+                  <sc-if value="{{ s.hasPayload }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex;flex-wrap:wrap;gap:9px;margin-top:10px;">
+                      <sc-for list="{{ s.payload }}" as="pl" hint-placeholder-count="2">
+                        <span style="font-size:15px;background:var(--td-ground-soft);border:1px solid var(--td-line);border-radius:999px;padding:4px 13px;flex:none;white-space:nowrap;">{{ pl }}</span>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ s.hasPhotos }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex;gap:12px;margin-top:14px;flex-wrap:wrap;">
+                      <sc-for list="{{ s.photos }}" as="ph" hint-placeholder-count="3">
+                        <div style="width:150px;">
+                          <div style="position:relative;height:112px;border-radius:var(--td-r-sm);overflow:hidden;background:radial-gradient(118% 96% at 30% 16%, #5a646d 0%, #2e353a 56%, #171b1e 100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14), var(--td-card);">
+                            <div style="position:absolute;inset:0;display:grid;place-items:center;">
+                              <sc-if value="{{ ph.isPlate }}" hint-placeholder-val="{{ false }}">
+                                <div style="border:2px solid #cdd4d9;border-radius:4px;padding:7px 10px;background:linear-gradient(150deg,#7d868d,#5b6469);box-shadow:0 3px 10px rgba(0,0,0,.45);">
+                                  <div style="font-family:var(--td-mono);font-size:13px;color:#fff;letter-spacing:.04em;">BR7K48219</div>
+                                  <div style="font-family:var(--td-mono);font-size:9px;color:#dbe1e5;margin-top:2px;">40.00R57 · BRIDGESTONE</div>
+                                </div>
+                              </sc-if>
+                              <sc-if value="{{ ph.isDamage }}" hint-placeholder-val="{{ false }}">
+                                <svg viewBox="0 0 100 100" style="width:88px;height:88px;">
+                                  <circle cx="50" cy="50" r="45" fill="#191d20"></circle>
+                                  <circle cx="50" cy="50" r="36" fill="none" stroke="#404a50" stroke-width="16" stroke-dasharray="11 8"></circle>
+                                  <circle cx="50" cy="50" r="26" fill="#343c41"></circle>
+                                  <path d="M26 64 L49 38" stroke="#e3623a" stroke-width="7" stroke-linecap="round"></path>
+                                  <path d="M26 64 L49 38" stroke="#ffbf9f" stroke-width="2.4" stroke-linecap="round"></path>
+                                </svg>
+                              </sc-if>
+                              <sc-if value="{{ ph.isWhole }}" hint-placeholder-val="{{ false }}">
+                                <svg viewBox="0 0 100 100" style="width:92px;height:92px;">
+                                  <ellipse cx="50" cy="92" rx="34" ry="5" fill="rgba(0,0,0,.45)"></ellipse>
+                                  <circle cx="50" cy="48" r="42" fill="#1c2124"></circle>
+                                  <circle cx="50" cy="48" r="34" fill="none" stroke="#454f56" stroke-width="15" stroke-dasharray="11 8"></circle>
+                                  <circle cx="50" cy="48" r="24" fill="#3a4247"></circle>
+                                  <circle cx="50" cy="48" r="19" fill="#96a1a8"></circle>
+                                  <circle cx="50" cy="48" r="6" fill="#6c7880"></circle>
+                                </svg>
+                              </sc-if>
+                              <sc-if value="{{ ph.isCavity }}" hint-placeholder-val="{{ false }}">
+                                <svg viewBox="0 0 100 100" style="width:88px;height:88px;">
+                                  <circle cx="50" cy="50" r="45" fill="#191d20"></circle>
+                                  <circle cx="50" cy="50" r="36" fill="none" stroke="#404a50" stroke-width="16" stroke-dasharray="11 8"></circle>
+                                  <path d="M34 42 q16 -9 32 0 l-4 20 q-12 6 -24 0 z" fill="#5a4034" stroke="#c99a6a" stroke-width="2"></path>
+                                  <path d="M40 48 h20" stroke="#e0b183" stroke-width="2"></path>
+                                </svg>
+                              </sc-if>
+                              <sc-if value="{{ ph.isRepair }}" hint-placeholder-val="{{ false }}">
+                                <svg viewBox="0 0 100 100" style="width:88px;height:88px;">
+                                  <circle cx="50" cy="50" r="45" fill="#191d20"></circle>
+                                  <circle cx="50" cy="50" r="36" fill="none" stroke="#404a50" stroke-width="16" stroke-dasharray="11 8"></circle>
+                                  <rect x="33" y="40" width="34" height="22" rx="5" fill="#25503a" stroke="#4fae7c" stroke-width="2"></rect>
+                                  <path d="M40 51 l5 5 l11 -12" stroke="#8fe0b3" stroke-width="3" fill="none" stroke-linecap="round"></path>
+                                </svg>
+                              </sc-if>
+                            </div>
+                            <div style="position:absolute;left:0;right:0;bottom:0;background:rgba(9,13,16,.8);padding:5px 8px;">
+                              <div style="font-family:var(--td-mono);font-size:10px;color:#fff;">{{ ph.at }} · {{ ph.by }}</div>
+                              <div style="font-family:var(--td-mono);font-size:10px;color:var(--td-hazard);">{{ ph.stageLabel }} · {{ ph.where }}</div>
+                            </div>
+                          </div>
+                          <sc-if value="{{ ph.hasNote }}" hint-placeholder-val="{{ false }}">
+                            <div style="font-size:14px;color:var(--td-ink-2);margin-top:6px;line-height:1.35;">{{ ph.note }}</div>
+                          </sc-if>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ s.isFuture }}" hint-placeholder-val="{{ false }}">
+                    <div style="font-size:15px;color:var(--td-ink-3);margin-top:5px;">{{ s.futureNote }}</div>
+                  </sc-if>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:18px;">
+
+          <div ref="{{ cookRef }}" style="position:relative;overflow:hidden;border-radius:var(--td-r-lg);background:radial-gradient(120% 92% at 50% 128%, rgba(210,84,44,.7), transparent 62%),var(--td-steel);color:#fff;box-shadow:var(--td-card);padding:22px;">
+            <div aria-hidden="true" style="position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(0deg,rgba(210,84,44,.6),transparent);animation:tdHeat 3.4s ease-in-out infinite;"></div>
+            <div style="position:relative;">
+              <div style="font-family:var(--td-display);font-weight:700;font-size:27px;line-height:1;">Cook record</div>
+              <div style="font-size:15px;color:var(--td-heat-wash);margin-top:5px;margin-bottom:16px;">Hot vulcanising, in progress</div>
+              <div style="font-family:var(--td-mono);font-size:46px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums;margin-bottom:12px;">{{ cookRemaining }}</div>
+              <div style="height:7px;border-radius:4px;background:rgba(246,193,166,.26);overflow:hidden;margin-bottom:14px;"><div style="height:7px;border-radius:4px;background:var(--td-heat-wash);width:{{ cookPct }}%;"></div></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;font-size:15px;color:var(--td-heat-wash);">
+                <span>Started 14:02</span><span>Target 01:30:00</span>
+                <span>{{ cookElapsed }} elapsed</span><span>L. Ferraro</span>
+              </div>
+              <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(246,193,166,.3);font-size:15px;line-height:1.5;color:#dfe9f3;">
+                Majors on this screen average <span style="font-family:var(--td-mono);">01:31:00</span>.
+                <span title="Cook duration is recorded, and compared only with the average of the same category in the data on this screen. Source: the client records cook duration, plus our judgement — no industry cure-time constant is claimed." style="border-bottom:1px dotted var(--td-heat-wash);cursor:help;">Where does that come from?</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="border-radius:var(--td-r-lg);background:
+                repeating-linear-gradient(96deg, var(--td-lug) 0 8px, var(--td-rubber) 8px 19px) top/100% 14px no-repeat,
+                var(--td-paper);
+              border:1px solid var(--td-line);box-shadow:var(--td-card);padding:28px 20px 20px;">
+            <h2 style="font-family:var(--td-display);font-weight:700;font-size:25px;margin:0 0 4px;">What we measured</h2>
+            <div style="font-size:15px;color:var(--td-ink-3);margin-bottom:14px;">Recorded by T. Barlow at inspection</div>
+            <div style="display:flex;flex-direction:column;gap:11px;">
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;"><span style="font-size:16px;color:var(--td-ink-2);">Damage position</span><span style="font-size:17px;font-weight:600;">Sidewall</span></div>
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;"><span style="font-size:16px;color:var(--td-ink-2);">Damage size</span><span style="font-family:var(--td-mono);font-size:19px;font-weight:600;font-variant-numeric:tabular-nums;">168 mm</span></div>
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;"><span style="font-size:16px;color:var(--td-ink-2);">Belt or ply damage</span><span style="background:var(--td-fail-tint);color:var(--td-fail-deep);border-radius:999px;padding:3px 12px;font-size:15px;font-weight:700;">Yes</span></div>
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;"><span style="font-size:16px;color:var(--td-ink-2);">Repair unit</span><span style="font-size:17px;text-align:right;">Section repair<br>220 × 160 mm</span></div>
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;"><span style="font-size:16px;color:var(--td-ink-2);">Category</span><span style="font-size:17px;font-weight:600;">Major</span></div>
+            </div>
+            <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--td-line);">
+              <span title="Thresholds in use: Minor is 50 mm or less with no belt or ply damage; Intermediate is 50–150 mm or a single ply; Major is over 150 mm, multi-ply, sidewall or bead, or any section repair. Source: our own judgement, aligned to Tire Industry Association section-repair terminology — adjustable, and we expect the client to correct it." style="font-size:15px;color:var(--td-blue-deep);font-weight:600;border-bottom:1px dotted var(--td-blue);cursor:help;">Why this counts as a Major</span>
+            </div>
+          </div>
+
+          <div style="border-radius:var(--td-r-lg);background:
+                repeating-linear-gradient(96deg, var(--td-lug) 0 8px, var(--td-rubber) 8px 19px) top/100% 14px no-repeat,
+                var(--td-paper);
+              border:1px solid var(--td-line);box-shadow:var(--td-card);padding:28px 20px 20px;">
+            <h2 style="font-family:var(--td-display);font-weight:700;font-size:25px;margin:0 0 4px;">This casing before</h2>
+            <div style="font-size:15px;color:var(--td-ink-3);margin-bottom:12px;">Serial <span style="font-family:var(--td-mono);">BR7K48219</span> — two previous jobs</div>
+            <sc-for list="{{ history }}" as="h" hint-placeholder-count="2">
+              <a href="TD One - Job File.dc.html" style="display:flex;align-items:center;gap:14px;padding:13px 0;border-top:1px solid var(--td-line);text-decoration:none;color:inherit;">
+                <span style="font-family:var(--td-mono);font-size:15px;font-weight:600;width:146px;">{{ h.jobNo }}</span>
+                <span style="font-family:var(--td-mono);font-size:15px;color:var(--td-ink-3);width:74px;">{{ h.date }}</span>
+                <span style="font-size:16px;flex:1;">{{ h.outcome }}</span>
+                <span style="font-size:18px;color:var(--td-blue);">→</span>
+              </a>
+            </sc-for>
+            <div style="border-top:1px solid var(--td-line);padding-top:12px;margin-top:2px;font-size:15px;color:var(--td-ink-2);">Third repair on this casing, and the category has risen each time.</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isEscalation }}" hint-placeholder-val="{{ false }}">
+    <main style="max-width:1240px;margin:0 auto;padding:22px 24px 90px;" data-screen-label="Needs a decision">
+      <div style="border-radius:var(--td-r-lg);overflow:hidden;border:2px solid var(--td-hazard);box-shadow:var(--td-card);background:var(--td-paper);">
+        <div style="display:flex;align-items:center;gap:14px;padding:13px 22px;background:repeating-linear-gradient(135deg,var(--td-hazard) 0 16px,#1b1a17 16px 32px);flex-wrap:wrap;">
+          <span style="background:#1b1a17;color:var(--td-hazard);font-family:var(--td-display);font-weight:700;font-size:20px;letter-spacing:.06em;text-transform:uppercase;padding:5px 13px;border-radius:6px;white-space:nowrap;">Needs a person</span>
+          <span style="background:var(--td-hazard-ink);color:#fff;font-size:15px;font-weight:600;padding:5px 12px;border-radius:6px;white-space:nowrap;">Worse than quoted · MKY-TR-26-0419</span>
+          <button onClick="{{ closeEscalation }}" style="margin-left:auto;border:none;background:#1b1a17;color:#fff;border-radius:var(--td-r-sm);font-size:15px;font-weight:600;padding:9px 16px;cursor:pointer;white-space:nowrap;">Back to the job</button>
+        </div>
+        <div style="padding:26px;">
+          <h1 style="font-family:var(--td-display);font-weight:700;font-size:42px;line-height:1.03;margin:0 0 8px;">This tyre is worse than what was quoted.</h1>
+          <p style="font-size:18px;color:var(--td-ink-2);margin:0 0 24px;max-width:58em;">Sales gets told, and this tyre pauses until a revised quote goes out. The other three tyres on the quote keep moving.</p>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr 1.1fr;gap:18px;margin-bottom:24px;">
+            <div style="border:1px solid var(--td-line);border-radius:var(--td-r-md);background:var(--td-ground-soft);padding:20px;">
+              <div style="font-size:15px;font-weight:600;color:var(--td-ink-3);margin-bottom:10px;">As quoted</div>
+              <div style="font-family:var(--td-display);font-weight:700;font-size:38px;line-height:1;margin-bottom:10px;">Intermediate</div>
+              <div style="font-size:16px;color:var(--td-ink-2);line-height:1.5;">50–150 mm, or a single ply affected. Quoted 05 Aug 26 by D. Rennick.</div>
+            </div>
+            <div style="border:2px solid var(--td-fail);border-radius:var(--td-r-md);background:var(--td-fail-tint);padding:20px;">
+              <div style="font-size:15px;font-weight:700;color:var(--td-fail-deep);margin-bottom:10px;">Measured at inspection</div>
+              <div style="font-family:var(--td-display);font-weight:700;font-size:38px;line-height:1;margin-bottom:12px;color:var(--td-fail-deep);">Major</div>
+              <div style="display:flex;gap:24px;margin-bottom:10px;">
+                <div><div style="font-family:var(--td-mono);font-size:27px;font-weight:600;font-variant-numeric:tabular-nums;">205 mm</div><div style="font-size:14px;color:var(--td-ink-2);">damage size</div></div>
+                <div><div style="font-family:var(--td-mono);font-size:27px;font-weight:600;">2 plies</div><div style="font-size:14px;color:var(--td-ink-2);">belt / ply damage</div></div>
+              </div>
+              <div style="font-size:16px;color:var(--td-ink-2);line-height:1.5;">Over 150 mm and multi-ply, which is a Major by the thresholds in use.</div>
+            </div>
+            <div style="border:1px solid rgba(245,163,0,.5);border-radius:var(--td-r-md);background:var(--td-hazard-tint);padding:20px;">
+              <div style="font-size:15px;font-weight:700;color:var(--td-hazard-deep);margin-bottom:12px;">The evidence</div>
+              <div style="display:flex;gap:14px;">
+                <div style="width:140px;flex:none;">
+                  <div style="position:relative;height:106px;border-radius:var(--td-r-sm);overflow:hidden;background:radial-gradient(118% 96% at 30% 16%, #5a646d 0%, #2e353a 56%, #171b1e 100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14), var(--td-card);">
+                    <div style="position:absolute;inset:0;display:grid;place-items:center;">
+                      <svg viewBox="0 0 100 100" style="width:84px;height:84px;">
+                        <circle cx="50" cy="50" r="45" fill="#191d20"></circle>
+                        <circle cx="50" cy="50" r="36" fill="none" stroke="#404a50" stroke-width="16" stroke-dasharray="11 8"></circle>
+                        <circle cx="50" cy="50" r="26" fill="#343c41"></circle>
+                        <path d="M24 58 L52 34" stroke="#e3623a" stroke-width="8" stroke-linecap="round"></path>
+                        <path d="M24 58 L52 34" stroke="#ffbf9f" stroke-width="2.6" stroke-linecap="round"></path>
+                      </svg>
+                    </div>
+                    <div style="position:absolute;left:0;right:0;bottom:0;background:rgba(9,13,16,.8);padding:5px 8px;">
+                      <div style="font-family:var(--td-mono);font-size:10px;color:#fff;">07:48 · K. Nettle</div>
+                      <div style="font-family:var(--td-mono);font-size:10px;color:var(--td-hazard);">Inspected · Mackay</div>
+                    </div>
+                  </div>
+                </div>
+                <div style="font-size:15px;color:var(--td-hazard-ink);line-height:1.5;">Attached to the inspection stage. It travels with the notification, so sales sees what the repairer saw.</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:18px;">
+            <div style="border:1px solid var(--td-line);border-radius:var(--td-r-md);background:var(--td-ground-soft);padding:20px;">
+              <label style="display:block;margin-bottom:16px;">
+                <span style="display:block;font-size:16px;font-weight:600;margin-bottom:8px;">Reason — required, and it goes in the email</span>
+                <textarea value="{{ escReason }}" onInput="{{ onEscReason }}" rows="3" style="border:1px solid var(--td-line-strong);border-radius:var(--td-r-sm);background:var(--td-paper);color:var(--td-ink);width:100%;font-size:16px;padding:13px;resize:vertical;"></textarea>
+              </label>
+              <sc-if value="{{ escBlocked }}" hint-placeholder-val="{{ true }}">
+                <div style="border-left:5px solid var(--td-fail);background:var(--td-fail-tint);border-radius:var(--td-r-sm);padding:13px 16px;font-size:16px;color:var(--td-fail-deep);margin-bottom:16px;">A reason is required — sales cannot revise a quote without one.</div>
+              </sc-if>
+              <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+                <button onClick="{{ sendEscalation }}" disabled="{{ escBlocked }}" style="border:none;background:var(--td-hazard);color:var(--td-hazard-ink);border-radius:var(--td-r-md);font-size:18px;font-weight:700;padding:16px 24px;cursor:pointer;box-shadow:0 8px 20px rgba(245,163,0,.34);white-space:nowrap;">Send to sales and pause this tyre</button>
+                <button onClick="{{ closeEscalation }}" style="border:1px solid var(--td-line-strong);background:var(--td-paper);color:var(--td-ink);border-radius:var(--td-r-md);font-size:16px;font-weight:600;padding:15px 20px;cursor:pointer;">Cancel</button>
+              </div>
+            </div>
+            <div style="border:1px solid var(--td-line);border-radius:var(--td-r-md);background:var(--td-ground-soft);padding:20px;">
+              <div style="font-size:16px;font-weight:600;color:var(--td-ink-2);margin-bottom:14px;">Who gets told</div>
+              <div style="display:flex;align-items:center;gap:13px;margin-bottom:12px;">
+                <span style="width:36px;height:36px;border-radius:50%;background:var(--td-blue);color:#fff;display:grid;place-items:center;font-family:var(--td-display);font-size:15px;font-weight:600;">DR</span>
+                <div><div style="font-size:17px;font-weight:600;">D. Rennick</div><div style="font-size:15px;color:var(--td-ink-2);">Sales — raised this quote</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:13px;margin-bottom:16px;">
+                <span style="width:36px;height:36px;border-radius:50%;background:var(--td-steel-2);color:#fff;display:grid;place-items:center;font-family:var(--td-display);font-size:15px;font-weight:600;">MO</span>
+                <div><div style="font-size:17px;font-weight:600;">M. Oduya</div><div style="font-size:15px;color:var(--td-ink-2);">Supervisor — Mackay</div></div>
+              </div>
+              <div style="padding-top:14px;border-top:1px solid var(--td-line);font-size:15px;color:var(--td-ink-2);line-height:1.5;">The customer is not told at this point. They see a revised quote from sales, in NetSuite, as they do today.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isReport }}" hint-placeholder-val="{{ false }}">
+    <main style="background:#5a6672;padding:26px 20px 80px;" data-screen-label="Job Report">
+      <div class="no-print" style="max-width:880px;margin:0 auto 18px;display:flex;gap:12px;align-items:center;">
+        <button onClick="{{ closeReport }}" style="border:none;background:var(--td-paper);color:var(--td-ink);border-radius:var(--td-r-md);font-size:16px;font-weight:600;padding:13px 20px;cursor:pointer;white-space:nowrap;">← Back to the job file</button>
+        <button onClick="{{ print }}" style="margin-left:auto;border:none;background:var(--td-blue);color:#fff;border-radius:var(--td-r-md);font-size:16px;font-weight:600;padding:13px 22px;cursor:pointer;white-space:nowrap;">Print or save</button>
+      </div>
+      <div style="max-width:880px;margin:0 auto;background:#fff;padding:48px 54px;box-shadow:var(--td-lift);border-radius:6px;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;border-bottom:3px solid var(--td-steel);padding-bottom:16px;margin-bottom:24px;">
+          <div>
+            <div style="font-family:var(--td-display);font-weight:700;font-size:24px;text-transform:uppercase;">Tyre Doctor</div>
+            <div style="font-family:var(--td-display);font-weight:600;font-size:32px;line-height:1.05;">Tyre repair job report</div>
+          </div>
+          <div style="text-align:right;font-family:var(--td-mono);font-size:14px;line-height:1.7;">
+            <div style="font-size:17px;font-weight:600;">MKY-TR-26-0417</div>
+            <div>BR7K48219 · 40.00R57</div>
+            <div>EST-10482 · revised</div>
+            <div>Mackay · MKY</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:26px;">
+          <div><div style="font-size:14px;font-weight:600;color:var(--td-ink-3);">Customer</div><div style="font-size:16px;">Kurrajong Coal</div></div>
+          <div><div style="font-size:14px;font-weight:600;color:var(--td-ink-3);">Site</div><div style="font-size:16px;">Ridgeview Pit</div></div>
+          <div><div style="font-size:14px;font-weight:600;color:var(--td-ink-3);">Fleet / machine</div><div style="font-family:var(--td-mono);font-size:16px;">HT-412</div></div>
+          <div><div style="font-size:14px;font-weight:600;color:var(--td-ink-3);">Category</div><div style="font-size:16px;">Major · section repair</div></div>
+        </div>
+
+        <h3 style="font-family:var(--td-display);font-weight:700;font-size:23px;margin:0 0 12px;">Stages</h3>
+        <table style="width:100%;font-size:14px;border-collapse:collapse;margin-bottom:26px;">
+          <thead>
+            <tr style="background:var(--td-ground-soft);">
+              <th style="text-align:left;padding:9px 10px;border-bottom:2px solid var(--td-line-strong);width:150px;">Stage</th>
+              <th style="text-align:left;padding:9px 10px;border-bottom:2px solid var(--td-line-strong);width:158px;">When</th>
+              <th style="text-align:left;padding:9px 10px;border-bottom:2px solid var(--td-line-strong);">Who</th>
+              <th style="text-align:left;padding:9px 10px;border-bottom:2px solid var(--td-line-strong);">Recorded</th>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{ reportRows }}" as="r" hint-placeholder-count="9">
+              <tr>
+                <td style="padding:9px 10px;border-bottom:1px solid var(--td-line);font-weight:600;">{{ r.label }}</td>
+                <td style="padding:9px 10px;border-bottom:1px solid var(--td-line);font-family:var(--td-mono);">{{ r.at }}</td>
+                <td style="padding:9px 10px;border-bottom:1px solid var(--td-line);">{{ r.by }}</td>
+                <td style="padding:9px 10px;border-bottom:1px solid var(--td-line);font-size:13px;">{{ r.payload }}</td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+
+        <h3 style="font-family:var(--td-display);font-weight:700;font-size:23px;margin:0 0 12px;">Photographs, by stage</h3>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:26px;">
+          <sc-for list="{{ reportPhotos }}" as="ph" hint-placeholder-count="7">
+            <div>
+              <div style="position:relative;height:96px;border-radius:6px;overflow:hidden;background:radial-gradient(118% 96% at 30% 16%, #5a646d 0%, #2e353a 56%, #171b1e 100%);display:grid;place-items:center;">
+                <svg viewBox="0 0 100 100" style="width:66px;height:66px;">
+                  <circle cx="50" cy="50" r="45" fill="#191d20"></circle>
+                  <circle cx="50" cy="50" r="36" fill="none" stroke="#404a50" stroke-width="16" stroke-dasharray="11 8"></circle>
+                  <circle cx="50" cy="50" r="24" fill="#3a4247"></circle>
+                  <circle cx="50" cy="50" r="18" fill="#96a1a8"></circle>
+                </svg>
+              </div>
+              <div style="font-family:var(--td-mono);font-size:11px;color:var(--td-ink-2);margin-top:5px;line-height:1.4;">{{ ph.stageLabel }}<br>{{ ph.at }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;">
+          <div>
+            <h3 style="font-family:var(--td-display);font-weight:700;font-size:23px;margin:0 0 12px;">Cook record</h3>
+            <div style="display:grid;grid-template-columns:1fr auto;gap:7px 12px;font-size:15px;">
+              <span style="color:var(--td-ink-2);">Started</span><span style="font-family:var(--td-mono);">07 Aug 26 · 14:02</span>
+              <span style="color:var(--td-ink-2);">Target duration</span><span style="font-family:var(--td-mono);">01:30:00</span>
+              <span style="color:var(--td-ink-2);">Recorded by</span><span>L. Ferraro</span>
+              <span style="color:var(--td-ink-2);">Entry method</span><span>Live timer</span>
+            </div>
+          </div>
+          <div>
+            <h3 style="font-family:var(--td-display);font-weight:700;font-size:23px;margin:0 0 12px;">Quote history</h3>
+            <div style="display:grid;grid-template-columns:auto 1fr;gap:7px 12px;font-size:15px;">
+              <span style="font-family:var(--td-mono);">Initial</span><span>04 Aug 26 · D. Rennick</span>
+              <span style="font-family:var(--td-mono);">Revised</span><span>06 Aug 26 · sidewall 168 mm, belt damage</span>
+              <span style="font-family:var(--td-mono);">Final</span><span style="color:var(--td-ink-3);">not yet sent</span>
+            </div>
+            <div style="margin-top:12px;font-size:14px;color:var(--td-ink-2);">Quote numbers are raised in NetSuite by sales. No amounts are held here.</div>
+          </div>
+        </div>
+
+        <div style="margin-top:32px;padding-top:14px;border-top:1px solid var(--td-line-strong);display:flex;justify-content:space-between;font-family:var(--td-mono);font-size:12px;color:var(--td-ink-3);">
+          <span>MKY-TR-26-0417 · assembled from the job file</span><span>Page 1 of 1</span>
+        </div>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ drawer }}" hint-placeholder-val="{{ false }}">
+    <div class="no-print" onClick="{{ closeDrawer }}" style="position:fixed;inset:0;z-index:60;background:rgba(17,28,36,.55);">
+      <div onClick="{{ stop }}" role="dialog" aria-modal="true" style="position:absolute;top:0;right:0;bottom:0;width:520px;background:var(--td-paper);box-shadow:-18px 0 44px rgba(17,28,36,.34);display:flex;flex-direction:column;animation:tdSlideIn 240ms cubic-bezier(.3,.9,.2,1) both;">
+        <div style="background:var(--td-steel);color:var(--td-steel-ink);padding:18px 22px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span style="font-size:15px;font-weight:600;color:#8fc0e8;">Stage action</span>
+            <button onClick="{{ closeDrawer }}" aria-label="Close" style="margin-left:auto;border:1px solid rgba(234,243,248,.4);background:transparent;color:var(--td-steel-ink);border-radius:var(--td-r-sm);font-size:16px;font-weight:600;padding:7px 14px;cursor:pointer;white-space:nowrap;">Close ✕</button>
+          </div>
+          <div style="font-family:var(--td-display);font-weight:700;font-size:30px;line-height:1.05;margin-top:8px;">Cooked → Final quote sent</div>
+          <div style="font-family:var(--td-mono);font-size:15px;color:#8fc0e8;margin-top:4px;">MKY-TR-26-0417 · BR7K48219</div>
+        </div>
+
+        <div style="flex:1;overflow:auto;padding:22px;">
+          <div style="font-size:16px;font-weight:600;color:var(--td-ink-2);margin-bottom:12px;">What this stage needs</div>
+
+          <div style="border:1px solid var(--td-line);border-radius:var(--td-r-md);background:var(--td-ground-soft);padding:18px;margin-bottom:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
+              <span style="font-family:var(--td-display);font-weight:700;font-size:22px;">Cook duration</span>
+              <div style="display:flex;border:1px solid var(--td-line-strong);border-radius:999px;overflow:hidden;background:var(--td-paper);">
+                <button onClick="{{ useTimer }}" style="border:none;background:{{ timerBg }};color:{{ timerText }};font-size:15px;font-weight:600;padding:9px 16px;cursor:pointer;white-space:nowrap;">Live timer</button>
+                <button onClick="{{ useTyped }}" style="border:none;background:{{ typedBg }};color:{{ typedText }};font-size:15px;font-weight:600;padding:9px 16px;cursor:pointer;white-space:nowrap;">Type it in</button>
+              </div>
+            </div>
+            <sc-if value="{{ isTimer }}" hint-placeholder-val="{{ true }}">
+              <div>
+                <div style="display:flex;align-items:baseline;gap:14px;">
+                  <span style="font-family:var(--td-mono);font-size:42px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1;">{{ cookRemaining }}</span>
+                  <span style="font-size:16px;color:var(--td-ink-2);">left of 01:30:00</span>
+                </div>
+                <div style="height:7px;border-radius:4px;background:#e2e8ed;margin-top:14px;overflow:hidden;"><div style="height:7px;border-radius:4px;background:var(--td-heat);width:{{ cookPct }}%;"></div></div>
+                <div style="font-size:15px;color:var(--td-ink-2);margin-top:12px;">The timer started when Repaired was confirmed, and keeps counting if the tablet sleeps.</div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ isTyped }}" hint-placeholder-val="{{ false }}">
+              <div>
+                <label style="display:block;">
+                  <span style="display:block;font-size:15px;font-weight:600;color:var(--td-ink-2);margin-bottom:7px;">Duration — hh:mm:ss</span>
+                  <input value="{{ typedValue }}" onInput="{{ onTyped }}" style="border:1px solid var(--td-line-strong);border-radius:var(--td-r-sm);background:var(--td-paper);color:var(--td-ink);width:212px;font-family:var(--td-mono);font-size:26px;padding:13px;">
+                </label>
+                <div style="font-size:15px;color:var(--td-ink-2);margin-top:12px;">Use this when the cook was run on the press timer and written on the sheet.</div>
+              </div>
+            </sc-if>
+          </div>
+
+          <div style="border:1px solid var(--td-line);border-radius:var(--td-r-md);background:var(--td-ground-soft);padding:18px;margin-bottom:16px;">
+            <div style="font-family:var(--td-display);font-weight:700;font-size:22px;margin-bottom:12px;">Photo of the finished repair</div>
+            <button onClick="{{ addPhoto }}" style="width:100%;min-height:104px;border:2px dashed {{ photoBorder }};border-radius:var(--td-r-md);background:{{ photoBg }};cursor:pointer;display:grid;place-items:center;font-size:17px;font-weight:600;color:{{ photoTextColor }};padding:14px;">{{ photoLabel }}</button>
+          </div>
+
+          <sc-if value="{{ blocked }}" hint-placeholder-val="{{ true }}">
+            <div style="border:2px solid var(--td-fail);border-radius:var(--td-r-md);background:var(--td-fail-tint);padding:18px;margin-bottom:16px;">
+              <div style="font-family:var(--td-display);font-weight:700;font-size:22px;color:var(--td-fail-deep);margin-bottom:8px;">Can't mark this stage yet</div>
+              <div style="font-size:16px;color:var(--td-fail-deep);line-height:1.5;">{{ blockedText }}</div>
+            </div>
+            <div style="border:1px solid var(--td-line);border-radius:var(--td-r-md);background:var(--td-ground-soft);padding:18px;margin-bottom:16px;">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+                <span style="font-size:16px;font-weight:600;color:var(--td-ink-2);">Supervisor override</span>
+                <span title="A stage cannot advance without its required capture. A supervisor override is allowed, but it is logged with a reason. Source: our judgement — workshops need an escape hatch, and the log keeps it honest." style="background:var(--td-blue-tint);color:var(--td-blue-deep);border-radius:999px;padding:3px 11px;font-size:14px;font-weight:600;cursor:help;white-space:nowrap;">Why this exists</span>
+              </div>
+              <label style="display:block;margin-bottom:14px;">
+                <span style="display:block;font-size:15px;color:var(--td-ink-2);margin-bottom:7px;">Reason — recorded against the job with your name</span>
+                <input value="{{ overrideReason }}" onInput="{{ onOverride }}" placeholder="Camera flat — photo taken on the shop phone" style="border:1px solid var(--td-line-strong);border-radius:var(--td-r-sm);background:var(--td-paper);color:var(--td-ink);width:100%;font-size:16px;padding:12px;">
+              </label>
+              <button onClick="{{ confirmOverride }}" disabled="{{ overrideBlocked }}" style="border:1px solid var(--td-line-strong);background:var(--td-paper);color:var(--td-ink);border-radius:var(--td-r-md);width:100%;font-size:16px;font-weight:600;padding:14px;cursor:pointer;">Override and advance</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ confirmed }}" hint-placeholder-val="{{ false }}">
+            <div style="border:2px solid var(--td-pass);border-radius:var(--td-r-md);background:var(--td-pass-tint);padding:18px;margin-bottom:16px;animation:tdRise 220ms ease-out both;">
+              <div style="font-family:var(--td-display);font-weight:700;font-size:23px;color:var(--td-pass-deep);margin-bottom:6px;">Stage confirmed</div>
+              <div style="font-size:16px;color:var(--td-pass-deep);line-height:1.5;">{{ confirmedText }}</div>
+            </div>
+          </sc-if>
+
+          <div style="font-size:16px;font-weight:600;color:var(--td-ink-2);margin:22px 0 10px;">Who gets told</div>
+          <div style="font-size:16px;color:var(--td-ink-2);line-height:1.5;">Sales — the tyre is ready for a final quote. The customer's tracker moves to "boxed up".</div>
+        </div>
+
+        <div style="padding:18px 22px;border-top:1px solid var(--td-line);display:flex;gap:12px;background:var(--td-ground-soft);">
+          <button onClick="{{ confirmStage }}" disabled="{{ blocked }}" style="border:none;background:var(--td-blue);color:#fff;border-radius:var(--td-r-md);flex:1;font-size:19px;font-weight:700;padding:17px;cursor:pointer;box-shadow:0 8px 20px rgba(13,100,173,.28);">Confirm cooked</button>
+          <button onClick="{{ closeDrawer }}" style="border:1px solid var(--td-line-strong);background:var(--td-paper);color:var(--td-ink);border-radius:var(--td-r-md);font-size:17px;font-weight:600;padding:17px 20px;cursor:pointer;">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div role="status" class="no-print" style="position:fixed;z-index:80;left:24px;bottom:22px;display:flex;align-items:center;gap:18px;background:var(--td-steel);color:var(--td-steel-ink);padding:15px 18px;border-radius:var(--td-r-md);box-shadow:var(--td-lift);animation:tdRise 220ms ease-out both;">
+      <span style="font-size:17px;">{{ toast.message }}</span>
+      <sc-if value="{{ toast.undoable }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ undo }}" style="border:1px solid rgba(234,243,248,.5);background:transparent;color:var(--td-steel-ink);border-radius:var(--td-r-sm);font-size:16px;font-weight:600;padding:9px 15px;cursor:pointer;white-space:nowrap;">Undo · {{ toast.seconds }}s</button>
+      </sc-if>
+      <button onClick="{{ dismissToast }}" aria-label="Dismiss" style="border:none;background:transparent;color:#8fc0e8;font-size:18px;cursor:pointer;">✕</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ tour }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:100;">
+      <div onClick="{{ endTour }}" style="position:absolute;left:{{ tour.x }}px;top:{{ tour.y }}px;width:{{ tour.w }}px;height:{{ tour.h }}px;border-radius:var(--td-r-md);box-shadow:0 0 0 9999px rgba(17,28,36,.66);border:3px solid var(--td-hazard);transition:all 300ms cubic-bezier(.3,.9,.2,1);"></div>
+      <div style="position:absolute;left:{{ tour.cardX }}px;top:{{ tour.cardY }}px;width:364px;background:var(--td-paper);border-radius:var(--td-r-lg);padding:22px;box-shadow:var(--td-lift);">
+        <div style="font-size:15px;font-weight:700;color:var(--td-blue-deep);margin-bottom:8px;">Step {{ tour.n }} of 4</div>
+        <div style="font-family:var(--td-display);font-weight:600;font-size:27px;line-height:1.12;margin-bottom:16px;">{{ tour.text }}</div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <button onClick="{{ nextTour }}" style="border:none;background:var(--td-blue);color:#fff;border-radius:var(--td-r-md);font-size:17px;font-weight:600;padding:13px 22px;cursor:pointer;white-space:nowrap;">{{ tour.nextLabel }}</button>
+          <button onClick="{{ endTour }}" style="border:none;background:transparent;color:var(--td-ink-2);font-size:16px;font-weight:600;padding:13px 8px;cursor:pointer;">Skip</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+const fmt = (s) => {
+  const pad = (n) => String(n).padStart(2, '0');
+  return pad(Math.floor(s / 3600)) + ':' + pad(Math.floor((s % 3600) / 60)) + ':' + pad(s % 60);
+};
+
+// The spine is seeded here so the headline feature paints on first frame rather
+// than waiting on a module load. Same shape and content as src/fixtures.js.
+const STAGES = [
+  { id:'triaged', label:'Triaged', actor:'Repair manager', at:'03 Aug 26 · 11:20', by:'J. Whelan (repair mgr)',
+    payload:['Repairable: yes','Position: sidewall'],
+    photos:[
+      { kind:'serial_plate', at:'11:20', by:'J. Whelan', where:'Ridgeview Pit' },
+      { kind:'damage', at:'11:21', by:'J. Whelan', where:'Ridgeview Pit', note:'Sidewall, driver side' },
+      { kind:'whole_tyre', at:'11:22', by:'J. Whelan', where:'Ridgeview Pit' },
+    ] },
+  { id:'initial_quote_sent', label:'Initial quote sent', actor:'Sales', at:'04 Aug 26 · 07:12', by:'D. Rennick (sales)', payload:['Quote: EST-10482'], photos:[] },
+  { id:'collected', label:'Collected', actor:'Logistics', at:'04 Aug 26 · 15:40', by:'R. Kaur (logistics)', payload:['Carrier: Halberd Transport','Driver: S. Doull'], photos:[] },
+  { id:'received', label:'Received', actor:'Supervisor', at:'05 Aug 26 · 08:05', by:'M. Oduya (supervisor)', payload:[], photos:[] },
+  { id:'washed', label:'Washed', actor:'Repairer', at:'05 Aug 26 · 10:52', by:'T. Barlow (repairer)', payload:[],
+    photos:[{ kind:'whole_tyre', at:'10:52', by:'T. Barlow', where:'Mackay' }] },
+  { id:'inspected', label:'Inspected', actor:'Repairer', at:'06 Aug 26 · 09:14', by:'T. Barlow (repairer)',
+    payload:['Damage size: 168 mm','Belt/ply: yes','Category: Major'],
+    photos:[{ kind:'damage', at:'09:12', by:'T. Barlow', where:'Mackay', note:'168 mm, belt exposed' }] },
+  { id:'cut_out', label:'Cut out', actor:'Repairer', at:'06 Aug 26 · 13:30', by:'T. Barlow (repairer)', payload:[],
+    photos:[{ kind:'cavity', at:'13:28', by:'T. Barlow', where:'Mackay', note:'Cavity opened and cleaned' }] },
+  { id:'repaired', label:'Repaired', actor:'Repairer', at:'07 Aug 26 · 11:05', by:'L. Ferraro (repairer)',
+    payload:['Repair unit: section repair 220 × 160 mm'],
+    photos:[{ kind:'repair', at:'11:02', by:'L. Ferraro', where:'Mackay' }] },
+  { id:'cooked', label:'Cooked', actor:'Repairer', at:'07 Aug 26 · 14:02', by:'L. Ferraro (repairer)', payload:['Cook target: 01:30:00'], photos:[] },
+  { id:'final_quote_sent', label:'Final quote sent', actor:'Sales', future:'Sales sets the quote to Final once the cook is recorded.', photos:[], payload:[] },
+  { id:'dispatched', label:'Dispatched', actor:'Logistics', future:'Destination site, carrier, date, and who released it.', photos:[], payload:[] },
+  { id:'closed', label:'Closed', actor:'—', future:'Closes when the customer has the tyre and the quote is final.', photos:[], payload:[] },
+];
+const CURRENT = 8;
+
+class Component extends DCLogic {
+  state = {
+    view: 'file', drawer: false, cook: 4360, entry: 'timer', typedValue: '01:30:00',
+    photo: false, overrideReason: '', confirmed: false, toast: null,
+    escReason: 'Measured 205 mm through two plies at inspection — over the 150 mm Major threshold, and multi-ply.',
+    tourStep: -1, tourRect: null,
+  };
+  refs = {};
+  setRef = (k) => (el) => { if (el) this.refs[k] = el; };
+
+  componentDidMount() {
+    this.timer = setInterval(() => this.setState((s) => ({ cook: Math.max(0, s.cook - 1) })), 1000);
+    this.onKey = (e) => { if (e.key === 'Escape') this.setState({ drawer: false, tourStep: -1, tourRect: null }); };
+    window.addEventListener('keydown', this.onKey);
+    this.reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+  componentWillUnmount() { clearInterval(this.timer); clearInterval(this.undoTimer); window.removeEventListener('keydown', this.onKey); }
+
+  openDrawer = () => this.setState({ drawer: true, confirmed: false });
+  closeDrawer = () => this.setState({ drawer: false });
+  stop = (e) => e.stopPropagation();
+  openReport = () => { this.setState({ view: 'report' }); window.scrollTo({ top: 0 }); };
+  closeReport = () => this.setState({ view: 'file' });
+  openEscalation = () => { this.setState({ view: 'escalation' }); window.scrollTo({ top: 0 }); };
+  closeEscalation = () => this.setState({ view: 'file' });
+  print = () => window.print();
+  useTimer = () => this.setState({ entry: 'timer' });
+  useTyped = () => this.setState({ entry: 'typed' });
+  onTyped = (e) => this.setState({ typedValue: e.target.value });
+  addPhoto = () => this.setState({ photo: true });
+  onOverride = (e) => this.setState({ overrideReason: e.target.value });
+  onEscReason = (e) => this.setState({ escReason: e.target.value });
+
+  showToast(message, undoable) {
+    clearInterval(this.undoTimer);
+    this.setState({ toast: { message, undoable, seconds: 5 } });
+    if (undoable) {
+      this.undoTimer = setInterval(() => this.setState((s) => {
+        if (!s.toast) return {};
+        const seconds = s.toast.seconds - 1;
+        if (seconds <= 0) { clearInterval(this.undoTimer); return { toast: null }; }
+        return { toast: { ...s.toast, seconds } };
+      }), 1000);
+    } else {
+      this.undoTimer = setTimeout(() => this.setState({ toast: null }), 4200);
+    }
+  }
+  dismissToast = () => { clearInterval(this.undoTimer); this.setState({ toast: null }); };
+  undo = () => { clearInterval(this.undoTimer); this.setState({ toast: null, confirmed: false }); };
+
+  confirmStage = () => {
+    this.setState({ confirmed: true });
+    this.showToast('Cooked confirmed at ' + this.state.typedValue + '. Sales notified.', true);
+  };
+  confirmOverride = () => {
+    this.setState({ confirmed: true, photo: true });
+    this.showToast('Advanced by override — the reason is logged against the job.', true);
+  };
+  sendEscalation = () => {
+    this.setState({ view: 'file' });
+    window.scrollTo({ top: 0 });
+    this.showToast('Sent to sales. This tyre is paused; the rest of the batch keeps moving.', true);
+  };
+
+  TOUR = [
+    { ref: 'header', text: 'Everything that identifies this tyre is in one band — serial, quote number, machine and stage.' },
+    { ref: 'advance', text: 'One big action per screen. On the floor, this is the only button that matters.' },
+    { ref: 'quote', text: 'The quote was revised, and the photo that caused it sits right there in the middle.' },
+    { ref: 'spine', text: 'The whole story, stage by stage, with every photo attached to the step it came from.' },
+  ];
+  measureTour(step) {
+    const el = this.refs[this.TOUR[step].ref];
+    if (!el || !el.isConnected || el.getBoundingClientRect().width < 30) return this.endTour();
+    const r = el.getBoundingClientRect();
+    const cardX = Math.min(Math.max(14, r.left + 16), window.innerWidth - 384);
+    const below = r.bottom + 18 + 220 < window.innerHeight;
+    this.setState({ tourStep: step, tourRect: { x: r.left - 7, y: r.top - 7, w: r.width + 14, h: r.height + 14, cardX, cardY: below ? r.bottom + 18 : Math.max(14, r.top + 24) } });
+  }
+  startTour = () => {
+    this.setState({ view: 'file', drawer: false });
+    window.scrollTo({ top: 0 });
+    requestAnimationFrame(() => this.measureTour(0));
+  };
+  nextTour = () => {
+    const next = this.state.tourStep + 1;
+    if (next >= this.TOUR.length) return this.endTour();
+    const el = this.refs[this.TOUR[next].ref];
+    if (!el || !el.isConnected) return this.endTour();
+    const r = el.getBoundingClientRect();
+    if (r.bottom > window.innerHeight - 40 || r.top < 90) window.scrollBy({ top: r.top - 150, behavior: this.reduced ? 'auto' : 'smooth' });
+    setTimeout(() => this.measureTour(next), this.reduced ? 0 : 400);
+  };
+  endTour = () => this.setState({ tourStep: -1, tourRect: null });
+
+  renderVals() {
+    const s = this.state;
+
+    const spine = STAGES.map((st, i) => {
+      const past = i < CURRENT, current = i === CURRENT, future = i > CURRENT;
+      return {
+        label: st.label,
+        at: st.at || (current ? 'in progress' : 'to come'),
+        by: st.by || (future ? st.actor : ''),
+        isCurrent: current, isFuture: future, futureNote: st.future || '',
+        hasPayload: !!(st.payload && st.payload.length), payload: st.payload || [],
+        hasPhotos: !!(st.photos && st.photos.length),
+        photos: (st.photos || []).map((p) => ({
+          at: p.at, by: p.by, where: p.where, stageLabel: st.label, note: p.note, hasNote: !!p.note,
+          isPlate: p.kind === 'serial_plate', isDamage: p.kind === 'damage', isWhole: p.kind === 'whole_tyre',
+          isCavity: p.kind === 'cavity', isRepair: p.kind === 'repair',
+        })),
+        dotSize: current ? 22 : 16,
+        dot: future ? 'var(--td-paper)' : (current ? 'var(--td-heat)' : 'var(--td-blue)'),
+        ring: future ? 'var(--td-line-strong)' : (current ? 'var(--td-heat-deep)' : 'var(--td-blue)'),
+        glow: current ? '0 0 0 6px rgba(210,84,44,.18)' : 'none',
+        line: future ? 'var(--td-line)' : 'var(--td-blue-tint)',
+        labelColor: future ? 'var(--td-ink-3)' : 'var(--td-ink)',
+      };
+    });
+
+    const need = [];
+    if (!s.photo) need.push('there is no photo of the finished repair');
+    if (s.entry === 'typed' && !/^\d{2}:\d{2}:\d{2}$/.test(s.typedValue)) need.push('the typed duration is not hh:mm:ss');
+    const blocked = need.length > 0;
+    const tOn = s.entry === 'timer';
+
+    const t = s.tourStep >= 0 && s.tourRect ? {
+      ...s.tourRect, n: s.tourStep + 1, text: this.TOUR[s.tourStep].text,
+      nextLabel: s.tourStep === this.TOUR.length - 1 ? 'Done' : 'Next',
+    } : false;
+
+    return {
+      isFile: s.view === 'file', isReport: s.view === 'report', isEscalation: s.view === 'escalation',
+      cookRemaining: fmt(s.cook), cookElapsed: fmt(5400 - s.cook), cookPct: Math.round(((5400 - s.cook) / 5400) * 100),
+      spine,
+      history: [
+        { jobNo: 'MKY-TR-25-0219', date: '14 Mar 25', outcome: 'Repaired and dispatched · Intermediate' },
+        { jobNo: 'MKY-TR-24-0641', date: '02 Aug 24', outcome: 'Repaired and dispatched · Minor' },
+      ],
+      reportRows: STAGES.slice(0, CURRENT + 1).map((st) => ({
+        label: st.label, at: st.at || '—', by: st.by || '—',
+        payload: st.payload && st.payload.length ? st.payload.join(' · ') : '—',
+      })),
+      reportPhotos: STAGES.reduce((acc, st) => acc.concat((st.photos || []).map((p) => ({ stageLabel: st.label, at: p.at }))), []),
+      openDrawer: this.openDrawer, closeDrawer: this.closeDrawer, drawer: s.drawer, stop: this.stop,
+      openReport: this.openReport, closeReport: this.closeReport, print: this.print,
+      openEscalation: this.openEscalation, closeEscalation: this.closeEscalation,
+      escReason: s.escReason, onEscReason: this.onEscReason, escBlocked: !s.escReason.trim(), sendEscalation: this.sendEscalation,
+      isTimer: tOn, isTyped: !tOn, useTimer: this.useTimer, useTyped: this.useTyped,
+      timerBg: tOn ? 'var(--td-blue)' : 'transparent', timerText: tOn ? '#fff' : 'var(--td-ink)',
+      typedBg: !tOn ? 'var(--td-blue)' : 'transparent', typedText: !tOn ? '#fff' : 'var(--td-ink)',
+      typedValue: s.typedValue, onTyped: this.onTyped,
+      addPhoto: this.addPhoto,
+      photoLabel: s.photo ? 'Photo attached — 1 of 1' : 'Tap to take the repair photo',
+      photoBorder: s.photo ? 'var(--td-pass)' : 'var(--td-line-strong)',
+      photoBg: s.photo ? 'var(--td-pass-tint)' : 'var(--td-paper)',
+      photoTextColor: s.photo ? 'var(--td-pass-deep)' : 'var(--td-ink-2)',
+      blocked, blockedText: blocked ? 'Can\u2019t mark Cooked yet — ' + need.join(', ') + '.' : '',
+      overrideReason: s.overrideReason, onOverride: this.onOverride,
+      overrideBlocked: !s.overrideReason.trim(), confirmOverride: this.confirmOverride,
+      confirmStage: this.confirmStage, confirmed: s.confirmed,
+      confirmedText: 'Recorded against MKY-TR-26-0417 at ' + s.typedValue + '. The tyre has moved to Ready to go out.',
+      toast: s.toast, undo: this.undo, dismissToast: this.dismissToast,
+      headerRef: this.setRef('header'), advanceRef: this.setRef('advance'), quoteRef: this.setRef('quote'), spineRef: this.setRef('spine'), cookRef: this.setRef('cook'),
+      tour: t, startTour: this.startTour, nextTour: this.nextTour, endTour: this.endTour,
+    };
+  }
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --td-ground:#e9eff4;--td-ground-soft:#f2f6f9;--td-paper:#ffffff;
+    --td-ink:#111c24;--td-ink-2:#3d4d59;--td-ink-3:#65757f;
+    --td-line:#d3dde4;--td-line-strong:#b6c5cf;
+    --td-steel:#16303f;--td-steel-2:#1f4a63;--td-steel-ink:#eaf3f8;
+    --td-blue:#0d64ad;--td-blue-deep:#0a4d87;--td-blue-tint:#e7f1fb;
+    --td-hazard:#f5a300;--td-hazard-deep:#8a5a00;--td-hazard-tint:#fff6e2;--td-hazard-ink:#241a00;
+    --td-heat:#d2542c;--td-heat-deep:#a53a17;--td-heat-wash:#f6c1a6;
+    --td-pass:#1f8a4d;--td-pass-deep:#146035;--td-pass-tint:#e8f6ee;
+    --td-fail:#c02a22;--td-fail-deep:#8c1d16;--td-fail-tint:#fdedeb;
+    --td-rubber:#edebe9;--td-lug:#dad5d1;--td-rubber-deep:#2a2d2f;
+    --td-r-lg:22px;--td-r-md:14px;--td-r-sm:10px;
+    --td-card:0 1px 2px rgba(17,28,36,.06),0 8px 20px rgba(17,28,36,.06);
+    --td-lift:0 14px 34px rgba(17,28,36,.18);
+    --td-display:'Barlow Condensed',Impact,sans-serif;
+    --td-body:'Barlow',system-ui,sans-serif;
+    --td-mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--td-ground);color:var(--td-ink);font-family:var(--td-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:var(--td-blue)} a:hover{color:var(--td-blue-deep)}
+  button,input,select,textarea{font-family:inherit}
+  @keyframes tdRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  @keyframes tdRoll{to{transform:rotate(360deg)}}
+  @keyframes tdArrive{from{opacity:0;transform:translateX(-22px)}to{opacity:1;transform:none}}
+  @keyframes tdHeat{0%,100%{opacity:.45}50%{opacity:.95}}
+  @keyframes tdTape{to{background-position:44px 0}}
+  @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:var(--td-ground);" data-screen-label="Branch Console">
+
+  <header style="position:sticky;top:0;z-index:40;background:var(--td-steel);color:var(--td-steel-ink);box-shadow:0 2px 14px rgba(17,28,36,.2);">
+    <div style="max-width:1560px;margin:0 auto;padding:11px 24px;display:flex;align-items:center;gap:16px;">
+      <a href="TD One - Landing.dc.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;">
+        <svg viewBox="0 0 100 100" style="width:28px;height:28px;flex:none;" aria-hidden="true">
+          <circle cx="50" cy="50" r="44" fill="#0d1a22"></circle>
+          <circle cx="50" cy="50" r="36" fill="none" stroke="#33495a" stroke-width="15" stroke-dasharray="10 7"></circle>
+          <circle cx="50" cy="50" r="26" fill="#2c3d47"></circle>
+          <circle cx="50" cy="50" r="21" fill="#8fa3af"></circle>
+          <circle cx="50" cy="50" r="7" fill="#5f7480"></circle>
+        </svg>
+        <span style="font-family:var(--td-display);font-weight:700;font-size:20px;text-transform:uppercase;white-space:nowrap;">Tyre Doctor</span>
+      </a>
+      <span style="background:rgba(234,243,248,.12);border-radius:999px;padding:5px 13px;font-size:14px;font-weight:600;white-space:nowrap;">Workshop floor</span>
+      <select ref="{{ branchRef }}" value="{{ branch }}" onChange="{{ onBranch }}" aria-label="Branch" style="border:1px solid rgba(234,243,248,.28);border-radius:var(--td-r-sm);background:rgba(234,243,248,.1);color:var(--td-steel-ink);font-size:15px;padding:8px 11px;width:216px;">
+        <option value="BNE">Brisbane — BNE</option>
+        <option value="BLW">Blackwater — BLW</option>
+        <option value="COB">Cobar — COB</option>
+        <option value="KAL">Kalgoorlie — KAL</option>
+        <option value="LTN">Leeton — LTN</option>
+        <option value="MKY">Mackay — MKY</option>
+        <option value="MUS">Muswellbrook — MUS</option>
+        <option value="WWY">West Wyalong — WWY</option>
+      </select>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:12px;">
+        <input ref="{{ searchRef }}" value="{{ query }}" onInput="{{ onQuery }}" placeholder="Find a quote or serial" aria-label="Find a job by quote number or serial" style="border:1px solid rgba(234,243,248,.28);border-radius:var(--td-r-sm);background:rgba(234,243,248,.1);color:var(--td-steel-ink);font-family:var(--td-mono);font-size:14px;padding:9px 13px;width:242px;">
+        <a href="TD One - Branch Performance.dc.html" style="color:var(--td-steel-ink);font-size:15px;font-weight:600;text-decoration:none;border-bottom:2px solid rgba(143,192,232,.5);padding-bottom:1px;white-space:nowrap;">Branch performance</a>
+        <button onClick="{{ startTour }}" disabled="{{ isEmpty }}" style="border:1px solid rgba(234,243,248,.34);border-radius:var(--td-r-sm);background:transparent;color:var(--td-steel-ink);font-size:15px;font-weight:600;padding:9px 15px;cursor:pointer;white-space:nowrap;">{{ tourLabel }}</button>
+        <a href="TD One - Who are you.dc.html" style="display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--td-steel-ink);background:rgba(234,243,248,.1);border-radius:999px;padding:5px 13px 5px 5px;">
+          <span style="width:30px;height:30px;border-radius:50%;background:var(--td-blue);display:grid;place-items:center;font-family:var(--td-display);font-size:14px;font-weight:600;">MO</span>
+          <span style="font-size:15px;font-weight:600;white-space:nowrap;">Supervisor</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main style="max-width:1560px;margin:0 auto;padding:24px 24px 90px;">
+
+    <div style="display:flex;align-items:flex-end;gap:28px;flex-wrap:wrap;margin-bottom:20px;">
+      <div>
+        <div style="font-size:15px;font-weight:600;color:var(--td-ink-3);margin-bottom:5px;">{{ branchRegion }}</div>
+        <h1 style="font-family:var(--td-display);font-weight:700;font-size:44px;line-height:1;margin:0;">{{ branchName }} — the floor, right now</h1>
+      </div>
+      <div style="display:flex;gap:12px;align-items:stretch;">
+        <div style="background:var(--td-paper);border:1px solid var(--td-line);border-radius:var(--td-r-md);padding:10px 16px;box-shadow:var(--td-card);">
+          <div style="font-family:var(--td-mono);font-size:26px;font-weight:600;line-height:1.1;">{{ tyreCount }}</div>
+          <div style="font-size:14px;color:var(--td-ink-3);">tyres in</div>
+        </div>
+        <div style="background:var(--td-paper);border:1px solid var(--td-line);border-radius:var(--td-r-md);padding:10px 16px;box-shadow:var(--td-card);">
+          <div style="font-family:var(--td-mono);font-size:26px;font-weight:600;line-height:1.1;">{{ rimCount }}</div>
+          <div style="font-size:14px;color:var(--td-ink-3);">rims in</div>
+        </div>
+        <div style="background:var(--td-heat-deep);border:1px solid var(--td-heat-deep);border-radius:var(--td-r-md);padding:10px 16px;box-shadow:var(--td-card);color:#fff;">
+          <div style="font-family:var(--td-mono);font-size:26px;font-weight:600;line-height:1.1;">{{ ovenCount }}</div>
+          <div style="font-size:14px;">in the oven</div>
+        </div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:12px;align-items:center;">
+        <a href="TD One - Rim.dc.html" style="display:inline-flex;align-items:center;background:var(--td-paper);border:1px solid var(--td-line-strong);color:var(--td-ink);font-size:16px;font-weight:600;padding:13px 20px;border-radius:var(--td-r-md);text-decoration:none;white-space:nowrap;">Take in a rim list</a>
+        <a href="TD One - Field.dc.html" style="display:inline-flex;align-items:center;gap:10px;background:var(--td-blue);color:#fff;font-size:17px;font-weight:600;padding:14px 24px;border-radius:var(--td-r-md);text-decoration:none;box-shadow:0 8px 20px rgba(13,100,173,.28);white-space:nowrap;">New site visit <span style="font-size:19px;line-height:1;">→</span></a>
+      </div>
+    </div>
+
+    <sc-if value="{{ searching }}" hint-placeholder-val="{{ false }}">
+      <div style="background:var(--td-paper);border:1px solid var(--td-line);border-radius:var(--td-r-lg);box-shadow:var(--td-card);padding:20px 22px;margin-bottom:20px;">
+        <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:12px;flex-wrap:wrap;">
+          <span style="font-family:var(--td-display);font-weight:600;font-size:24px;">{{ resultLabel }}</span>
+          <button onClick="{{ clearQuery }}" style="margin-left:auto;border:none;background:transparent;color:var(--td-blue);font-size:16px;font-weight:600;cursor:pointer;white-space:nowrap;">Clear search</button>
+        </div>
+        <sc-for list="{{ results }}" as="r" hint-placeholder-count="2">
+          <a href="TD One - Job File.dc.html" style="display:flex;align-items:center;gap:18px;padding:13px 14px;border:1px solid var(--td-line);border-radius:var(--td-r-md);text-decoration:none;color:inherit;margin-bottom:9px;background:var(--td-ground-soft);">
+            <span style="font-family:var(--td-mono);font-size:15px;font-weight:600;width:158px;">{{ r.jobNo }}</span>
+            <span style="font-family:var(--td-mono);font-size:15px;width:124px;color:var(--td-blue-deep);">{{ r.serial }}</span>
+            <span style="font-family:var(--td-mono);font-size:15px;width:112px;">{{ r.quoteNo }}</span>
+            <span style="font-size:16px;flex:1;">{{ r.customer }}</span>
+            <span style="background:var(--td-blue-tint);color:var(--td-blue-deep);border-radius:999px;padding:5px 13px;font-size:14px;font-weight:600;white-space:nowrap;">{{ r.stageLabel }}</span>
+            <span style="font-size:19px;color:var(--td-blue);">→</span>
+          </a>
+        </sc-for>
+        <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding-top:6px;">
+            <span style="font-size:17px;">No job with that quote or serial at {{ branchName }}.</span>
+            <button onClick="{{ searchAll }}" style="border:1px solid var(--td-blue);background:var(--td-blue-tint);color:var(--td-blue-deep);border-radius:var(--td-r-md);font-size:16px;font-weight:600;padding:11px 18px;cursor:pointer;white-space:nowrap;">Search all branches?</button>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+      <div style="border-radius:var(--td-r-lg);background:
+            repeating-linear-gradient(96deg, var(--td-lug) 0 8px, var(--td-rubber) 8px 19px) top/100% 18px no-repeat,
+            repeating-linear-gradient(96deg, var(--td-lug) 0 8px, var(--td-rubber) 8px 19px) bottom/100% 18px no-repeat,
+            var(--td-paper);
+          border:1px solid var(--td-line);box-shadow:var(--td-card);padding:52px 40px;text-align:center;animation:tdRise 400ms ease-out both;">
+        <h2 style="font-family:var(--td-display);font-weight:700;font-size:38px;margin:0 0 10px;">The floor is clear at {{ branchName }}.</h2>
+        <p style="font-size:18px;color:var(--td-ink-2);margin:0 auto 34px;max-width:42em;">Nothing is in a bay here. A job starts one of two ways — a repair manager triages tyres at a mine, or a mine sends its rim list in for testing.</p>
+        <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+          <a href="TD One - Field.dc.html" style="display:inline-flex;align-items:center;gap:10px;background:var(--td-blue);color:#fff;font-size:18px;font-weight:600;padding:16px 26px;border-radius:var(--td-r-md);text-decoration:none;box-shadow:0 8px 20px rgba(13,100,173,.28);white-space:nowrap;">Start a site visit <span style="font-size:20px;line-height:1;">→</span></a>
+          <a href="TD One - Rim.dc.html" style="display:inline-flex;align-items:center;background:var(--td-paper);border:1px solid var(--td-line-strong);color:var(--td-ink);font-size:17px;font-weight:600;padding:15px 22px;border-radius:var(--td-r-md);text-decoration:none;white-space:nowrap;">Take in a rim list</a>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ showBoard }}" hint-placeholder-val="{{ true }}">
+      <div ref="{{ boardRef }}">
+
+        <div ref="{{ hazardRef }}" style="border-radius:var(--td-r-lg);overflow:hidden;border:2px solid var(--td-hazard);box-shadow:var(--td-card);margin-bottom:22px;background:var(--td-paper);">
+          <div style="display:flex;align-items:center;gap:14px;padding:11px 20px;background:repeating-linear-gradient(135deg,var(--td-hazard) 0 16px,#1b1a17 16px 32px);">
+            <span style="background:#1b1a17;color:var(--td-hazard);font-family:var(--td-display);font-weight:700;font-size:19px;letter-spacing:.06em;text-transform:uppercase;padding:4px 12px;border-radius:6px;white-space:nowrap;">Needs a person</span>
+            <span style="background:var(--td-hazard-ink);color:#fff;font-size:15px;font-weight:600;padding:5px 12px;border-radius:6px;white-space:nowrap;">2 waiting — nothing moves until someone decides</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:20px;">
+            <div style="border:1px solid var(--td-line);border-radius:var(--td-r-md);background:var(--td-ground-soft);padding:18px;display:flex;flex-direction:column;gap:13px;">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <span style="background:var(--td-hazard-tint);color:var(--td-hazard-deep);border:1px solid rgba(245,163,0,.5);border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700;white-space:nowrap;">Worse than quoted</span>
+                <span style="margin-left:auto;font-size:15px;color:var(--td-ink-3);white-space:nowrap;">paused 4 h</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:14px;">
+                <svg viewBox="0 0 100 100" style="width:52px;height:52px;flex:none;" aria-hidden="true">
+                  <circle cx="50" cy="50" r="44" fill="#23282b"></circle>
+                  <circle cx="50" cy="50" r="36" fill="none" stroke="#4a5359" stroke-width="15" stroke-dasharray="10 7"></circle>
+                  <circle cx="50" cy="50" r="26" fill="#3d4449"></circle>
+                  <circle cx="50" cy="50" r="21" fill="#9aa6ad"></circle>
+                  <circle cx="50" cy="50" r="7" fill="#6d7a82"></circle>
+                </svg>
+                <div>
+                  <div style="font-family:var(--td-mono);font-size:17px;font-weight:600;">MC9T31104</div>
+                  <div style="font-size:15px;color:var(--td-ink-2);">MKY-TR-26-0419 · Barrunga Iron Ore</div>
+                </div>
+              </div>
+              <div style="font-size:16px;line-height:1.5;">Measured <span style="font-family:var(--td-mono);font-weight:600;white-space:nowrap;">205&nbsp;mm</span> through two plies at inspection. Quoted <strong>Intermediate</strong>, now <strong>Major</strong>. The other three tyres on this quote are still moving.</div>
+              <div style="display:flex;gap:11px;margin-top:auto;flex-wrap:wrap;">
+                <a href="TD One - Job File.dc.html" style="display:inline-flex;align-items:center;gap:9px;background:var(--td-hazard);color:var(--td-hazard-ink);font-size:17px;font-weight:700;padding:13px 21px;border-radius:var(--td-r-md);text-decoration:none;box-shadow:0 7px 16px rgba(245,163,0,.36);white-space:nowrap;">Open the decision <span style="font-size:18px;line-height:1;">→</span></a>
+                <button onClick="{{ openEscalationEmail }}" style="border:1px solid var(--td-line-strong);background:var(--td-paper);color:var(--td-ink);border-radius:var(--td-r-md);font-size:16px;font-weight:600;padding:12px 18px;cursor:pointer;white-space:nowrap;">See what sales gets told</button>
+              </div>
+            </div>
+            <div style="border:1px solid var(--td-line);border-radius:var(--td-r-md);background:var(--td-ground-soft);padding:18px;display:flex;flex-direction:column;gap:13px;">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <span style="background:var(--td-hazard-tint);color:var(--td-hazard-deep);border:1px solid rgba(245,163,0,.5);border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700;white-space:nowrap;">Held from a rim list</span>
+                <span style="margin-left:auto;font-size:15px;color:var(--td-ink-3);white-space:nowrap;">Kurrajong Coal</span>
+              </div>
+              <div style="display:flex;align-items:baseline;gap:11px;">
+                <span style="font-family:var(--td-mono);font-size:38px;font-weight:600;line-height:1;">5</span>
+                <span style="font-size:16px;color:var(--td-ink-2);">of 18 rows need confirming before a job is created</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:5px;font-size:15px;color:var(--td-ink-2);">
+                <span><span style="font-family:var(--td-mono);">R-4492</span> appears twice</span>
+                <span><span style="font-family:var(--td-mono);">R-4471</span> already has an open job</span>
+                <span><span style="font-family:var(--td-mono);">RM-88-9911</span> isn't in the register</span>
+                <span>one rim back at <span style="font-family:var(--td-mono);">8,240 h</span>, one at <span style="font-family:var(--td-mono);">21,100 h</span></span>
+              </div>
+              <div style="margin-top:auto;">
+                <a href="TD One - Rim.dc.html" style="display:inline-flex;align-items:center;gap:9px;background:var(--td-hazard);color:var(--td-hazard-ink);font-size:17px;font-weight:700;padding:13px 21px;border-radius:var(--td-r-md);text-decoration:none;box-shadow:0 7px 16px rgba(245,163,0,.36);white-space:nowrap;">Work through the 5 <span style="font-size:18px;line-height:1;">→</span></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:12px;flex-wrap:wrap;">
+          <h2 style="font-family:var(--td-display);font-weight:700;font-size:30px;margin:0;">Tyre line</h2>
+          <span style="font-size:16px;color:var(--td-ink-2);">on the way → wash → inspect → cut out → fill → the oven</span>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:22px;">
+          <sc-for list="{{ tyreBays }}" as="bay" hint-placeholder-count="5">
+            <div ref="{{ bay.ref }}" style="display:grid;grid-template-columns:214px 1fr;gap:20px;align-items:stretch;border-radius:var(--td-r-md);background:
+                  repeating-linear-gradient(180deg, var(--td-lug) 0 7px, var(--td-rubber) 7px 16px) left/7px 100% no-repeat,
+                  var(--td-paper);
+                border:1px solid var(--td-line);box-shadow:var(--td-card);padding:16px 20px 16px 22px;animation:tdRise 420ms ease-out both;">
+              <div>
+                <div style="font-family:var(--td-display);font-weight:700;font-size:25px;line-height:1.05;">{{ bay.label }}</div>
+                <div style="font-size:15px;color:var(--td-ink-3);margin-top:2px;">{{ bay.kicker }}</div>
+                <div style="display:inline-flex;align-items:center;gap:7px;margin-top:9px;background:var(--td-blue-tint);color:var(--td-blue-deep);border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700;white-space:nowrap;">{{ bay.countLabel }}</div>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;">
+                <sc-for list="{{ bay.jobs }}" as="j" hint-placeholder-count="2">
+                  <div style="width:302px;border:1px solid var(--td-line);border-radius:var(--td-r-md);background:var(--td-ground-soft);padding:13px 14px;display:flex;flex-direction:column;gap:10px;animation:tdArrive 380ms ease-out both;">
+                    <a href="TD One - Job File.dc.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit;">
+                      <svg viewBox="0 0 100 100" style="width:42px;height:42px;flex:none;" aria-hidden="true">
+                        <circle cx="50" cy="50" r="44" fill="#23282b"></circle>
+                        <circle cx="50" cy="50" r="36" fill="none" stroke="#4a5359" stroke-width="15" stroke-dasharray="10 7"></circle>
+                        <circle cx="50" cy="50" r="26" fill="#3d4449"></circle>
+                        <circle cx="50" cy="50" r="21" fill="#9aa6ad"></circle>
+                        <circle cx="50" cy="50" r="7" fill="#6d7a82"></circle>
+                      </svg>
+                      <span style="min-width:0;flex:1;">
+                        <span style="display:block;font-family:var(--td-mono);font-size:16px;font-weight:600;">{{ j.serial }}</span>
+                        <span style="display:block;font-size:15px;color:var(--td-ink-2);">{{ j.size }} · {{ j.category }}</span>
+                      </span>
+                      <span style="font-size:19px;color:var(--td-blue);">→</span>
+                    </a>
+                    <span style="font-size:14px;color:var(--td-ink-3);line-height:1.35;">{{ j.note }}</span>
+                    <sc-if value="{{ j.canReceive }}" hint-placeholder-val="{{ false }}">
+                      <button onClick="{{ j.receive }}" style="border:none;background:var(--td-blue);color:#fff;border-radius:var(--td-r-sm);font-size:16px;font-weight:600;padding:12px;width:100%;cursor:pointer;box-shadow:0 6px 14px rgba(13,100,173,.26);">Mark received</button>
+                    </sc-if>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ bay.isClear }}" hint-placeholder-val="{{ false }}">
+                  <div style="align-self:center;font-size:16px;color:var(--td-ink-3);">Bay clear</div>
+                </sc-if>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1.55fr 1fr;gap:18px;margin-bottom:26px;">
+
+          <div ref="{{ ovenRef }}" style="position:relative;overflow:hidden;border-radius:var(--td-r-lg);background:
+                radial-gradient(120% 90% at 50% 118%, rgba(210,84,44,.72), transparent 62%), var(--td-steel);
+              color:#fff;box-shadow:var(--td-card);padding:22px 24px;animation:tdRise 460ms ease-out 80ms both;">
+            <div aria-hidden="true" style="position:absolute;left:0;right:0;bottom:0;height:96px;background:linear-gradient(0deg,rgba(210,84,44,.62),transparent);animation:tdHeat 3.4s ease-in-out infinite;pointer-events:none;"></div>
+            <div style="position:relative;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px;">
+              <div>
+                <div style="font-family:var(--td-display);font-weight:700;font-size:32px;line-height:1;">The cook oven</div>
+                <div style="font-size:16px;color:var(--td-heat-wash);margin-top:5px;">Hot vulcanising — live cook time</div>
+              </div>
+              <span title="Cook duration is recorded, and only compared with the average of the same category in the data on this screen. Source: the client records cook duration, plus our judgement — no industry cure-time constant is claimed." style="border:1px solid rgba(246,193,166,.5);color:var(--td-heat-wash);border-radius:999px;padding:5px 13px;font-size:14px;font-weight:600;cursor:help;white-space:nowrap;">Where the average comes from</span>
+            </div>
+            <div style="position:relative;display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+              <sc-for list="{{ ovenJobs }}" as="o" hint-placeholder-count="2">
+                <a href="TD One - Job File.dc.html" style="text-decoration:none;color:inherit;border:1px solid rgba(246,193,166,.42);border-radius:var(--td-r-md);background:rgba(9,14,18,.42);padding:16px;display:flex;flex-direction:column;gap:11px;min-width:0;">
+                  <div style="display:flex;align-items:center;gap:12px;">
+                    <svg viewBox="0 0 100 100" style="width:44px;height:44px;flex:none;filter:drop-shadow(0 0 9px rgba(210,84,44,.85));" aria-hidden="true">
+                      <circle cx="50" cy="50" r="44" fill="#1b1416"></circle>
+                      <circle cx="50" cy="50" r="36" fill="none" stroke="#3a2420" stroke-width="15" stroke-dasharray="10 7"></circle>
+                      <circle cx="50" cy="50" r="26" fill="#4a2c24"></circle>
+                      <circle cx="50" cy="50" r="21" fill="#d2542c"></circle>
+                      <circle cx="50" cy="50" r="7" fill="#f6c1a6"></circle>
+                    </svg>
+                    <span>
+                      <span style="display:block;font-family:var(--td-mono);font-size:16px;font-weight:600;">{{ o.serial }}</span>
+                      <span style="display:block;font-size:15px;color:var(--td-heat-wash);">{{ o.size }} · {{ o.category }}</span>
+                    </span>
+                  </div>
+                  <div style="font-family:var(--td-mono);font-size:34px;font-weight:600;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;">{{ o.remaining }}</div>
+                  <div style="height:6px;border-radius:3px;background:rgba(246,193,166,.28);overflow:hidden;"><div style="height:6px;border-radius:3px;background:var(--td-heat-wash);width:{{ o.pct }}%;"></div></div>
+                  <div style="display:flex;justify-content:space-between;gap:10px;font-size:14px;color:var(--td-heat-wash);"><span style="white-space:nowrap;">{{ o.elapsed }} elapsed</span><span style="white-space:nowrap;">target {{ o.target }}</span></div>
+                </a>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="border-radius:var(--td-r-lg);background:
+                repeating-linear-gradient(96deg, var(--td-lug) 0 8px, var(--td-rubber) 8px 19px) top/100% 14px no-repeat,
+                var(--td-paper);
+              border:1px solid var(--td-line);box-shadow:var(--td-card);padding:28px 20px 20px;animation:tdRise 460ms ease-out 140ms both;">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;">
+              <div>
+                <div style="font-family:var(--td-display);font-weight:700;font-size:27px;line-height:1;">Ready to go out</div>
+                <div style="font-size:15px;color:var(--td-ink-3);margin-top:4px;">Quoted final or certified, waiting on the truck</div>
+              </div>
+              <span style="background:var(--td-pass-tint);color:var(--td-pass-deep);border-radius:999px;padding:5px 13px;font-family:var(--td-mono);font-size:15px;font-weight:600;white-space:nowrap;">{{ readyCount }}</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <sc-for list="{{ readyJobs }}" as="r" hint-placeholder-count="2">
+                <a href="TD One - Job File.dc.html" style="display:flex;align-items:center;gap:13px;padding:12px 14px;border:1px solid rgba(31,138,77,.4);border-radius:var(--td-r-md);background:var(--td-pass-tint);text-decoration:none;color:inherit;">
+                  <span style="width:9px;height:34px;border-radius:5px;background:var(--td-pass);flex:none;"></span>
+                  <span style="flex:1;min-width:0;">
+                    <span style="display:block;font-family:var(--td-mono);font-size:16px;font-weight:600;">{{ r.serial }}</span>
+                    <span style="display:block;font-size:15px;color:var(--td-ink-2);">{{ r.customer }}</span>
+                  </span>
+                  <span style="background:var(--td-paper);color:var(--td-pass-deep);border:1px solid rgba(31,138,77,.4);border-radius:999px;padding:4px 11px;font-size:14px;font-weight:600;white-space:nowrap;">{{ r.badge }}</span>
+                </a>
+              </sc-for>
+            </div>
+            <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--td-line);display:flex;align-items:center;gap:11px;flex-wrap:wrap;">
+              <span style="width:10px;height:10px;border-radius:50%;background:var(--td-fail);flex:none;"></span>
+              <span style="font-size:15px;color:var(--td-ink-2);">1 tyre not repairable this week —</span>
+              <a href="TD One - Job File.dc.html" style="font-family:var(--td-mono);font-size:15px;font-weight:600;">MKY-TR-26-0423</a>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:12px;flex-wrap:wrap;">
+          <h2 style="font-family:var(--td-display);font-weight:700;font-size:30px;margin:0;">Rim side</h2>
+          <span style="font-size:16px;color:var(--td-ink-2);">blast → crack testing → paint, or repair and re-test → certify</span>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:18px;">
+          <sc-for list="{{ rimBays }}" as="bay" hint-placeholder-count="3">
+            <div style="display:grid;grid-template-columns:214px 1fr;gap:20px;align-items:stretch;border-radius:var(--td-r-md);background:
+                  repeating-linear-gradient(180deg, var(--td-lug) 0 7px, var(--td-rubber) 7px 16px) left/7px 100% no-repeat,
+                  var(--td-paper);
+                border:1px solid var(--td-line);box-shadow:var(--td-card);padding:16px 20px 16px 22px;animation:tdRise 440ms ease-out 100ms both;">
+              <div>
+                <div style="font-family:var(--td-display);font-weight:700;font-size:25px;line-height:1.05;">{{ bay.label }}</div>
+                <div style="font-size:15px;color:var(--td-ink-3);margin-top:2px;">{{ bay.kicker }}</div>
+                <div style="display:inline-flex;align-items:center;gap:7px;margin-top:9px;background:var(--td-blue-tint);color:var(--td-blue-deep);border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700;white-space:nowrap;">{{ bay.countLabel }}</div>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;">
+                <sc-for list="{{ bay.jobs }}" as="j" hint-placeholder-count="2">
+                  <a href="TD One - Rim.dc.html" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--td-line);border-radius:var(--td-r-md);background:var(--td-ground-soft);text-decoration:none;color:inherit;min-width:238px;">
+                    <svg viewBox="0 0 100 100" style="width:40px;height:40px;flex:none;" aria-hidden="true">
+                      <circle cx="50" cy="50" r="43" fill="none" stroke="#9aa6ad" stroke-width="7"></circle>
+                      <circle cx="50" cy="50" r="30" fill="none" stroke="#b8c2c8" stroke-width="4"></circle>
+                      <circle cx="50" cy="50" r="14" fill="none" stroke="#8b979e" stroke-width="4"></circle>
+                      <circle cx="50" cy="24" r="3.4" fill="#8b979e"></circle>
+                      <circle cx="72" cy="62" r="3.4" fill="#8b979e"></circle>
+                      <circle cx="28" cy="62" r="3.4" fill="#8b979e"></circle>
+                    </svg>
+                    <span style="flex:1;">
+                      <span style="display:block;font-family:var(--td-mono);font-size:16px;font-weight:600;">{{ j.assetNo }}</span>
+                      <span style="display:block;font-size:15px;color:var(--td-ink-2);">{{ j.hoursLabel }}</span>
+                    </span>
+                    <sc-if value="{{ j.failed }}" hint-placeholder-val="{{ false }}">
+                      <span style="background:var(--td-fail-tint);color:var(--td-fail-deep);border:1px solid rgba(192,42,34,.4);border-radius:999px;padding:4px 11px;font-size:14px;font-weight:600;white-space:nowrap;">{{ j.failLabel }}</span>
+                    </sc-if>
+                    <span style="font-size:19px;color:var(--td-blue);">→</span>
+                  </a>
+                </sc-for>
+                <sc-if value="{{ bay.isClear }}" hint-placeholder-val="{{ false }}">
+                  <div style="align-self:center;font-size:16px;color:var(--td-ink-3);">Bay clear</div>
+                </sc-if>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div ref="{{ dialsRef }}" style="border-radius:var(--td-r-lg);background:
+              repeating-linear-gradient(96deg, var(--td-lug) 0 8px, var(--td-rubber) 8px 19px) top/100% 14px no-repeat,
+              var(--td-paper);
+            border:1px solid var(--td-line);box-shadow:var(--td-card);padding:28px 22px 22px;">
+          <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:18px;flex-wrap:wrap;">
+            <h2 style="font-family:var(--td-display);font-weight:700;font-size:27px;margin:0;">Rim hours</h2>
+            <span style="font-size:16px;color:var(--td-ink-2);">machine hours toward the next crack test</span>
+            <span title="10,000 h is this customer's NDT interval. Source: the client, on the discovery call. Rim inspection frequency is risk-based per mine under Queensland Recognised Standard 13, so the interval is held per customer and is adjustable." style="margin-left:auto;background:var(--td-blue-tint);color:var(--td-blue-deep);border-radius:999px;padding:5px 13px;font-size:14px;font-weight:600;cursor:help;white-space:nowrap;">10,000 h — this customer's interval</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:16px;">
+            <sc-for list="{{ dials }}" as="d" hint-placeholder-count="6">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+                <svg viewBox="0 0 84 84" style="width:92px;height:92px;transform:rotate(-90deg);" aria-hidden="true">
+                  <circle cx="42" cy="42" r="33" fill="none" stroke="#e2e8ed" stroke-width="10"></circle>
+                  <circle cx="42" cy="42" r="33" fill="none" stroke="{{ d.color }}" stroke-width="10" stroke-linecap="round" stroke-dasharray="{{ d.dash }}"></circle>
+                </svg>
+                <div style="font-family:var(--td-mono);font-size:15px;font-weight:600;">{{ d.assetNo }}</div>
+                <div style="font-family:var(--td-mono);font-size:14px;color:var(--td-ink-2);font-variant-numeric:tabular-nums;">{{ d.hoursLabel }}</div>
+                <div style="font-size:14px;font-weight:700;color:{{ d.color }};white-space:nowrap;">{{ d.status }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:18px;padding:96px 20px;">
+        <svg viewBox="0 0 100 100" style="width:104px;height:104px;animation:tdRoll 1.15s linear infinite;" aria-hidden="true">
+          <circle cx="50" cy="50" r="46" fill="#23282b"></circle>
+          <circle cx="50" cy="50" r="37" fill="none" stroke="#4a5359" stroke-width="17" stroke-dasharray="11 8"></circle>
+          <circle cx="50" cy="50" r="26" fill="#3d4449"></circle>
+          <circle cx="50" cy="50" r="21" fill="#9aa6ad"></circle>
+          <circle cx="50" cy="50" r="21" fill="none" stroke="#77848c" stroke-width="1.5"></circle>
+          <circle cx="50" cy="50" r="7" fill="#6d7a82"></circle>
+          <circle cx="50" cy="32" r="2.6" fill="#77848c"></circle>
+        </svg>
+        <div style="font-family:var(--td-display);font-weight:600;font-size:26px;">Reading the floor at {{ branchName }}</div>
+        <div style="font-size:16px;color:var(--td-ink-2);">Checking what is in each bay.</div>
+      </div>
+    </sc-if>
+  </main>
+
+  <sc-if value="{{ flight }}" hint-placeholder-val="{{ false }}">
+    <div aria-hidden="true" style="position:fixed;z-index:70;pointer-events:none;left:{{ flight.x }}px;top:{{ flight.y }}px;transform:translate({{ flight.dx }}px,{{ flight.dy }}px) rotate({{ flight.rot }}deg);transition:transform 660ms cubic-bezier(.3,.9,.2,1);">
+      <svg viewBox="0 0 100 100" style="width:46px;height:46px;filter:drop-shadow(0 8px 16px rgba(17,28,36,.4));">
+        <circle cx="50" cy="50" r="44" fill="#23282b"></circle>
+        <circle cx="50" cy="50" r="36" fill="none" stroke="#4a5359" stroke-width="15" stroke-dasharray="10 7"></circle>
+        <circle cx="50" cy="50" r="26" fill="#3d4449"></circle>
+        <circle cx="50" cy="50" r="21" fill="#9aa6ad"></circle>
+        <circle cx="50" cy="50" r="7" fill="#6d7a82"></circle>
+      </svg>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div role="status" style="position:fixed;z-index:80;left:24px;bottom:22px;display:flex;align-items:center;gap:18px;background:var(--td-steel);color:var(--td-steel-ink);padding:15px 18px;border-radius:var(--td-r-md);box-shadow:var(--td-lift);animation:tdRise 220ms ease-out both;">
+      <span style="font-size:17px;">{{ toast.message }}</span>
+      <sc-if value="{{ toast.undoable }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ undo }}" style="border:1px solid rgba(234,243,248,.5);background:transparent;color:var(--td-steel-ink);border-radius:var(--td-r-sm);font-size:16px;font-weight:600;padding:9px 15px;cursor:pointer;white-space:nowrap;">Undo · {{ toast.seconds }}s</button>
+      </sc-if>
+      <button onClick="{{ dismissToast }}" aria-label="Dismiss" style="border:none;background:transparent;color:#8fc0e8;font-size:18px;cursor:pointer;">✕</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ email }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeEmail }}" style="position:fixed;inset:0;z-index:90;background:rgba(17,28,36,.58);display:grid;place-items:center;padding:30px;">
+      <div onClick="{{ stop }}" role="dialog" aria-modal="true" style="background:var(--td-paper);max-width:680px;width:100%;border-radius:var(--td-r-lg);box-shadow:var(--td-lift);overflow:hidden;animation:tdRise 220ms ease-out both;">
+        <div style="display:flex;align-items:center;gap:14px;padding:16px 22px;border-bottom:1px solid var(--td-line);background:var(--td-ground-soft);">
+          <span style="font-family:var(--td-display);font-weight:700;font-size:23px;">What sales gets told</span>
+          <button onClick="{{ closeEmail }}" style="margin-left:auto;border:1px solid var(--td-line-strong);background:var(--td-paper);color:var(--td-ink);border-radius:var(--td-r-sm);font-size:16px;font-weight:600;padding:9px 16px;cursor:pointer;white-space:nowrap;">Close</button>
+        </div>
+        <div style="padding:22px;">
+          <div style="display:grid;grid-template-columns:76px 1fr;gap:9px 14px;font-size:16px;margin-bottom:18px;">
+            <span style="color:var(--td-ink-3);">To</span><span style="font-family:var(--td-mono);font-size:15px;">{{ email.to }}</span>
+            <span style="color:var(--td-ink-3);">From</span><span style="font-family:var(--td-mono);font-size:15px;">{{ email.from }}</span>
+            <span style="color:var(--td-ink-3);">Subject</span><span style="font-weight:600;">{{ email.subject }}</span>
+          </div>
+          <div style="border-top:1px solid var(--td-line);padding-top:18px;display:flex;flex-direction:column;gap:10px;font-size:16px;line-height:1.5;">
+            <sc-for list="{{ email.lines }}" as="line" hint-placeholder-count="4">
+              <div>{{ line }}</div>
+            </sc-for>
+          </div>
+          <div style="display:flex;gap:14px;margin-top:22px;">
+            <div style="width:148px;">
+              <div style="position:relative;height:104px;border-radius:var(--td-r-sm);overflow:hidden;background:radial-gradient(115% 95% at 32% 18%, #57616a 0%, #2d3439 58%, #191d21 100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14), var(--td-card);">
+                <div style="position:absolute;inset:0;display:grid;place-items:center;">
+                  <svg viewBox="0 0 100 100" style="width:76px;height:76px;">
+                    <circle cx="50" cy="50" r="44" fill="#191d20"></circle>
+                    <circle cx="50" cy="50" r="36" fill="none" stroke="#404a50" stroke-width="15" stroke-dasharray="10 7"></circle>
+                    <circle cx="50" cy="50" r="26" fill="#343c41"></circle>
+                    <path d="M28 62 L47 40" stroke="#e3623a" stroke-width="6" stroke-linecap="round"></path>
+                    <path d="M28 62 L47 40" stroke="#ffb08c" stroke-width="2" stroke-linecap="round"></path>
+                  </svg>
+                </div>
+                <div style="position:absolute;left:0;right:0;bottom:0;background:rgba(9,13,16,.8);padding:5px 8px;">
+                  <div style="font-family:var(--td-mono);font-size:11px;color:#fff;">07:48 · K. Nettle</div>
+                  <div style="font-family:var(--td-mono);font-size:11px;color:var(--td-hazard);">Inspected · Mackay</div>
+                </div>
+              </div>
+              <div style="font-size:14px;color:var(--td-ink-3);margin-top:6px;">The sidewall, measured</div>
+            </div>
+            <div style="flex:1;background:var(--td-hazard-tint);border:1px solid rgba(245,163,0,.5);border-radius:var(--td-r-md);padding:16px;">
+              <div style="font-size:16px;line-height:1.5;color:var(--td-hazard-ink);">The photo travels with the message, so sales sees what the repairer saw before they revise the quote.</div>
+            </div>
+          </div>
+          <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--td-line);font-size:15px;color:var(--td-ink-3);">Sent when the stage is confirmed. Quoting stays in NetSuite — TD One holds the quote number and its status.</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ tour }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:100;">
+      <div onClick="{{ endTour }}" style="position:absolute;left:{{ tour.x }}px;top:{{ tour.y }}px;width:{{ tour.w }}px;height:{{ tour.h }}px;border-radius:var(--td-r-md);box-shadow:0 0 0 9999px rgba(17,28,36,.66);border:3px solid var(--td-hazard);transition:all 300ms cubic-bezier(.3,.9,.2,1);"></div>
+      <div style="position:absolute;left:{{ tour.cardX }}px;top:{{ tour.cardY }}px;width:364px;background:var(--td-paper);border-radius:var(--td-r-lg);padding:22px;box-shadow:var(--td-lift);">
+        <div style="font-size:15px;font-weight:700;color:var(--td-blue-deep);margin-bottom:8px;">Step {{ tour.n }} of 5</div>
+        <div style="font-family:var(--td-display);font-weight:600;font-size:27px;line-height:1.12;margin-bottom:16px;">{{ tour.text }}</div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <button onClick="{{ nextTour }}" style="border:none;background:var(--td-blue);color:#fff;border-radius:var(--td-r-md);font-size:17px;font-weight:600;padding:13px 22px;cursor:pointer;white-space:nowrap;">{{ tour.nextLabel }}</button>
+          <button onClick="{{ endTour }}" style="border:none;background:transparent;color:var(--td-ink-2);font-size:16px;font-weight:600;padding:13px 8px;cursor:pointer;">Skip</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+const fmt = (s) => {
+  const pad = (n) => String(n).padStart(2, '0');
+  return pad(Math.floor(s / 3600)) + ':' + pad(Math.floor((s % 3600) / 60)) + ':' + pad(s % 60);
+};
+
+// Seeded so the loaded board is the first thing painted — no skeleton flash on
+// arrival. Shape matches src/fixtures.js; the import below replaces it when it lands.
+const SEED_JOBS = [
+  { jobNo:'MKY-TR-26-0417', rail:'tyre', customer:'Kurrajong Coal', stage:'cooked', category:'Major', cookSeconds:5400, cookRemaining:4360, quote:{number:'EST-10482'}, asset:{serial:'BR7K48219',size:'40.00R57'} },
+  { jobNo:'MKY-TR-26-0418', rail:'tyre', customer:'Kurrajong Coal', stage:'cooked', category:'Intermediate', cookSeconds:3600, cookRemaining:967, quote:{number:'EST-10482'}, asset:{serial:'BR7K48220',size:'40.00R57'} },
+  { jobNo:'MKY-TR-26-0419', rail:'tyre', customer:'Barrunga Iron Ore', stage:'inspected', category:'Major', paused:true, quote:{number:'EST-10496'}, asset:{serial:'MC9T31104',size:'53/80R63'} },
+  { jobNo:'MKY-TR-26-0412', rail:'tyre', customer:'Marrakoo Gold Operations', stage:'washed', category:'Intermediate', quote:{number:'EST-10471'}, asset:{serial:'GY4L22876',size:'33.00R51'} },
+  { jobNo:'MKY-TR-26-0413', rail:'tyre', customer:'Kurrajong Coal', stage:'cut_out', category:'Intermediate', quote:{number:'EST-10482'}, asset:{serial:'BR7K48221',size:'27.00R49'} },
+  { jobNo:'MKY-TR-26-0414', rail:'tyre', customer:'Bellara Copper', stage:'repaired', category:'Major', quote:{number:'EST-10477'}, asset:{serial:'MC9T31108',size:'40.00R57'} },
+  { jobNo:'MKY-TR-26-0409', rail:'tyre', customer:'Yandarra Minerals', stage:'received', category:'Minor', quote:{number:'EST-10465'}, asset:{serial:'GY4L22880',size:'24.00R35'} },
+  { jobNo:'MKY-TR-26-0420', rail:'tyre', customer:'Wattlebank Coal', stage:'triaged', category:'Minor', etaLabel:'Awaiting a quote from sales', asset:{serial:'BR7K48225',size:'18.00R33'} },
+  { jobNo:'MKY-TR-26-0421', rail:'tyre', customer:'Wattlebank Coal', stage:'initial_quote_sent', category:'Intermediate', etaLabel:'Pickup booked — Thursday', quote:{number:'EST-10501'}, asset:{serial:'BR7K48226',size:'40.00R57'} },
+  { jobNo:'MKY-TR-26-0422', rail:'tyre', customer:'Kurrajong Coal', stage:'collected', category:'Major', etaLabel:'ETA 09 Aug, 06:30 — Halberd Transport', quote:{number:'EST-10482'}, asset:{serial:'MC9T31112',size:'53/80R63'} },
+  { jobNo:'MKY-TR-26-0410', rail:'tyre', customer:'Marrakoo Gold Operations', stage:'final_quote_sent', category:'Intermediate', quote:{number:'EST-10471'}, asset:{serial:'GY4L22884',size:'33.00R51'} },
+  { jobNo:'MKY-RJ-26-0132', rail:'rim', customer:'Kurrajong Coal', stage:'ndt_tested', findings:[1,2], asset:{customerAssetNo:'R-4471',hoursAtRemoval:10240} },
+  { jobNo:'MKY-RJ-26-0133', rail:'rim', customer:'Kurrajong Coal', stage:'blasted', asset:{customerAssetNo:'R-4472',hoursAtRemoval:9980} },
+  { jobNo:'MKY-RJ-26-0134', rail:'rim', customer:'Bellara Copper', stage:'btp', asset:{customerAssetNo:'R-4468',hoursAtRemoval:10110} },
+  { jobNo:'MKY-RJ-26-0135', rail:'rim', customer:'Barrunga Iron Ore', stage:'rim_repaired', findings:[1], asset:{customerAssetNo:'R-4455',hoursAtRemoval:12400} },
+  { jobNo:'MKY-RJ-26-0136', rail:'rim', customer:'Marrakoo Gold Operations', stage:'certified', asset:{customerAssetNo:'R-4460',hoursAtRemoval:10000} },
+  { jobNo:'MKY-RJ-26-0137', rail:'rim', customer:'Yandarra Minerals', stage:'rim_received', asset:{customerAssetNo:'R-4481',hoursAtRemoval:8240} },
+];
+
+const SEED_STAGE_BAY = {
+  triaged:'on_the_way', initial_quote_sent:'on_the_way', collected:'on_the_way',
+  received:'wash', washed:'wash', inspected:'inspect', cut_out:'cut_out',
+  repaired:'fill', cooked:'oven', final_quote_sent:'ready', dispatched:'ready',
+};
+const SEED_STAGE_LABEL = {
+  triaged:'Triaged', initial_quote_sent:'Initial quote sent', collected:'Collected', received:'Received',
+  washed:'Washed', inspected:'Inspected', cut_out:'Cut out', repaired:'Repaired', cooked:'Cooked',
+  final_quote_sent:'Final quote sent', dispatched:'Dispatched',
+  rim_received:'Received', blasted:'Blasted', ndt_tested:'NDT tested', btp:'BTP', rim_repaired:'Rim repaired', certified:'Certified',
+};
+
+const BRANCHES = [
+  { code:'BNE', name:'Brisbane', region:'South East Queensland' },
+  { code:'BLW', name:'Blackwater', region:'Bowen Basin' },
+  { code:'COB', name:'Cobar', region:'Central West NSW' },
+  { code:'KAL', name:'Kalgoorlie', region:'Goldfields' },
+  { code:'LTN', name:'Leeton', region:'Riverina — head office' },
+  { code:'MKY', name:'Mackay', region:'Bowen Basin' },
+  { code:'MUS', name:'Muswellbrook', region:'Hunter Valley' },
+  { code:'WWY', name:'West Wyalong', region:'Central West NSW' },
+];
+
+const ESCALATION_EMAIL = {
+  to: 'sales@tyredoctor', from: 'TD One — Mackay',
+  subject: 'Worse than quoted — MKY-TR-26-0419 (MC9T31104) is now a Major',
+  lines: [
+    'Inspected at Mackay by K. Nettle, 08 Aug 26 at 07:48.',
+    'Quoted as Intermediate. Measured 205 mm through two plies, so it is now a Major.',
+    'Quote no. (from NetSuite): EST-10496 — needs revising.',
+    'This tyre is paused. The other 3 tyres on EST-10496 are still moving.',
+  ],
+};
+
+class Component extends DCLogic {
+  state = {
+    loading: false, branch: 'MKY', jobs: SEED_JOBS,
+    query: '', tourStep: -1, tourRect: null, email: null, toast: null, flight: null,
+  };
+  refs = {};
+  setRef = (k) => (el) => { if (el) this.refs[k] = el; };
+
+  componentDidMount() {
+    try { const b = localStorage.getItem('tdone.branch'); if (b) this.setState({ branch: b }); } catch (e) {}
+    // PHASE 2: replace with the real subscription. Fixtures are the handoff source of truth.
+    import('./src/fixtures.js').then((fx) => {
+      this.fx = fx;
+      this.setState({ jobs: [...fx.TYRE_JOBS, ...fx.RIM_JOBS].filter((j) => j.stage !== 'not_repairable') });
+    }).catch(() => {});
+    this.timer = setInterval(() => this.tick(), 1000);
+    this.onKey = (e) => {
+      if (e.key === '/' && document.activeElement !== this.refs.search) { e.preventDefault(); if (this.refs.search) this.refs.search.focus(); }
+      if (e.key === 'Escape') this.setState({ email: null, tourStep: -1, tourRect: null });
+    };
+    window.addEventListener('keydown', this.onKey);
+    this.reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.syncBranchSelect();
+  }
+  componentDidUpdate() { this.syncBranchSelect(); }
+  // The <option> list can finish streaming after the value is first applied, so
+  // keep the native select in step with state explicitly.
+  syncBranchSelect() {
+    const el = this.refs.branchSelect;
+    if (el && el.value !== this.state.branch) el.value = this.state.branch;
+  }
+  componentWillUnmount() {
+    clearInterval(this.timer); clearInterval(this.undoTimer); window.removeEventListener('keydown', this.onKey);
+  }
+
+  tick() {
+    this.setState((s) => ({ jobs: s.jobs.map((j) => (j.cookRemaining > 0 ? { ...j, cookRemaining: j.cookRemaining - 1 } : j)) }));
+  }
+
+  onBranch = (e) => {
+    const branch = e.target.value;
+    this.setState({ branch, loading: true, query: '', tourStep: -1, tourRect: null });
+    try { localStorage.setItem('tdone.branch', branch); } catch (err) {}
+    setTimeout(() => this.setState({ loading: false }), 700);
+  };
+
+  onQuery = (e) => this.setState({ query: e.target.value });
+  clearQuery = () => this.setState({ query: '' });
+  searchAll = () => this.showToast('Searching all eight branches for "' + this.state.query + '"', false);
+
+  showToast(message, undoable) {
+    clearInterval(this.undoTimer);
+    this.setState({ toast: { message, undoable, seconds: 5 } });
+    if (undoable) {
+      this.undoTimer = setInterval(() => this.setState((s) => {
+        if (!s.toast) return {};
+        const seconds = s.toast.seconds - 1;
+        if (seconds <= 0) { clearInterval(this.undoTimer); return { toast: null }; }
+        return { toast: { ...s.toast, seconds } };
+      }), 1000);
+    } else {
+      this.undoTimer = setTimeout(() => this.setState({ toast: null }), 4200);
+    }
+  }
+  dismissToast = () => { clearInterval(this.undoTimer); this.setState({ toast: null }); };
+  undo = () => {
+    clearInterval(this.undoTimer);
+    const prev = this.lastMove;
+    this.setState((s) => ({
+      toast: null,
+      jobs: s.jobs.map((j) => (prev && j.jobNo === prev.jobNo ? { ...j, stage: prev.from } : j)),
+    }));
+  };
+
+  receive = (jobNo) => (ev) => {
+    const src = ev.currentTarget.getBoundingClientRect();
+    const job = this.state.jobs.find((j) => j.jobNo === jobNo);
+    this.lastMove = { jobNo, from: job.stage };
+    this.setState((s) => ({ jobs: s.jobs.map((j) => (j.jobNo === jobNo ? { ...j, stage: 'received' } : j)) }));
+    const dest = this.refs.bay_wash && this.refs.bay_wash.getBoundingClientRect();
+    if (dest && !this.reduced) {
+      const x = src.left + src.width / 2 - 23, y = src.top + src.height / 2 - 23;
+      this.setState({ flight: { x, y, dx: 0, dy: 0, rot: 0 } });
+      requestAnimationFrame(() => requestAnimationFrame(() => this.setState((s) => (s.flight ? {
+        flight: { ...s.flight, dx: dest.left + 260 - x, dy: dest.top + dest.height / 2 - y, rot: 540 },
+      } : {}))));
+      setTimeout(() => this.setState({ flight: null }), 720);
+    }
+    this.showToast('Received, and moved to the wash bay. Sales notified.', true);
+  };
+
+  openEscalationEmail = () => this.setState({ email: (this.fx && this.fx.EMAILS.escalation) || ESCALATION_EMAIL });
+  closeEmail = () => this.setState({ email: null });
+  stop = (e) => e.stopPropagation();
+
+  TOUR = [
+    { ref: 'hazard', text: 'Anything waiting on a person sits at the top. Nothing moves until someone decides.' },
+    { ref: 'board', text: 'Below that is your shed from above — the route a tyre actually takes through the bays.' },
+    { ref: 'bay_inspect', text: 'Each bay shows what is physically in it right now, not a list of statuses.' },
+    { ref: 'oven', text: 'The oven counts real cook time. Two tyres curing, with what is left on each.' },
+    { ref: 'dials', text: 'Rims, ordered by hours toward their next crack test. Overdue arcs stand out.' },
+  ];
+
+  measureTour(step) {
+    const el = this.refs[this.TOUR[step].ref];
+    if (!el || !el.isConnected || el.getBoundingClientRect().width < 40) return this.endTour();
+    const r = el.getBoundingClientRect();
+    const cardX = Math.min(Math.max(14, r.left + 16), window.innerWidth - 384);
+    const below = r.bottom + 18 + 220 < window.innerHeight;
+    this.setState({ tourStep: step, tourRect: { x: r.left - 7, y: r.top - 7, w: r.width + 14, h: r.height + 14, cardX, cardY: below ? r.bottom + 18 : Math.max(14, r.top + 26) } });
+  }
+  startTour = () => {
+    if (!this.state.jobs.length) return;
+    window.scrollTo({ top: 0 });
+    requestAnimationFrame(() => this.measureTour(0));
+  };
+  nextTour = () => {
+    const next = this.state.tourStep + 1;
+    if (next >= this.TOUR.length) return this.endTour();
+    const el = this.refs[this.TOUR[next].ref];
+    if (!el || !el.isConnected) return this.endTour();
+    const r = el.getBoundingClientRect();
+    if (r.bottom > window.innerHeight - 40 || r.top < 90) window.scrollBy({ top: r.top - 150, behavior: this.reduced ? 'auto' : 'smooth' });
+    setTimeout(() => this.measureTour(next), this.reduced ? 0 : 400);
+  };
+  endTour = () => this.setState({ tourStep: -1, tourRect: null });
+
+  renderVals() {
+    const s = this.state;
+    const row = BRANCHES.find((b) => b.code === s.branch) || { code: s.branch, name: s.branch, region: '' };
+    const jobs = s.branch === 'MKY' ? s.jobs : [];
+    const label = (id) => SEED_STAGE_LABEL[id] || id;
+    const bayOf = (j) => {
+      if (j.rail === 'rim') {
+        if (j.stage === 'rim_received' || j.stage === 'blasted') return 'rim_blast';
+        if (j.stage === 'btp') return 'rim_btp';
+        if (j.stage === 'certified') return 'ready';
+        return 'rim_ndt';
+      }
+      return SEED_STAGE_BAY[j.stage] || null;
+    };
+    const inBay = (id, rail) => jobs.filter((j) => bayOf(j) === id && j.rail === rail);
+    const countLabel = (n, word) => n + ' ' + word + (n === 1 ? '' : 's') + ' here';
+
+    const tyreBays = [
+      { id: 'on_the_way', label: 'On the way', kicker: 'Triaged, quoted or on a truck' },
+      { id: 'wash', label: 'Wash bay', kicker: 'Received and washed' },
+      { id: 'inspect', label: 'Inspect', kicker: 'Measure and categorise' },
+      { id: 'cut_out', label: 'Cut out', kicker: 'Cavity opened' },
+      { id: 'fill', label: 'Fill and repair', kicker: 'Rubber going in' },
+    ].map((b) => {
+      const list = inBay(b.id, 'tyre');
+      return {
+        ...b, ref: this.setRef('bay_' + b.id), countLabel: countLabel(list.length, 'tyre'), isClear: list.length === 0,
+        jobs: list.map((j) => ({
+          serial: j.asset.serial, size: j.asset.size, category: j.category,
+          note: j.paused ? 'Paused — waiting on a revised quote' : (j.etaLabel || (j.customer + ' · ' + (j.quote ? j.quote.number : 'no quote yet'))),
+          canReceive: j.stage === 'collected', receive: this.receive(j.jobNo),
+        })),
+      };
+    });
+
+    const rimBays = [
+      { id: 'rim_blast', label: 'Blast booth', kicker: 'Received and blasted' },
+      { id: 'rim_ndt', label: 'Crack testing', kicker: 'Tested, repaired, re-tested' },
+      { id: 'rim_btp', label: 'Blast, test, paint', kicker: 'The clean-rim path' },
+    ].map((b) => {
+      const list = inBay(b.id, 'rim');
+      return {
+        ...b, countLabel: countLabel(list.length, 'rim'), isClear: list.length === 0,
+        jobs: list.map((j) => ({
+          assetNo: j.asset.customerAssetNo,
+          hoursLabel: (j.asset.hoursAtRemoval || 0).toLocaleString() + ' h at removal',
+          failed: !!(j.findings && j.findings.length),
+          failLabel: j.findings && j.findings.length ? j.findings.length + ' crack' + (j.findings.length > 1 ? 's' : '') : '',
+        })),
+      };
+    });
+
+    const oven = jobs.filter((j) => j.stage === 'cooked' && j.cookRemaining > 0);
+    const readyList = jobs.filter((j) => bayOf(j) === 'ready');
+    const q = s.query.trim().toUpperCase();
+    const matches = q ? jobs.filter((j) =>
+      j.jobNo.toUpperCase().includes(q) || (j.asset.serial || '').toUpperCase().includes(q) ||
+      (j.asset.customerAssetNo || '').toUpperCase().includes(q) || (j.quote ? j.quote.number.toUpperCase().includes(q) : false)) : [];
+
+    const t = s.tourStep >= 0 && s.tourRect ? {
+      ...s.tourRect, n: s.tourStep + 1, text: this.TOUR[s.tourStep].text,
+      nextLabel: s.tourStep === this.TOUR.length - 1 ? 'Done' : 'Next',
+    } : false;
+
+    return {
+      loading: s.loading, branch: s.branch, branchName: row.name, branchRegion: row.region, onBranch: this.onBranch,
+      branchRef: this.setRef('branchSelect'),
+      searchRef: this.setRef('search'), query: s.query, onQuery: this.onQuery, clearQuery: this.clearQuery, searchAll: this.searchAll,
+      searching: !s.loading && q.length > 0,
+      results: matches.map((j) => ({
+        jobNo: j.jobNo, serial: j.asset.serial || j.asset.customerAssetNo,
+        quoteNo: j.quote ? j.quote.number : 'no quote yet', customer: j.customer, stageLabel: label(j.stage),
+      })),
+      noResults: q.length > 0 && matches.length === 0,
+      resultLabel: matches.length === 0 ? 'Nothing found' : matches.length + (matches.length === 1 ? ' match at ' : ' matches at ') + row.name,
+      isEmpty: !s.loading && jobs.length === 0,
+      tourLabel: jobs.length === 0 ? 'Nothing to show yet' : 'Show me around',
+      showBoard: !s.loading && jobs.length > 0,
+      boardRef: this.setRef('board'), ovenRef: this.setRef('oven'), dialsRef: this.setRef('dials'), hazardRef: this.setRef('hazard'),
+      tyreBays, rimBays,
+      ovenJobs: oven.map((j) => ({
+        serial: j.asset.serial, size: j.asset.size, category: j.category,
+        remaining: fmt(Math.max(0, j.cookRemaining)), target: fmt(j.cookSeconds), elapsed: fmt(j.cookSeconds - j.cookRemaining),
+        pct: Math.round(((j.cookSeconds - j.cookRemaining) / j.cookSeconds) * 100),
+      })),
+      readyJobs: readyList.map((j) => ({
+        serial: j.rail === 'rim' ? j.asset.customerAssetNo : j.asset.serial,
+        customer: j.customer, badge: j.rail === 'rim' ? 'Certified' : 'Quote final',
+      })),
+      dials: jobs.filter((j) => j.rail === 'rim').map((j) => {
+        const h = j.asset.hoursAtRemoval || 0;
+        const C = 2 * Math.PI * 33;
+        const overdue = h > 12000, early = h < 9000;
+        return {
+          assetNo: j.asset.customerAssetNo, hoursLabel: h.toLocaleString() + ' h',
+          status: overdue ? 'Overdue' : early ? 'Back early' : 'At interval',
+          color: overdue ? 'var(--td-fail)' : early ? 'var(--td-blue)' : 'var(--td-pass)',
+          dash: (C * Math.min(1, h / 10000)).toFixed(1) + ' ' + C.toFixed(1),
+        };
+      }),
+      tyreCount: jobs.filter((j) => j.rail === 'tyre').length,
+      rimCount: jobs.filter((j) => j.rail === 'rim').length,
+      ovenCount: oven.length, readyCount: readyList.length,
+      email: s.email, closeEmail: this.closeEmail, openEscalationEmail: this.openEscalationEmail, stop: this.stop,
+      toast: s.toast, undo: this.undo, dismissToast: this.dismissToast, flight: s.flight,
+      tour: t, startTour: this.startTour, nextTour: this.nextTour, endTour: this.endTour,
+    };
+  }
+}
+
+</script>
+</body>
+</html>

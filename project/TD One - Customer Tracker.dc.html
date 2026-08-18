@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --td-ground:#e9eff4;--td-ground-soft:#f2f6f9;--td-paper:#ffffff;
+    --td-ink:#111c24;--td-ink-2:#3d4d59;--td-ink-3:#65757f;
+    --td-line:#d3dde4;--td-line-strong:#b6c5cf;
+    --td-steel:#16303f;--td-steel-ink:#eaf3f8;
+    --td-blue:#0d64ad;--td-blue-deep:#0a4d87;--td-blue-tint:#e7f1fb;
+    --td-hazard:#f5a300;--td-hazard-deep:#8a5a00;--td-hazard-tint:#fff6e2;--td-hazard-ink:#241a00;
+    --td-heat:#d2542c;--td-heat-deep:#a53a17;--td-heat-wash:#f6c1a6;
+    --td-pass:#1f8a4d;--td-pass-deep:#146035;--td-pass-tint:#e8f6ee;
+    --td-fail:#c02a22;--td-fail-deep:#8c1d16;--td-fail-tint:#fdedeb;
+    --td-rubber:#edebe9;--td-lug:#dad5d1;
+    --td-r-lg:22px;--td-r-md:14px;--td-r-sm:10px;
+    --td-card:0 1px 2px rgba(17,28,36,.06),0 8px 20px rgba(17,28,36,.06);
+    --td-lift:0 14px 34px rgba(17,28,36,.18);
+    --td-display:'Barlow Condensed',Impact,sans-serif;
+    --td-body:'Barlow',system-ui,sans-serif;
+    --td-mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--td-ground-soft);color:var(--td-ink);font-family:var(--td-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:var(--td-blue)} a:hover{color:var(--td-blue-deep)}
+  @keyframes tdRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  @keyframes tdHeat{0%,100%{opacity:.5}50%{opacity:1}}
+  @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:radial-gradient(900px 420px at 50% -14%, rgba(13,100,173,.12), transparent 58%),var(--td-ground-soft);" data-screen-label="Customer Tracker">
+
+  <header style="background:var(--td-paper);border-bottom:1px solid var(--td-line);">
+    <div style="max-width:1120px;margin:0 auto;padding:22px 28px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <svg viewBox="0 0 100 100" style="width:34px;height:34px;flex:none;" aria-hidden="true">
+          <circle cx="50" cy="50" r="44" fill="#23282b"></circle>
+          <circle cx="50" cy="50" r="36" fill="none" stroke="#4a5359" stroke-width="15" stroke-dasharray="10 7"></circle>
+          <circle cx="50" cy="50" r="26" fill="#3d4449"></circle>
+          <circle cx="50" cy="50" r="21" fill="#9aa6ad"></circle>
+          <circle cx="50" cy="50" r="7" fill="#6d7a82"></circle>
+        </svg>
+        <div>
+          <div style="font-family:var(--td-display);font-weight:700;font-size:21px;text-transform:uppercase;letter-spacing:.02em;white-space:nowrap;">Tyre Doctor</div>
+          <div style="font-size:15px;color:var(--td-ink-2);">Repair status for Kurrajong Coal</div>
+        </div>
+      </div>
+      <div style="margin-left:auto;text-align:right;">
+        <div style="font-size:16px;font-weight:600;">Ridgeview Pit</div>
+        <div style="font-size:15px;color:var(--td-ink-2);">Updated this morning</div>
+      </div>
+    </div>
+  </header>
+
+  <main style="max-width:1120px;margin:0 auto;padding:42px 28px 90px;">
+
+    <div style="margin-bottom:30px;animation:tdRise 400ms ease-out both;">
+      <h1 style="font-family:var(--td-display);font-weight:700;font-size:54px;line-height:1.02;margin:0 0 12px;">Where your tyres and rims are</h1>
+      <p style="font-size:19px;color:var(--td-ink-2);margin:0;max-width:44em;">Six items are with us at the moment. Anything certified has its paperwork attached below.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;">
+      <sc-for list="{{ items }}" as="it" hint-placeholder-count="6">
+        <div style="border-radius:var(--td-r-lg);background:
+              repeating-linear-gradient(96deg, var(--td-lug) 0 8px, var(--td-rubber) 8px 19px) top/100% 15px no-repeat,
+              repeating-linear-gradient(96deg, var(--td-lug) 0 8px, var(--td-rubber) 8px 19px) bottom/100% 15px no-repeat,
+              var(--td-paper);
+            border:1px solid var(--td-line);box-shadow:var(--td-card);padding:30px 24px;display:flex;flex-direction:column;gap:18px;animation:tdRise 420ms ease-out both;">
+          <div style="display:flex;align-items:flex-start;gap:16px;">
+            <sc-if value="{{ it.isTyre }}" hint-placeholder-val="{{ true }}">
+              <svg viewBox="0 0 100 100" style="width:60px;height:60px;flex:none;" aria-hidden="true">
+                <circle cx="50" cy="50" r="45" fill="#23282b"></circle>
+                <circle cx="50" cy="50" r="36" fill="none" stroke="#4a5359" stroke-width="16" stroke-dasharray="11 8"></circle>
+                <circle cx="50" cy="50" r="26" fill="#3d4449"></circle>
+                <circle cx="50" cy="50" r="21" fill="{{ it.hubFill }}"></circle>
+                <circle cx="50" cy="50" r="7" fill="{{ it.hubCore }}"></circle>
+              </svg>
+            </sc-if>
+            <sc-if value="{{ it.isRim }}" hint-placeholder-val="{{ false }}">
+              <svg viewBox="0 0 100 100" style="width:60px;height:60px;flex:none;" aria-hidden="true">
+                <circle cx="50" cy="50" r="44" fill="none" stroke="#8b979e" stroke-width="8"></circle>
+                <circle cx="50" cy="50" r="30" fill="none" stroke="#b0bbc1" stroke-width="5"></circle>
+                <circle cx="50" cy="50" r="14" fill="none" stroke="#7d8990" stroke-width="5"></circle>
+                <circle cx="50" cy="22" r="3.6" fill="#7d8990"></circle>
+                <circle cx="74" cy="64" r="3.6" fill="#7d8990"></circle>
+                <circle cx="26" cy="64" r="3.6" fill="#7d8990"></circle>
+              </svg>
+            </sc-if>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:15px;font-weight:600;color:var(--td-ink-3);">{{ it.kindLabel }}</div>
+              <div style="font-family:var(--td-mono);font-weight:600;font-size:23px;line-height:1.15;">{{ it.title }}</div>
+              <div style="font-size:15px;color:var(--td-ink-2);">{{ it.subtitle }}</div>
+            </div>
+            <span style="border:2px solid {{ it.stateBorder }};background:{{ it.stateBg }};color:{{ it.stateText }};padding:7px 14px;border-radius:999px;font-family:var(--td-display);font-weight:700;font-size:18px;white-space:nowrap;">{{ it.stateLabel }}</span>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:0;align-items:start;">
+            <sc-for list="{{ it.steps }}" as="st" hint-placeholder-count="5">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:9px;">
+                <span style="height:5px;width:100%;background:{{ st.bar }};display:block;border-radius:3px;"></span>
+                <span style="width:{{ st.size }}px;height:{{ st.size }}px;border-radius:50%;background:{{ st.dot }};border:3px solid {{ st.ring }};margin-top:-16px;box-shadow:{{ st.glow }};"></span>
+                <span style="font-family:var(--td-display);font-weight:600;font-size:16px;color:{{ st.text }};text-align:center;line-height:1.15;">{{ st.label }}</span>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:16px;">
+            <sc-if value="{{ it.hasPhoto }}" hint-placeholder-val="{{ false }}">
+              <div style="position:relative;width:96px;height:70px;flex:none;border-radius:var(--td-r-sm);overflow:hidden;background:radial-gradient(118% 96% at 30% 16%, #5a646d 0%, #2e353a 56%, #171b1e 100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.15);">
+                <div style="position:absolute;inset:0;display:grid;place-items:center;">
+                  <svg viewBox="0 0 100 100" style="width:54px;height:54px;">
+                    <circle cx="50" cy="50" r="45" fill="#191d20"></circle>
+                    <circle cx="50" cy="50" r="36" fill="none" stroke="#404a50" stroke-width="16" stroke-dasharray="11 8"></circle>
+                    <circle cx="50" cy="50" r="24" fill="#3a4247"></circle>
+                    <circle cx="50" cy="50" r="18" fill="#96a1a8"></circle>
+                  </svg>
+                </div>
+                <div style="position:absolute;left:0;right:0;bottom:0;background:rgba(9,13,16,.78);padding:3px 6px;">
+                  <div style="font-family:var(--td-mono);font-size:9px;color:#fff;">{{ it.photoStamp }}</div>
+                </div>
+              </div>
+            </sc-if>
+            <div style="font-size:16px;color:var(--td-ink-2);line-height:1.45;">{{ it.note }}</div>
+          </div>
+
+          <sc-if value="{{ it.hasCerts }}" hint-placeholder-val="{{ false }}">
+            <div style="border-top:1px solid var(--td-line);padding-top:16px;">
+              <div style="font-size:15px;font-weight:600;color:var(--td-ink-3);margin-bottom:10px;">Certificates</div>
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <sc-for list="{{ it.certs }}" as="c" hint-placeholder-count="2">
+                  <a href="TD One - Rim.dc.html" style="display:flex;align-items:center;gap:14px;padding:12px 14px;border:1px solid rgba(31,138,77,.4);border-radius:var(--td-r-md);background:var(--td-pass-tint);text-decoration:none;color:inherit;">
+                    <span style="position:relative;width:34px;height:44px;flex:none;background:#fff;border:1px solid var(--td-pass);border-radius:3px;box-shadow:0 2px 6px rgba(17,28,36,.14);display:block;overflow:hidden;">
+                      <span style="position:absolute;top:0;right:0;width:12px;height:12px;background:var(--td-pass-tint);border-left:1px solid var(--td-pass);border-bottom:1px solid var(--td-pass);display:block;"></span>
+                      <span style="position:absolute;left:5px;right:5px;top:18px;height:2px;background:#c9d6cf;display:block;"></span>
+                      <span style="position:absolute;left:5px;right:12px;top:24px;height:2px;background:#c9d6cf;display:block;"></span>
+                      <span style="position:absolute;left:5px;right:16px;top:30px;height:2px;background:#c9d6cf;display:block;"></span>
+                    </span>
+                    <span style="flex:1;min-width:0;">
+                      <span style="display:block;font-size:17px;font-weight:600;">{{ c.name }}</span>
+                      <span style="display:block;font-family:var(--td-mono);font-size:14px;color:var(--td-pass-deep);">{{ c.number }}</span>
+                    </span>
+                    <span style="background:var(--td-paper);border:1px solid var(--td-pass);color:var(--td-pass-deep);border-radius:999px;padding:6px 14px;font-size:15px;font-weight:600;white-space:nowrap;">Open</span>
+                  </a>
+                </sc-for>
+              </div>
+              <div style="font-size:16px;color:var(--td-ink-2);margin-top:12px;">The next test falls due at <span style="font-family:var(--td-mono);font-weight:600;">20,000 h</span> on this rim.</div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin-top:34px;background:var(--td-paper);border:1px solid var(--td-line);border-radius:var(--td-r-lg);box-shadow:var(--td-card);padding:26px;">
+      <h2 style="font-family:var(--td-display);font-weight:700;font-size:27px;margin:0 0 8px;">Questions about a repair?</h2>
+      <p style="font-size:17px;color:var(--td-ink-2);margin:0;max-width:54em;">Quote your job number or the tyre serial, and your Tyre Doctor contact can open the same file you are looking at. Quotes and invoicing are handled by your account manager as usual.</p>
+    </div>
+
+    <div style="margin-top:28px;font-size:15px;color:var(--td-ink-3);">
+      The workshop uses an internal view of this same data. <a href="TD One - Branch Console.dc.html">Return to the workshop tool</a>.
+    </div>
+  </main>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1120,&quot;height&quot;:900}}">
+const TYRE_STEPS = ['Received', 'Being prepared', 'Cooking', 'Boxed up', 'Dispatched'];
+const RIM_STEPS = ['Received', 'Being tested', 'Being repaired', 'Certified', 'Dispatched'];
+
+// PHASE 2: derive from the same jobs the console reads — curated fields only, no internals.
+const ITEMS = [
+  { kind:'tyre', title:'BR7K48219', subtitle:'Bridgestone 40.00R57 · HT-412', step:2, note:'Cooking now. Expected back with you next week.', photo:true, photoStamp:'07 Aug · Mackay' },
+  { kind:'tyre', title:'BR7K48220', subtitle:'Bridgestone 40.00R57 · HT-408', step:2, note:'Cooking now.', photo:false },
+  { kind:'tyre', title:'BR7K48221', subtitle:'Bridgestone 27.00R49 · HT-401', step:1, note:'Being prepared at Mackay since Wednesday.', photo:true, photoStamp:'06 Aug · Mackay' },
+  { kind:'tyre', title:'MC9T31112', subtitle:'Michelin 53/80R63 · HT-415', step:0, note:'With us since Friday.', photo:false },
+  { kind:'rim', title:'R-4471', subtitle:'63 in — 5-piece · HT-412', step:1, note:'Crack testing this week. Your account manager has been updated.', photo:true, photoStamp:'08 Aug · Mackay' },
+  { kind:'rim', title:'R-4460', subtitle:'57 in — 5-piece · LD-19', step:3, note:'Tested and painted. Paperwork issued.', photo:false,
+    certs:[{ name:'Rim NDT certificate', number:'NDT-MKY-26-0311' }, { name:'Rim repair certificate', number:'RRC-MKY-26-0311' }] },
+];
+
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      items: ITEMS.map((it) => {
+        const labels = it.kind === 'rim' ? RIM_STEPS : TYRE_STEPS;
+        const cooking = it.kind === 'tyre' && it.step === 2;
+        const done = it.step >= 3;
+        return {
+          isTyre: it.kind === 'tyre', isRim: it.kind === 'rim',
+          kindLabel: it.kind === 'rim' ? 'Rim' : 'Tyre',
+          title: it.title, subtitle: it.subtitle, note: it.note,
+          hasPhoto: !!it.photo, photoStamp: it.photoStamp || '',
+          hubFill: cooking ? '#d2542c' : '#9aa6ad',
+          hubCore: cooking ? '#f6c1a6' : '#6d7a82',
+          stateLabel: labels[it.step],
+          stateBg: cooking ? 'var(--td-heat-wash)' : (done ? 'var(--td-pass-tint)' : 'var(--td-blue-tint)'),
+          stateBorder: cooking ? 'var(--td-heat)' : (done ? 'var(--td-pass)' : 'var(--td-blue)'),
+          stateText: cooking ? 'var(--td-heat-deep)' : (done ? 'var(--td-pass-deep)' : 'var(--td-blue-deep)'),
+          hasCerts: !!it.certs, certs: it.certs || [],
+          steps: labels.map((label, i) => ({
+            label,
+            size: i === it.step ? 20 : 14,
+            bar: i <= it.step ? (cooking && i === it.step ? 'var(--td-heat)' : 'var(--td-blue)') : 'var(--td-line)',
+            dot: i < it.step ? 'var(--td-blue)' : (i === it.step ? (cooking ? 'var(--td-heat)' : 'var(--td-blue)') : 'var(--td-paper)'),
+            ring: i <= it.step ? (cooking && i === it.step ? 'var(--td-heat-deep)' : 'var(--td-blue-deep)') : 'var(--td-line-strong)',
+            glow: i === it.step ? (cooking ? '0 0 0 6px rgba(210,84,44,.2)' : '0 0 0 6px rgba(13,100,173,.16)') : 'none',
+            text: i <= it.step ? 'var(--td-ink)' : 'var(--td-ink-3)',
+          })),
+        };
+      }),
+    };
+  }
+}
+
+</script>
+</body>
+</html>

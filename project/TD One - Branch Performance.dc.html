@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --td-ground:#e9eff4;--td-ground-soft:#f2f6f9;--td-paper:#ffffff;
+    --td-ink:#111c24;--td-ink-2:#3d4d59;--td-ink-3:#65757f;
+    --td-line:#d3dde4;--td-line-strong:#b6c5cf;
+    --td-steel:#16303f;--td-steel-2:#1f4a63;--td-steel-ink:#eaf3f8;
+    --td-blue:#0d64ad;--td-blue-deep:#0a4d87;--td-blue-tint:#e7f1fb;--td-blue-mid:#4d92cc;--td-blue-pale:#a8cdea;
+    --td-hazard:#f5a300;--td-hazard-deep:#8a5a00;--td-hazard-tint:#fff6e2;--td-hazard-ink:#241a00;
+    --td-heat:#d2542c;--td-heat-deep:#a53a17;--td-heat-wash:#f6c1a6;
+    --td-pass:#1f8a4d;--td-pass-deep:#146035;--td-pass-tint:#e8f6ee;
+    --td-fail:#c02a22;--td-fail-deep:#8c1d16;--td-fail-tint:#fdedeb;
+    --td-rubber:#edebe9;--td-lug:#dad5d1;--td-rubber-deep:#2a2d2f;
+    --td-r-lg:22px;--td-r-md:14px;--td-r-sm:10px;
+    --td-card:0 1px 2px rgba(17,28,36,.06),0 8px 20px rgba(17,28,36,.06);
+    --td-lift:0 14px 34px rgba(17,28,36,.18);
+    --td-display:'Barlow Condensed',Impact,sans-serif;
+    --td-body:'Barlow',system-ui,sans-serif;
+    --td-mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--td-ground);color:var(--td-ink);font-family:var(--td-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:var(--td-blue)} a:hover{color:var(--td-blue-deep)}
+  button,input,select,textarea{font-family:inherit}
+  @keyframes tdRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  @keyframes tdGrow{from{transform:scaleX(0)}to{transform:none}}
+  @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:var(--td-ground);" data-screen-label="Branch Performance">
+
+  <header style="position:sticky;top:0;z-index:40;background:var(--td-steel);color:var(--td-steel-ink);box-shadow:0 2px 14px rgba(17,28,36,.2);">
+    <div style="max-width:1520px;margin:0 auto;padding:11px 24px;display:flex;align-items:center;gap:16px;">
+      <a href="TD One - Landing.dc.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;">
+        <svg viewBox="0 0 100 100" style="width:28px;height:28px;flex:none;" aria-hidden="true">
+          <circle cx="50" cy="50" r="44" fill="#0d1a22"></circle>
+          <circle cx="50" cy="50" r="36" fill="none" stroke="#33495a" stroke-width="15" stroke-dasharray="10 7"></circle>
+          <circle cx="50" cy="50" r="26" fill="#2c3d47"></circle>
+          <circle cx="50" cy="50" r="21" fill="#8fa3af"></circle>
+          <circle cx="50" cy="50" r="7" fill="#5f7480"></circle>
+        </svg>
+        <span style="font-family:var(--td-display);font-weight:700;font-size:20px;text-transform:uppercase;white-space:nowrap;">Tyre Doctor</span>
+      </a>
+      <span style="background:rgba(234,243,248,.12);border-radius:999px;padding:5px 13px;font-size:14px;font-weight:600;white-space:nowrap;">Office — reports</span>
+      <a href="TD One - Branch Console.dc.html" style="display:inline-flex;align-items:center;gap:8px;color:var(--td-steel-ink);background:rgba(234,243,248,.12);border-radius:var(--td-r-sm);padding:8px 14px;font-size:15px;font-weight:600;text-decoration:none;white-space:nowrap;">← Mackay floor</a>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:12px;">
+        <button onClick="{{ startTour }}" style="border:1px solid rgba(234,243,248,.34);border-radius:var(--td-r-sm);background:transparent;color:var(--td-steel-ink);font-size:15px;font-weight:600;padding:9px 15px;cursor:pointer;white-space:nowrap;">Show me around</button>
+        <a href="TD One - Who are you.dc.html" style="display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--td-steel-ink);background:rgba(234,243,248,.1);border-radius:999px;padding:5px 13px 5px 5px;">
+          <span style="width:30px;height:30px;border-radius:50%;background:var(--td-pass);display:grid;place-items:center;font-family:var(--td-display);font-size:14px;font-weight:600;">GS</span>
+          <span style="font-size:15px;font-weight:600;white-space:nowrap;">Superintendent</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main style="max-width:1520px;margin:0 auto;padding:24px 24px 90px;">
+
+    <div style="display:flex;align-items:flex-end;gap:26px;flex-wrap:wrap;margin-bottom:22px;">
+      <div>
+        <div style="font-size:15px;font-weight:600;color:var(--td-ink-3);margin-bottom:5px;">All eight branches</div>
+        <h1 style="font-family:var(--td-display);font-weight:700;font-size:44px;line-height:1;margin:0;">Branch performance</h1>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:10px;">
+        <sc-for list="{{ periods }}" as="p" hint-placeholder-count="3">
+          <button onClick="{{ p.onTap }}" style="border:1px solid {{ p.border }};border-radius:var(--td-r-md);background:{{ p.bg }};color:{{ p.text }};font-size:16px;font-weight:600;padding:12px 20px;cursor:pointer;white-space:nowrap;">{{ p.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:18px;">
+      <sc-for list="{{ headline }}" as="k" hint-placeholder-count="4">
+        <div style="border-radius:var(--td-r-lg);background:
+              repeating-linear-gradient(96deg, var(--td-lug) 0 8px, var(--td-rubber) 8px 19px) top/100% 13px no-repeat,
+              var(--td-paper);border:1px solid var(--td-line);box-shadow:var(--td-card);padding:26px 20px 20px;">
+          <div style="font-family:var(--td-mono);font-size:40px;font-weight:600;line-height:1;color:{{ k.color }};">{{ k.value }}</div>
+          <div style="font-size:16px;font-weight:600;margin-top:8px;">{{ k.label }}</div>
+          <div style="font-size:15px;color:var(--td-ink-2);margin-top:2px;">{{ k.sub }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div ref="{{ mixRef }}" style="border-radius:var(--td-r-lg);background:var(--td-paper);border:1px solid var(--td-line);box-shadow:var(--td-card);padding:22px 24px;margin-bottom:18px;">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:18px;flex-wrap:wrap;">
+        <h2 style="font-family:var(--td-display);font-weight:700;font-size:28px;margin:0;">Repair mix by branch</h2>
+        <span style="font-size:16px;color:var(--td-ink-2);">click a branch to drill in</span>
+        <div style="margin-left:auto;display:flex;gap:18px;font-size:15px;">
+          <span style="display:flex;align-items:center;gap:8px;"><span style="width:14px;height:14px;border-radius:4px;background:var(--td-blue-pale);"></span>Minor</span>
+          <span style="display:flex;align-items:center;gap:8px;"><span style="width:14px;height:14px;border-radius:4px;background:var(--td-blue-mid);"></span>Intermediate</span>
+          <span style="display:flex;align-items:center;gap:8px;"><span style="width:14px;height:14px;border-radius:4px;background:var(--td-blue-deep);"></span>Major</span>
+          <span title="Repair categories Minor, Intermediate and Major. Source: the client reports 'intermediates and majors' and described minor repair through to major repair; AURKTJ013, 'Perform minor repairs to earthmoving and off-the-road tyres', confirms that minor repair is a defined Australian competency." style="background:var(--td-blue-tint);color:var(--td-blue-deep);border-radius:999px;padding:4px 12px;font-weight:600;cursor:help;white-space:nowrap;">Where these come from</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <sc-for list="{{ mix }}" as="m" hint-placeholder-count="8">
+          <button onClick="{{ m.onTap }}" style="display:grid;grid-template-columns:150px 1fr 130px;gap:16px;align-items:center;background:{{ m.rowBg }};border:1px solid {{ m.rowBorder }};border-radius:var(--td-r-md);padding:11px 14px;cursor:pointer;text-align:left;width:100%;">
+            <span style="display:flex;align-items:baseline;gap:9px;">
+              <span style="font-family:var(--td-display);font-weight:700;font-size:20px;">{{ m.name }}</span>
+              <span style="font-family:var(--td-mono);font-size:13px;color:var(--td-ink-3);">{{ m.code }}</span>
+            </span>
+            <span style="display:flex;height:26px;width:100%;border-radius:6px;overflow:hidden;background:var(--td-ground);">
+              <span style="background:var(--td-blue-pale);width:{{ m.minorPct }}%;display:block;transform-origin:left;animation:tdGrow 520ms ease-out both;"></span>
+              <span style="background:var(--td-blue-mid);width:{{ m.interPct }}%;display:block;transform-origin:left;animation:tdGrow 560ms ease-out both;"></span>
+              <span style="background:var(--td-blue-deep);width:{{ m.majorPct }}%;display:block;transform-origin:left;animation:tdGrow 600ms ease-out both;"></span>
+            </span>
+            <span style="font-family:var(--td-mono);font-size:15px;font-variant-numeric:tabular-nums;color:var(--td-ink-2);text-align:right;white-space:nowrap;">{{ m.counts }}</span>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;align-items:start;">
+
+      <div ref="{{ hoursRef }}" style="border-radius:var(--td-r-lg);background:var(--td-paper);border:1px solid var(--td-line);box-shadow:var(--td-card);padding:22px 24px;">
+        <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:4px;flex-wrap:wrap;">
+          <h2 style="font-family:var(--td-display);font-weight:700;font-size:28px;margin:0;">Man hours against repair hours</h2>
+          <button onClick="{{ toggleHours }}" style="margin-left:auto;border:1px solid var(--td-line-strong);background:var(--td-paper);color:var(--td-ink);border-radius:var(--td-r-md);font-size:15px;font-weight:600;padding:10px 16px;cursor:pointer;white-space:nowrap;">{{ hoursToggleLabel }}</button>
+        </div>
+        <div style="font-size:16px;color:var(--td-ink-2);margin-bottom:20px;">Hours paid on the floor, against the hours booked to repairs.</div>
+
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <sc-for list="{{ hours }}" as="h" hint-placeholder-count="5">
+            <div>
+              <div style="display:flex;align-items:baseline;gap:11px;margin-bottom:6px;flex-wrap:wrap;">
+                <span style="font-family:var(--td-display);font-weight:700;font-size:19px;">{{ h.name }}</span>
+                <span style="font-family:var(--td-mono);font-size:15px;color:var(--td-ink-2);font-variant-numeric:tabular-nums;">{{ h.label }}</span>
+                <span style="margin-left:auto;background:{{ h.ratioBg }};color:{{ h.ratioColor }};border-radius:999px;padding:3px 12px;font-family:var(--td-mono);font-size:15px;font-weight:600;white-space:nowrap;">{{ h.ratio }}</span>
+              </div>
+              <div style="position:relative;height:24px;border-radius:6px;background:var(--td-ground);overflow:hidden;">
+                <div style="position:absolute;left:0;top:0;bottom:0;width:{{ h.manPct }}%;background:var(--td-blue-pale);"></div>
+                <div style="position:absolute;left:0;top:5px;bottom:5px;width:{{ h.repairPct }}%;background:var(--td-blue);border-radius:0 4px 4px 0;"></div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ hoursOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:22px;border:1px solid rgba(13,100,173,.35);border-radius:var(--td-r-md);background:var(--td-blue-tint);padding:20px;animation:tdRise 260ms ease-out both;">
+            <div style="font-family:var(--td-display);font-weight:700;font-size:23px;margin-bottom:4px;">Enter man hours</div>
+            <p style="font-size:16px;color:var(--td-ink-2);margin:0 0 16px;">Labour isn't captured digitally anywhere yet, so it is typed in here, per branch, per period. Repair hours come from the stage timestamps.</p>
+            <div style="display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;">
+              <label style="display:block;">
+                <span style="display:block;font-size:15px;font-weight:600;color:var(--td-ink-2);margin-bottom:6px;">Branch</span>
+                <select style="border:1px solid var(--td-line-strong);border-radius:var(--td-r-sm);background:var(--td-paper);color:var(--td-ink);font-size:16px;padding:11px 12px;min-width:186px;">
+                  <option>Mackay — MKY</option><option>Blackwater — BLW</option><option>Kalgoorlie — KAL</option>
+                  <option>Brisbane — BNE</option><option>Muswellbrook — MUS</option><option>Cobar — COB</option>
+                  <option>West Wyalong — WWY</option><option>Leeton — LTN</option>
+                </select>
+              </label>
+              <label style="display:block;">
+                <span style="display:block;font-size:15px;font-weight:600;color:var(--td-ink-2);margin-bottom:6px;">Man hours this period</span>
+                <input value="{{ manHoursEntry }}" onInput="{{ onManHours }}" style="border:1px solid var(--td-line-strong);border-radius:var(--td-r-sm);background:var(--td-paper);color:var(--td-ink);font-family:var(--td-mono);font-size:19px;padding:11px 12px;width:146px;">
+              </label>
+              <button onClick="{{ saveHours }}" style="border:none;background:var(--td-blue);color:#fff;border-radius:var(--td-r-md);font-size:17px;font-weight:700;padding:14px 22px;cursor:pointer;white-space:nowrap;">Save hours</button>
+            </div>
+            <sc-if value="{{ hoursSaved }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top:14px;font-size:16px;font-weight:600;color:var(--td-pass-deep);">Saved against Mackay for this period. The ratio above has updated.</div>
+            </sc-if>
+          </div>
+        </sc-if>
+      </div>
+
+      <div style="border-radius:var(--td-r-lg);background:var(--td-paper);border:1px solid var(--td-line);box-shadow:var(--td-card);padding:22px 24px;">
+        <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:20px;flex-wrap:wrap;">
+          <h2 style="font-family:var(--td-display);font-weight:700;font-size:28px;margin:0;">Average time in each stage</h2>
+          <span style="background:var(--td-blue-tint);color:var(--td-blue-deep);border-radius:999px;padding:4px 13px;font-size:15px;font-weight:600;white-space:nowrap;">{{ drillName }}</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <sc-for list="{{ stageBars }}" as="b" hint-placeholder-count="6">
+            <div style="display:grid;grid-template-columns:130px 1fr 70px;gap:14px;align-items:center;">
+              <span style="font-family:var(--td-display);font-weight:600;font-size:19px;">{{ b.label }}</span>
+              <span style="height:20px;border-radius:5px;background:var(--td-ground);display:block;overflow:hidden;"><span style="display:block;height:20px;border-radius:5px;background:{{ b.color }};width:{{ b.pct }}%;transform-origin:left;animation:tdGrow 520ms ease-out both;"></span></span>
+              <span style="font-family:var(--td-mono);font-size:16px;font-variant-numeric:tabular-nums;text-align:right;">{{ b.value }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--td-line);display:flex;gap:28px;flex-wrap:wrap;">
+          <div><div style="font-family:var(--td-mono);font-size:26px;font-weight:600;font-variant-numeric:tabular-nums;">{{ drillClosed }}</div><div style="font-size:15px;color:var(--td-ink-2);">jobs closed</div></div>
+          <div><div style="font-family:var(--td-mono);font-size:26px;font-weight:600;font-variant-numeric:tabular-nums;">{{ drillRejection }}</div><div style="font-size:15px;color:var(--td-ink-2);">rejection rate</div></div>
+          <div><div style="font-family:var(--td-mono);font-size:26px;font-weight:600;font-variant-numeric:tabular-nums;">{{ drillTotal }}</div><div style="font-size:15px;color:var(--td-ink-2);">repairs in period</div></div>
+          <div style="flex:1;min-width:190px;font-size:15px;color:var(--td-ink-2);align-self:center;">The longest stage is where the floor loses days, not the cook.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="border-radius:var(--td-r-lg);background:var(--td-paper);border:1px solid var(--td-line);box-shadow:var(--td-card);overflow:hidden;">
+      <div style="display:flex;align-items:baseline;gap:14px;padding:18px 22px;border-bottom:1px solid var(--td-line);flex-wrap:wrap;">
+        <h2 style="font-family:var(--td-display);font-weight:700;font-size:28px;margin:0;">Every branch, this period</h2>
+        <span style="font-size:16px;color:var(--td-ink-2);">click a row to drill into its stage times</span>
+      </div>
+      <table style="width:100%;font-size:16px;border-collapse:collapse;">
+        <thead>
+          <tr style="background:var(--td-ground-soft);">
+            <th style="text-align:left;padding:12px 14px;border-bottom:2px solid var(--td-line-strong);width:186px;">Branch</th>
+            <th style="text-align:right;padding:12px 14px;border-bottom:2px solid var(--td-line-strong);">Minor</th>
+            <th style="text-align:right;padding:12px 14px;border-bottom:2px solid var(--td-line-strong);">Intermediate</th>
+            <th style="text-align:right;padding:12px 14px;border-bottom:2px solid var(--td-line-strong);">Major</th>
+            <th style="text-align:right;padding:12px 14px;border-bottom:2px solid var(--td-line-strong);">Closed</th>
+            <th style="text-align:right;padding:12px 14px;border-bottom:2px solid var(--td-line-strong);">Man hours</th>
+            <th style="text-align:right;padding:12px 14px;border-bottom:2px solid var(--td-line-strong);">Repair hours</th>
+            <th style="text-align:right;padding:12px 14px;border-bottom:2px solid var(--td-line-strong);">Booked</th>
+            <th style="text-align:right;padding:12px 14px;border-bottom:2px solid var(--td-line-strong);">Rejected</th>
+          </tr>
+        </thead>
+        <tbody>
+          <sc-for list="{{ table }}" as="t" hint-placeholder-count="8">
+            <tr onClick="{{ t.onTap }}" style="cursor:pointer;background:{{ t.rowBg }};">
+              <td style="padding:12px 14px;border-bottom:1px solid var(--td-line);"><span style="font-weight:600;">{{ t.name }}</span> <span style="font-family:var(--td-mono);font-size:14px;color:var(--td-ink-3);">{{ t.code }}</span></td>
+              <td style="padding:12px 14px;border-bottom:1px solid var(--td-line);text-align:right;font-family:var(--td-mono);font-variant-numeric:tabular-nums;">{{ t.minors }}</td>
+              <td style="padding:12px 14px;border-bottom:1px solid var(--td-line);text-align:right;font-family:var(--td-mono);font-variant-numeric:tabular-nums;">{{ t.intermediates }}</td>
+              <td style="padding:12px 14px;border-bottom:1px solid var(--td-line);text-align:right;font-family:var(--td-mono);font-variant-numeric:tabular-nums;">{{ t.majors }}</td>
+              <td style="padding:12px 14px;border-bottom:1px solid var(--td-line);text-align:right;font-family:var(--td-mono);font-variant-numeric:tabular-nums;">{{ t.jobsClosed }}</td>
+              <td style="padding:12px 14px;border-bottom:1px solid var(--td-line);text-align:right;font-family:var(--td-mono);font-variant-numeric:tabular-nums;">{{ t.manHours }}</td>
+              <td style="padding:12px 14px;border-bottom:1px solid var(--td-line);text-align:right;font-family:var(--td-mono);font-variant-numeric:tabular-nums;">{{ t.repairHours }}</td>
+              <td style="padding:12px 14px;border-bottom:1px solid var(--td-line);text-align:right;font-family:var(--td-mono);font-variant-numeric:tabular-nums;font-weight:600;color:{{ t.bookedColor }};">{{ t.booked }}</td>
+              <td style="padding:12px 14px;border-bottom:1px solid var(--td-line);text-align:right;font-family:var(--td-mono);font-variant-numeric:tabular-nums;">{{ t.rejection }}</td>
+            </tr>
+          </sc-for>
+        </tbody>
+      </table>
+      <div style="padding:16px 22px;font-size:15px;color:var(--td-ink-2);background:var(--td-ground-soft);">
+        Leeton is head office — no workshop jobs this period. Booked is repair hours as a share of the man hours entered.
+      </div>
+    </div>
+  </main>
+
+  <sc-if value="{{ tour }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:100;">
+      <div onClick="{{ endTour }}" style="position:absolute;left:{{ tour.x }}px;top:{{ tour.y }}px;width:{{ tour.w }}px;height:{{ tour.h }}px;border-radius:var(--td-r-md);box-shadow:0 0 0 9999px rgba(17,28,36,.66);border:3px solid var(--td-hazard);transition:all 300ms cubic-bezier(.3,.9,.2,1);"></div>
+      <div style="position:absolute;left:{{ tour.cardX }}px;top:{{ tour.cardY }}px;width:364px;background:var(--td-paper);border-radius:var(--td-r-lg);padding:22px;box-shadow:var(--td-lift);">
+        <div style="font-size:15px;font-weight:700;color:var(--td-blue-deep);margin-bottom:8px;">Step {{ tour.n }} of 2</div>
+        <div style="font-family:var(--td-display);font-weight:600;font-size:27px;line-height:1.12;margin-bottom:16px;">{{ tour.text }}</div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <button onClick="{{ nextTour }}" style="border:none;background:var(--td-blue);color:#fff;border-radius:var(--td-r-md);font-size:17px;font-weight:600;padding:13px 22px;cursor:pointer;white-space:nowrap;">{{ tour.nextLabel }}</button>
+          <button onClick="{{ endTour }}" style="border:none;background:transparent;color:var(--td-ink-2);font-size:16px;font-weight:600;padding:13px 8px;cursor:pointer;">Skip</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+const STAGE_LABELS = { received:'Received', washed:'Washed', inspected:'Inspected', cut_out:'Cut out', repaired:'Repaired', cooked:'Cooked' };
+const NAMES = { MKY:'Mackay', BLW:'Blackwater', KAL:'Kalgoorlie', BNE:'Brisbane', MUS:'Muswellbrook', COB:'Cobar', WWY:'West Wyalong', LTN:'Leeton' };
+
+const REPORTS = [
+  { branch:'MKY', minors:14, intermediates:31, majors:18, jobsClosed:63, manHours:1200, repairHours:600, rejectionRate:.07,
+    avgStageHours:{ received:6, washed:9, inspected:14, cut_out:11, repaired:19, cooked:2 } },
+  { branch:'KAL', minors:12, intermediates:24, majors:12, jobsClosed:48, manHours:880, repairHours:511, rejectionRate:.09,
+    avgStageHours:{ received:8, washed:11, inspected:15, cut_out:13, repaired:21, cooked:2 } },
+  { branch:'BLW', minors:9, intermediates:18, majors:7, jobsClosed:34, manHours:640, repairHours:402, rejectionRate:.05,
+    avgStageHours:{ received:5, washed:7, inspected:12, cut_out:10, repaired:16, cooked:2 } },
+  { branch:'MUS', minors:6, intermediates:13, majors:6, jobsClosed:25, manHours:470, repairHours:300, rejectionRate:.06,
+    avgStageHours:{ received:6, washed:8, inspected:13, cut_out:10, repaired:17, cooked:2 } },
+  { branch:'BNE', minors:7, intermediates:11, majors:4, jobsClosed:22, manHours:410, repairHours:268, rejectionRate:.04,
+    avgStageHours:{ received:4, washed:6, inspected:10, cut_out:9, repaired:14, cooked:2 } },
+  { branch:'COB', minors:4, intermediates:8, majors:3, jobsClosed:15, manHours:300, repairHours:181, rejectionRate:.08,
+    avgStageHours:{ received:7, washed:9, inspected:14, cut_out:12, repaired:18, cooked:2 } },
+  { branch:'WWY', minors:3, intermediates:6, majors:2, jobsClosed:11, manHours:220, repairHours:140, rejectionRate:.05,
+    avgStageHours:{ received:5, washed:7, inspected:11, cut_out:9, repaired:15, cooked:2 } },
+  { branch:'LTN', minors:0, intermediates:0, majors:0, jobsClosed:0, manHours:0, repairHours:0, rejectionRate:0, avgStageHours:{} },
+];
+
+class Component extends DCLogic {
+  state = {
+    period: 'This month', drill: 'MKY', hoursOpen: false, manHoursEntry: '1200', hoursSaved: false,
+    tourStep: -1, tourRect: null,
+  };
+  refs = {};
+  setRef = (k) => (el) => { if (el) this.refs[k] = el; };
+
+  componentDidMount() {
+    this.reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.onKey = (e) => { if (e.key === 'Escape') this.setState({ tourStep: -1, tourRect: null }); };
+    window.addEventListener('keydown', this.onKey);
+  }
+  componentWillUnmount() { window.removeEventListener('keydown', this.onKey); }
+
+  setPeriod = (p) => () => this.setState({ period: p });
+  setDrill = (code) => () => this.setState({ drill: code });
+  toggleHours = () => this.setState((s) => ({ hoursOpen: !s.hoursOpen }));
+  onManHours = (e) => this.setState({ manHoursEntry: e.target.value.replace(/[^0-9]/g, ''), hoursSaved: false });
+  saveHours = () => this.setState({ hoursSaved: true });
+
+  TOUR = [
+    { ref: 'mix', text: 'Intermediates and majors, per branch — the split the superintendent builds by hand today.' },
+    { ref: 'hours', text: 'Man hours against repair hours. Hours are typed in here, because nobody captures labour digitally yet.' },
+  ];
+  measureTour(step) {
+    const el = this.refs[this.TOUR[step].ref];
+    if (!el || !el.isConnected || el.getBoundingClientRect().width < 30) return this.endTour();
+    const r = el.getBoundingClientRect();
+    const cardX = Math.min(Math.max(14, r.left + 20), window.innerWidth - 384);
+    const below = r.bottom + 18 + 210 < window.innerHeight;
+    this.setState({ tourStep: step, tourRect: { x: r.left - 7, y: r.top - 7, w: r.width + 14, h: r.height + 14, cardX, cardY: below ? r.bottom + 18 : Math.max(14, r.top + 30) } });
+  }
+  startTour = () => { window.scrollTo({ top: 0 }); requestAnimationFrame(() => this.measureTour(0)); };
+  nextTour = () => {
+    const next = this.state.tourStep + 1;
+    if (next >= this.TOUR.length) return this.endTour();
+    if (!this.state.hoursOpen && this.TOUR[next].ref === 'hours') this.setState({ hoursOpen: true });
+    const el = this.refs[this.TOUR[next].ref];
+    if (!el || !el.isConnected) return this.endTour();
+    const r = el.getBoundingClientRect();
+    if (r.bottom > window.innerHeight - 40 || r.top < 90) window.scrollBy({ top: r.top - 140, behavior: this.reduced ? 'auto' : 'smooth' });
+    setTimeout(() => this.measureTour(next), this.reduced ? 0 : 400);
+  };
+  endTour = () => this.setState({ tourStep: -1, tourRect: null });
+
+  renderVals() {
+    const s = this.state;
+    const manEntry = Number(s.manHoursEntry || 0);
+    const withEntry = (r) => (r.branch === 'MKY' && s.hoursSaved ? { ...r, manHours: manEntry } : r);
+
+    const totalRepairs = REPORTS.reduce((a, r) => a + r.minors + r.intermediates + r.majors, 0);
+    const totalClosed = REPORTS.reduce((a, r) => a + r.jobsClosed, 0);
+    const totalMan = REPORTS.map(withEntry).reduce((a, r) => a + r.manHours, 0);
+    const totalRepairHours = REPORTS.reduce((a, r) => a + r.repairHours, 0);
+
+    const mix = REPORTS.map((r) => {
+      const total = r.minors + r.intermediates + r.majors || 1;
+      return {
+        code: r.branch, name: NAMES[r.branch], onTap: this.setDrill(r.branch),
+        minorPct: (r.minors / total) * 100, interPct: (r.intermediates / total) * 100, majorPct: (r.majors / total) * 100,
+        counts: r.minors + ' · ' + r.intermediates + ' · ' + r.majors,
+        rowBg: s.drill === r.branch ? 'var(--td-blue-tint)' : 'var(--td-paper)',
+        rowBorder: s.drill === r.branch ? 'var(--td-blue)' : 'var(--td-line)',
+      };
+    });
+
+    const maxMan = Math.max.apply(null, REPORTS.map((r) => withEntry(r).manHours).concat([1]));
+    const hours = REPORTS.filter((r) => r.manHours > 0).slice(0, 5).map((raw) => {
+      const r = withEntry(raw);
+      const booked = Math.round((r.repairHours / (r.manHours || 1)) * 100);
+      return {
+        name: NAMES[r.branch],
+        label: r.manHours.toLocaleString() + ' h paid · ' + r.repairHours.toLocaleString() + ' h on repairs',
+        ratio: booked + '% booked',
+        ratioColor: booked < 55 ? 'var(--td-fail-deep)' : 'var(--td-pass-deep)',
+        ratioBg: booked < 55 ? 'var(--td-fail-tint)' : 'var(--td-pass-tint)',
+        manPct: (r.manHours / maxMan) * 100, repairPct: (r.repairHours / maxMan) * 100,
+      };
+    });
+
+    const drill = REPORTS.find((r) => r.branch === s.drill) || REPORTS[0];
+    const entries = Object.keys(drill.avgStageHours).map((k) => [k, drill.avgStageHours[k]]);
+    const maxStage = Math.max.apply(null, entries.map((e) => e[1]).concat([1]));
+
+    return {
+      periods: ['This month', 'Quarter', 'Year'].map((p) => ({
+        label: p, onTap: this.setPeriod(p),
+        border: s.period === p ? 'var(--td-blue)' : 'var(--td-line-strong)',
+        bg: s.period === p ? 'var(--td-blue)' : 'var(--td-paper)',
+        text: s.period === p ? '#fff' : 'var(--td-ink-2)',
+      })),
+      headline: [
+        { value: String(totalRepairs), label: 'Repairs in period', sub: 'across seven workshops', color: 'var(--td-ink)' },
+        { value: String(REPORTS.reduce((a, r) => a + r.majors, 0)), label: 'Majors', sub: 'the ones that tie up a bay', color: 'var(--td-blue-deep)' },
+        { value: Math.round((totalRepairHours / totalMan) * 100) + '%', label: 'Hours booked to repairs', sub: totalRepairHours.toLocaleString() + ' h of ' + totalMan.toLocaleString() + ' h paid', color: 'var(--td-blue-deep)' },
+        { value: '6%', label: 'Rejection rate', sub: 'tyres found not repairable', color: 'var(--td-fail-deep)' },
+      ],
+      mix, hours,
+      stageBars: entries.map((e) => ({
+        label: STAGE_LABELS[e[0]] || e[0], value: e[1] + ' h', pct: (e[1] / maxStage) * 100,
+        color: e[0] === 'cooked' ? 'var(--td-heat)' : 'var(--td-blue)',
+      })),
+      table: REPORTS.map((raw) => {
+        const r = withEntry(raw);
+        const booked = r.manHours ? Math.round((r.repairHours / r.manHours) * 100) : 0;
+        return {
+          code: r.branch, name: NAMES[r.branch], onTap: this.setDrill(r.branch),
+          minors: r.minors, intermediates: r.intermediates, majors: r.majors, jobsClosed: r.jobsClosed,
+          manHours: r.manHours.toLocaleString(), repairHours: r.repairHours.toLocaleString(),
+          booked: r.manHours ? booked + '%' : '—',
+          bookedColor: r.manHours && booked < 55 ? 'var(--td-fail-deep)' : 'var(--td-ink)',
+          rejection: Math.round(r.rejectionRate * 100) + '%',
+          rowBg: s.drill === r.branch ? 'var(--td-blue-tint)' : 'transparent',
+        };
+      }),
+      drillName: NAMES[s.drill], drillClosed: drill.jobsClosed,
+      drillRejection: Math.round(drill.rejectionRate * 100) + '%',
+      drillTotal: drill.minors + drill.intermediates + drill.majors,
+      hoursOpen: s.hoursOpen, toggleHours: this.toggleHours,
+      hoursToggleLabel: s.hoursOpen ? 'Hide hours entry' : 'Open man-hours entry',
+      manHoursEntry: s.manHoursEntry, onManHours: this.onManHours, saveHours: this.saveHours, hoursSaved: s.hoursSaved,
+      mixRef: this.setRef('mix'), hoursRef: this.setRef('hours'),
+      tour: s.tourStep >= 0 && s.tourRect ? {
+        ...s.tourRect, n: s.tourStep + 1, text: this.TOUR[s.tourStep].text,
+        nextLabel: s.tourStep === this.TOUR.length - 1 ? 'Done' : 'Next',
+      } : false,
+      startTour: this.startTour, nextTour: this.nextTour, endTour: this.endTour,
+    };
+  }
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --td-ground:#e9eff4;--td-ground-soft:#f2f6f9;--td-paper:#ffffff;
+    --td-ink:#111c24;--td-ink-2:#3d4d59;--td-ink-3:#65757f;
+    --td-line:#d3dde4;--td-line-strong:#b6c5cf;
+    --td-steel:#16303f;--td-steel-2:#1f4a63;--td-steel-ink:#eaf3f8;
+    --td-blue:#0d64ad;--td-blue-deep:#0a4d87;--td-blue-tint:#e7f1fb;
+    --td-hazard:#f5a300;--td-hazard-deep:#8a5a00;--td-hazard-tint:#fff6e2;--td-hazard-ink:#241a00;
+    --td-heat:#d2542c;--td-heat-deep:#a53a17;--td-heat-wash:#f6c1a6;
+    --td-pass:#1f8a4d;--td-pass-deep:#146035;--td-pass-tint:#e8f6ee;
+    --td-fail:#c02a22;--td-fail-deep:#8c1d16;--td-fail-tint:#fdedeb;
+    --td-rubber:#edebe9;--td-lug:#dad5d1;--td-rubber-deep:#2a2d2f;
+    --td-r-lg:22px;--td-r-md:14px;--td-r-sm:10px;
+    --td-card:0 1px 2px rgba(17,28,36,.06),0 8px 20px rgba(17,28,36,.06);
+    --td-lift:0 14px 34px rgba(17,28,36,.18);
+    --td-display:'Barlow Condensed',Impact,sans-serif;
+    --td-body:'Barlow',system-ui,sans-serif;
+    --td-mono:'IBM Plex Mono',ui-monospace,monospace;
+    --td-night:#0e1f2b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--td-night);color:var(--td-ink);font-family:var(--td-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:var(--td-blue)} a:hover{color:var(--td-blue-deep)}
+  button,input,select,textarea{font-family:inherit}
+  @keyframes tdRise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  @keyframes tdArrive{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
+  @keyframes tdRoll{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:
+    radial-gradient(1000px 460px at 16% -6%, rgba(245,163,0,.20), transparent 58%),
+    radial-gradient(900px 500px at 90% 10%, rgba(13,100,173,.22), transparent 60%),
+    var(--td-night);padding:24px 20px 70px;" data-screen-label="Field — mine site">
+
+  <div style="max-width:1180px;margin:0 auto 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+    <a href="TD One - Branch Console.dc.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:#eaf3f8;">
+      <svg viewBox="0 0 100 100" style="width:30px;height:30px;flex:none;" aria-hidden="true">
+        <circle cx="50" cy="50" r="44" fill="#0a1319"></circle>
+        <circle cx="50" cy="50" r="36" fill="none" stroke="#31414a" stroke-width="15" stroke-dasharray="10 7"></circle>
+        <circle cx="50" cy="50" r="26" fill="#28353c"></circle>
+        <circle cx="50" cy="50" r="21" fill="#8fa3af"></circle>
+        <circle cx="50" cy="50" r="7" fill="#5f7480"></circle>
+      </svg>
+      <span style="font-family:var(--td-display);font-weight:700;font-size:20px;text-transform:uppercase;white-space:nowrap;">Tyre Doctor</span>
+    </a>
+    <span style="display:inline-flex;align-items:center;gap:9px;background:var(--td-hazard);color:var(--td-hazard-ink);border-radius:999px;padding:6px 14px;font-size:15px;font-weight:700;white-space:nowrap;">
+      <span style="width:9px;height:9px;border-radius:50%;background:var(--td-hazard-ink);"></span>Mine site — on the phone
+    </span>
+    <span style="color:#a9bec9;font-size:16px;">Big targets, one thing per screen, works with gloves on.</span>
+    <a href="TD One - Branch Console.dc.html" style="margin-left:auto;color:var(--td-hazard);font-size:16px;font-weight:600;text-decoration:none;white-space:nowrap;">← Back to the Mackay floor</a>
+  </div>
+
+  <div style="max-width:452px;margin:0 auto;background:var(--td-ground-soft);border:11px solid #050d12;border-radius:38px;box-shadow:0 28px 70px rgba(0,0,0,.6);overflow:hidden;">
+
+    <div style="background:var(--td-steel);color:#fff;padding:12px 18px 16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;font-family:var(--td-mono);font-size:12px;opacity:.85;margin-bottom:12px;">
+        <span>07 Aug · 09:41</span><span>Wattlebank North</span><span>61%</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <sc-for list="{{ steps }}" as="st" hint-placeholder-count="3">
+          <div style="flex:1;display:flex;flex-direction:column;gap:7px;">
+            <div style="height:5px;border-radius:3px;background:{{ st.bar }};"></div>
+            <div style="font-size:14px;font-weight:600;color:{{ st.text }};">{{ st.label }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <sc-if value="{{ isStep1 }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:22px 20px 28px;animation:tdRise 300ms ease-out both;">
+        <h1 style="font-family:var(--td-display);font-weight:700;font-size:38px;line-height:1.03;margin:0 0 6px;">New site visit</h1>
+        <p style="font-size:17px;color:var(--td-ink-2);margin:0 0 24px;">One visit, one pile of tyres, one quote, one pickup.</p>
+
+        <label style="display:block;margin-bottom:20px;">
+          <span style="display:block;font-size:16px;font-weight:600;margin-bottom:8px;">Customer</span>
+          <select value="{{ customer }}" onChange="{{ onCustomer }}" style="border:1px solid var(--td-line-strong);border-radius:var(--td-r-md);background:var(--td-paper);color:var(--td-ink);width:100%;font-size:19px;padding:16px 14px;min-height:60px;">
+            <option>Wattlebank Coal</option>
+            <option>Kurrajong Coal</option>
+            <option>Barrunga Iron Ore</option>
+            <option>Marrakoo Gold Operations</option>
+            <option>Bellara Copper</option>
+            <option>Yandarra Minerals</option>
+          </select>
+        </label>
+
+        <label style="display:block;margin-bottom:20px;">
+          <span style="display:block;font-size:16px;font-weight:600;margin-bottom:8px;">Site</span>
+          <select style="border:1px solid var(--td-line-strong);border-radius:var(--td-r-md);background:var(--td-paper);color:var(--td-ink);width:100%;font-size:19px;padding:16px 14px;min-height:60px;">
+            <option>Wattlebank North</option>
+            <option>Wattlebank South</option>
+          </select>
+        </label>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px;">
+          <label style="display:block;">
+            <span style="display:block;font-size:16px;font-weight:600;margin-bottom:8px;">Date</span>
+            <input value="07 Aug 26" style="border:1px solid var(--td-line-strong);border-radius:var(--td-r-md);background:var(--td-paper);color:var(--td-ink);width:100%;font-family:var(--td-mono);font-size:18px;padding:16px 14px;min-height:60px;">
+          </label>
+          <label style="display:block;">
+            <span style="display:block;font-size:16px;font-weight:600;margin-bottom:8px;">Tyres on the pallet</span>
+            <input value="{{ pallet }}" onInput="{{ onPallet }}" inputMode="numeric" style="border:1px solid var(--td-line-strong);border-radius:var(--td-r-md);background:var(--td-paper);color:var(--td-ink);width:100%;font-family:var(--td-mono);font-size:18px;padding:16px 14px;min-height:60px;">
+          </label>
+        </div>
+        <p style="font-size:15px;color:var(--td-ink-2);margin:0 0 24px;">A count, so the app can tell you when you have worked through the pile. You can add more as you go.</p>
+
+        <div style="background:var(--td-blue-tint);border:1px solid rgba(13,100,173,.35);border-radius:var(--td-r-md);padding:14px 16px;font-size:16px;margin-bottom:24px;">
+          Visit no. <span style="font-family:var(--td-mono);font-weight:600;">SV-26-0092</span> — assigned now, so photos have somewhere to land.
+        </div>
+
+        <button onClick="{{ toStep2 }}" style="border:none;background:var(--td-blue);color:#fff;border-radius:var(--td-r-md);width:100%;font-size:22px;font-weight:700;padding:20px;min-height:68px;cursor:pointer;box-shadow:0 10px 24px rgba(13,100,173,.34);">Start photographing</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isStep2 }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:20px 20px 28px;animation:tdRise 300ms ease-out both;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:16px;">
+          <h1 style="font-family:var(--td-display);font-weight:700;font-size:34px;line-height:1;margin:0;">Tyre {{ tyreN }} of {{ pallet }}</h1>
+          <span style="font-size:16px;color:var(--td-ink-2);white-space:nowrap;">{{ doneCount }} saved</span>
+        </div>
+
+        <sc-if value="{{ queued }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:center;gap:12px;background:var(--td-hazard-tint);border:1px solid rgba(245,163,0,.55);border-radius:var(--td-r-md);padding:13px 15px;margin-bottom:16px;">
+            <span style="width:28px;height:28px;border-radius:50%;background:var(--td-hazard);color:var(--td-hazard-ink);display:grid;place-items:center;flex:none;font-family:var(--td-mono);font-size:14px;font-weight:600;">2</span>
+            <span style="font-size:16px;line-height:1.35;color:var(--td-hazard-ink);">2 photos are waiting for signal. They will send themselves.</span>
+          </div>
+        </sc-if>
+
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:10px;">
+          <sc-for list="{{ tiles }}" as="t" hint-placeholder-count="3">
+            <button onClick="{{ t.onTap }}" style="border:2px solid {{ t.border }};border-radius:var(--td-r-md);background:{{ t.bg }};padding:0;cursor:pointer;display:block;width:100%;aspect-ratio:3 / 4;position:relative;overflow:hidden;">
+              <span style="position:absolute;inset:0;display:grid;place-items:center;">
+                <sc-if value="{{ t.empty }}" hint-placeholder-val="{{ true }}">
+                  <span style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:0 6px;">
+                    <span style="width:36px;height:27px;border:2.5px solid var(--td-ink-3);border-radius:5px;display:block;position:relative;">
+                      <span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:13px;height:13px;border:2.5px solid var(--td-ink-3);border-radius:50%;display:block;"></span>
+                    </span>
+                    <span style="font-size:14px;font-weight:600;color:var(--td-ink-2);text-align:center;line-height:1.25;">{{ t.label }}</span>
+                  </span>
+                </sc-if>
+                <sc-if value="{{ t.busy }}" hint-placeholder-val="{{ false }}">
+                  <span style="display:flex;flex-direction:column;align-items:center;gap:10px;width:78%;">
+                    <svg viewBox="0 0 100 100" style="width:40px;height:40px;animation:tdRoll 1.05s linear infinite;">
+                      <circle cx="50" cy="50" r="45" fill="#23282b"></circle>
+                      <circle cx="50" cy="50" r="36" fill="none" stroke="#4a5359" stroke-width="16" stroke-dasharray="11 8"></circle>
+                      <circle cx="50" cy="50" r="24" fill="#3d4449"></circle>
+                      <circle cx="50" cy="50" r="19" fill="#9aa6ad"></circle>
+                      <circle cx="50" cy="30" r="2.6" fill="#77848c"></circle>
+                    </svg>
+                    <span style="width:100%;height:6px;border-radius:3px;background:#d9d4ce;overflow:hidden;"><span style="display:block;height:6px;background:var(--td-blue);width:{{ t.pct }}%;"></span></span>
+                    <span style="font-size:13px;font-weight:600;color:var(--td-ink-2);">Sending</span>
+                  </span>
+                </sc-if>
+                <sc-if value="{{ t.done }}" hint-placeholder-val="{{ false }}">
+                  <span style="position:absolute;inset:0;display:block;background:radial-gradient(118% 96% at 30% 16%, #5a646d 0%, #2e353a 56%, #171b1e 100%);">
+                    <span style="position:absolute;inset:0;display:grid;place-items:center;">
+                      <sc-if value="{{ t.isPlate }}" hint-placeholder-val="{{ false }}">
+                        <span style="border:2px solid #cdd4d9;border-radius:4px;padding:6px 9px;background:linear-gradient(150deg,#7d868d,#5b6469);box-shadow:0 3px 10px rgba(0,0,0,.45);display:block;">
+                          <span style="display:block;font-family:var(--td-mono);font-size:12px;color:#fff;">BR7K48225</span>
+                          <span style="display:block;font-family:var(--td-mono);font-size:8px;color:#dbe1e5;margin-top:2px;">18.00R33</span>
+                        </span>
+                      </sc-if>
+                      <sc-if value="{{ t.isDamage }}" hint-placeholder-val="{{ false }}">
+                        <svg viewBox="0 0 100 100" style="width:78px;height:78px;">
+                          <circle cx="50" cy="50" r="45" fill="#191d20"></circle>
+                          <circle cx="50" cy="50" r="36" fill="none" stroke="#404a50" stroke-width="16" stroke-dasharray="11 8"></circle>
+                          <circle cx="50" cy="50" r="26" fill="#343c41"></circle>
+                          <path d="M28 62 L50 38" stroke="#e3623a" stroke-width="7" stroke-linecap="round"></path>
+                          <path d="M28 62 L50 38" stroke="#ffbf9f" stroke-width="2.4" stroke-linecap="round"></path>
+                        </svg>
+                      </sc-if>
+                      <sc-if value="{{ t.isWhole }}" hint-placeholder-val="{{ false }}">
+                        <svg viewBox="0 0 100 100" style="width:82px;height:82px;">
+                          <ellipse cx="50" cy="92" rx="32" ry="5" fill="rgba(0,0,0,.45)"></ellipse>
+                          <circle cx="50" cy="48" r="42" fill="#1c2124"></circle>
+                          <circle cx="50" cy="48" r="34" fill="none" stroke="#454f56" stroke-width="15" stroke-dasharray="11 8"></circle>
+                          <circle cx="50" cy="48" r="24" fill="#3a4247"></circle>
+                          <circle cx="50" cy="48" r="19" fill="#96a1a8"></circle>
+                          <circle cx="50" cy="48" r="6" fill="#6c7880"></circle>
+                        </svg>
+                      </sc-if>
+                    </span>
+                    <span style="position:absolute;left:0;right:0;bottom:0;background:rgba(9,13,16,.8);padding:5px 6px;display:block;">
+                      <span style="display:block;font-family:var(--td-mono);font-size:9px;color:#fff;line-height:1.35;">09:41 · J. Whelan</span>
+                      <span style="display:block;font-family:var(--td-mono);font-size:9px;color:var(--td-hazard);line-height:1.35;">Triaged · Wattlebank N.</span>
+                    </span>
+                  </span>
+                </sc-if>
+              </span>
+            </button>
+          </sc-for>
+        </div>
+        <div style="font-size:15px;color:var(--td-ink-2);margin-bottom:20px;">{{ photoCountLabel }}</div>
+
+        <label style="display:block;margin-bottom:20px;">
+          <span style="display:block;font-size:16px;font-weight:600;margin-bottom:8px;">Tyre serial</span>
+          <input value="{{ serial }}" onInput="{{ onSerial }}" placeholder="BR7K48225" style="border:1px solid var(--td-line-strong);border-radius:var(--td-r-md);background:var(--td-paper);color:var(--td-ink);width:100%;font-family:var(--td-mono);font-size:24px;letter-spacing:.05em;padding:16px 14px;min-height:66px;">
+        </label>
+
+        <div style="margin-bottom:20px;">
+          <span style="display:block;font-size:16px;font-weight:600;margin-bottom:10px;">Can it be repaired?</span>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <button onClick="{{ setYes }}" style="min-height:74px;border:2px solid {{ yesBorder }};border-radius:var(--td-r-md);background:{{ yesBg }};color:{{ yesText }};font-family:var(--td-display);font-weight:700;font-size:29px;cursor:pointer;">YES</button>
+            <button onClick="{{ setNo }}" style="min-height:74px;border:2px solid {{ noBorder }};border-radius:var(--td-r-md);background:{{ noBg }};color:{{ noText }};font-family:var(--td-display);font-weight:700;font-size:29px;cursor:pointer;">NO</button>
+          </div>
+        </div>
+
+        <div style="margin-bottom:20px;">
+          <span style="display:block;font-size:16px;font-weight:600;margin-bottom:10px;">Where is the damage?</span>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <sc-for list="{{ positions }}" as="pos" hint-placeholder-count="4">
+              <button onClick="{{ pos.onTap }}" style="min-height:58px;padding:0 22px;border:2px solid {{ pos.border }};border-radius:var(--td-r-md);background:{{ pos.bg }};color:{{ pos.text }};font-family:var(--td-display);font-weight:600;font-size:22px;cursor:pointer;text-transform:capitalize;">{{ pos.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <sc-if value="{{ isReject }}" hint-placeholder-val="{{ false }}">
+          <label style="display:block;margin-bottom:20px;">
+            <span style="display:block;font-size:16px;font-weight:700;color:var(--td-fail-deep);margin-bottom:8px;">Why can't it be repaired? Required.</span>
+            <input value="{{ reason }}" onInput="{{ onReason }}" placeholder="Bead damage through the wire bundle" style="border:2px solid var(--td-fail);border-radius:var(--td-r-md);background:var(--td-paper);color:var(--td-ink);width:100%;font-size:18px;padding:16px 14px;min-height:60px;">
+          </label>
+        </sc-if>
+
+        <label style="display:block;margin-bottom:22px;">
+          <span style="display:block;font-size:16px;font-weight:600;margin-bottom:8px;">Note for the workshop — optional</span>
+          <input placeholder="Anything they should know" style="border:1px solid var(--td-line-strong);border-radius:var(--td-r-md);background:var(--td-paper);color:var(--td-ink);width:100%;font-size:17px;padding:16px 14px;min-height:60px;">
+        </label>
+
+        <sc-if value="{{ blocked }}" hint-placeholder-val="{{ true }}">
+          <div style="border-left:5px solid var(--td-fail);background:var(--td-fail-tint);border-radius:var(--td-r-sm);padding:13px 15px;margin-bottom:16px;font-size:16px;color:var(--td-fail-deep);line-height:1.4;">{{ blockedMessage }}</div>
+        </sc-if>
+
+        <button onClick="{{ saveTyre }}" disabled="{{ blocked }}" style="border:none;background:var(--td-blue);color:#fff;border-radius:var(--td-r-md);width:100%;font-size:22px;font-weight:700;padding:20px;min-height:70px;cursor:pointer;margin-bottom:12px;box-shadow:0 10px 24px rgba(13,100,173,.32);">Save and next tyre</button>
+        <button onClick="{{ toStep3 }}" style="border:1px solid var(--td-line-strong);background:var(--td-paper);color:var(--td-ink);border-radius:var(--td-r-md);width:100%;font-size:19px;font-weight:600;padding:17px;min-height:60px;cursor:pointer;">Finish the visit</button>
+
+        <sc-for list="{{ saved }}" as="c" hint-placeholder-count="0">
+          <div style="margin-top:14px;border:1px solid var(--td-line);border-radius:var(--td-r-md);background:var(--td-paper);padding:14px;display:flex;align-items:center;gap:13px;animation:tdArrive 320ms ease-out both;">
+            <svg viewBox="0 0 100 100" style="width:46px;height:46px;flex:none;" aria-hidden="true">
+              <circle cx="50" cy="50" r="45" fill="#23282b"></circle>
+              <circle cx="50" cy="50" r="36" fill="none" stroke="#4a5359" stroke-width="16" stroke-dasharray="11 8"></circle>
+              <circle cx="50" cy="50" r="24" fill="#3d4449"></circle>
+              <circle cx="50" cy="50" r="19" fill="#9aa6ad"></circle>
+              <circle cx="50" cy="50" r="6" fill="#6d7a82"></circle>
+            </svg>
+            <span style="flex:1;min-width:0;">
+              <span style="display:block;font-family:var(--td-mono);font-size:17px;font-weight:600;">{{ c.serial }}</span>
+              <span style="display:block;font-size:15px;color:var(--td-ink-2);">{{ c.detail }}</span>
+            </span>
+            <span style="background:{{ c.badgeBg }};color:{{ c.badgeText }};border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700;white-space:nowrap;">{{ c.badge }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isStep3 }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:20px 20px 28px;animation:tdRise 300ms ease-out both;">
+        <h1 style="font-family:var(--td-display);font-weight:700;font-size:34px;line-height:1.03;margin:0 0 4px;">Visit summary</h1>
+        <div style="font-size:16px;color:var(--td-ink-2);margin-bottom:20px;"><span style="font-family:var(--td-mono);">SV-26-0092</span> · Wattlebank Coal, Wattlebank North · 07 Aug 26</div>
+
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:22px;">
+          <div style="border:1px solid var(--td-line);border-radius:var(--td-r-md);background:var(--td-paper);padding:14px;">
+            <div style="font-family:var(--td-mono);font-size:30px;font-weight:600;line-height:1;">6</div>
+            <div style="font-size:15px;color:var(--td-ink-2);margin-top:3px;">assessed</div>
+          </div>
+          <div style="border:1px solid rgba(31,138,77,.45);border-radius:var(--td-r-md);background:var(--td-pass-tint);padding:14px;">
+            <div style="font-family:var(--td-mono);font-size:30px;font-weight:600;line-height:1;color:var(--td-pass-deep);">5</div>
+            <div style="font-size:15px;color:var(--td-pass-deep);margin-top:3px;">repairable</div>
+          </div>
+          <div style="border:1px solid rgba(192,42,34,.45);border-radius:var(--td-r-md);background:var(--td-fail-tint);padding:14px;">
+            <div style="font-family:var(--td-mono);font-size:30px;font-weight:600;line-height:1;color:var(--td-fail-deep);">1</div>
+            <div style="font-size:15px;color:var(--td-fail-deep);margin-top:3px;">rejected</div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:24px;">
+          <sc-for list="{{ visitCards }}" as="v" hint-placeholder-count="6">
+            <div style="border:1px solid {{ v.border }};border-radius:var(--td-r-md);background:{{ v.bg }};padding:14px;">
+              <div style="display:flex;align-items:center;gap:13px;">
+                <svg viewBox="0 0 100 100" style="width:48px;height:48px;flex:none;" aria-hidden="true">
+                  <circle cx="50" cy="50" r="45" fill="#23282b"></circle>
+                  <circle cx="50" cy="50" r="36" fill="none" stroke="#4a5359" stroke-width="16" stroke-dasharray="11 8"></circle>
+                  <circle cx="50" cy="50" r="24" fill="#3d4449"></circle>
+                  <circle cx="50" cy="50" r="19" fill="#9aa6ad"></circle>
+                  <circle cx="50" cy="50" r="6" fill="#6d7a82"></circle>
+                </svg>
+                <div style="flex:1;min-width:0;">
+                  <div style="font-family:var(--td-mono);font-size:17px;font-weight:600;">{{ v.serial }}</div>
+                  <div style="font-size:15px;color:var(--td-ink-2);">{{ v.make }} {{ v.size }} · {{ v.fleetNo }}</div>
+                </div>
+                <span style="background:{{ v.badgeBg }};color:{{ v.badgeText }};border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700;white-space:nowrap;">{{ v.badge }}</span>
+              </div>
+              <div style="font-size:15px;color:var(--td-ink-2);margin-top:10px;line-height:1.4;">{{ v.detail }}</div>
+              <sc-if value="{{ v.rejected }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:12px;display:flex;gap:12px;align-items:center;">
+                  <div style="position:relative;width:92px;height:66px;flex:none;border-radius:var(--td-r-sm);overflow:hidden;background:radial-gradient(118% 96% at 30% 16%, #5a646d 0%, #2e353a 56%, #171b1e 100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);">
+                    <div style="position:absolute;inset:0;display:grid;place-items:center;">
+                      <svg viewBox="0 0 100 100" style="width:50px;height:50px;">
+                        <circle cx="50" cy="50" r="45" fill="#191d20"></circle>
+                        <circle cx="50" cy="50" r="36" fill="none" stroke="#404a50" stroke-width="16" stroke-dasharray="11 8"></circle>
+                        <path d="M30 66 L54 40" stroke="#e3623a" stroke-width="8" stroke-linecap="round"></path>
+                      </svg>
+                    </div>
+                  </div>
+                  <div style="font-size:14px;color:var(--td-fail-deep);line-height:1.4;">Rejection photo<br>10:04 · J. Whelan · Wattlebank North</div>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="background:var(--td-blue-tint);border:1px solid rgba(13,100,173,.35);border-radius:var(--td-r-md);padding:16px;margin-bottom:22px;">
+          <div style="font-size:17px;font-weight:700;margin-bottom:6px;">What happens when you send</div>
+          <div style="font-size:16px;line-height:1.5;color:var(--td-ink-2);">Sales gets the batch summary and the serials, and raises the quote in NetSuite. The quote number comes back into this visit, and logistics is told to collect.</div>
+        </div>
+
+        <button onClick="{{ openEmail }}" style="border:none;background:var(--td-blue);color:#fff;border-radius:var(--td-r-md);width:100%;font-size:22px;font-weight:700;padding:20px;min-height:70px;cursor:pointer;margin-bottom:12px;box-shadow:0 10px 24px rgba(13,100,173,.32);">Send to sales</button>
+        <button onClick="{{ backToStep2 }}" style="border:1px solid var(--td-line-strong);background:var(--td-paper);color:var(--td-ink);border-radius:var(--td-r-md);width:100%;font-size:19px;font-weight:600;padding:17px;min-height:60px;cursor:pointer;">Back to the pile</button>
+      </div>
+    </sc-if>
+  </div>
+
+  <sc-if value="{{ email }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeEmail }}" style="position:fixed;inset:0;z-index:90;background:rgba(6,12,16,.72);display:grid;place-items:center;padding:26px;">
+      <div onClick="{{ stop }}" role="dialog" aria-modal="true" style="background:var(--td-paper);max-width:660px;width:100%;border-radius:var(--td-r-lg);box-shadow:var(--td-lift);overflow:hidden;animation:tdRise 220ms ease-out both;">
+        <div style="display:flex;align-items:center;gap:14px;padding:16px 22px;border-bottom:1px solid var(--td-line);background:var(--td-ground-soft);">
+          <span style="font-family:var(--td-display);font-weight:700;font-size:23px;">What sales gets</span>
+          <button onClick="{{ closeEmail }}" style="margin-left:auto;border:1px solid var(--td-line-strong);background:var(--td-paper);color:var(--td-ink);border-radius:var(--td-r-sm);font-size:16px;font-weight:600;padding:9px 16px;cursor:pointer;white-space:nowrap;">Close</button>
+        </div>
+        <div style="padding:22px;">
+          <div style="display:grid;grid-template-columns:76px 1fr;gap:9px 14px;font-size:16px;margin-bottom:18px;">
+            <span style="color:var(--td-ink-3);">To</span><span style="font-family:var(--td-mono);font-size:15px;">sales@tyredoctor</span>
+            <span style="color:var(--td-ink-3);">From</span><span style="font-family:var(--td-mono);font-size:15px;">TD One — Mackay</span>
+            <span style="color:var(--td-ink-3);">Subject</span><span style="font-weight:600;">Initial inspection ready — Wattlebank Coal, Wattlebank North (6 tyres)</span>
+          </div>
+          <div style="border-top:1px solid var(--td-line);padding-top:18px;display:flex;flex-direction:column;gap:10px;font-size:16px;line-height:1.5;">
+            <div>Site visit SV-26-0092, 07 Aug 26, assessed by J. Whelan.</div>
+            <div>6 tyres assessed — 5 repairable, 1 not repairable.</div>
+            <div>Serials: BR7K48225, BR7K48226, MC9T31119, GY4L22891, BR7K48229, and BR7K48227 (rejected).</div>
+            <div>Quote no. (from NetSuite): not yet raised.</div>
+          </div>
+          <div style="display:flex;gap:14px;margin-top:20px;">
+            <div style="width:140px;">
+              <div style="position:relative;height:100px;border-radius:var(--td-r-sm);overflow:hidden;background:radial-gradient(118% 96% at 30% 16%, #5a646d 0%, #2e353a 56%, #171b1e 100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);">
+                <div style="position:absolute;inset:0;display:grid;place-items:center;">
+                  <svg viewBox="0 0 100 100" style="width:74px;height:74px;">
+                    <circle cx="50" cy="50" r="45" fill="#191d20"></circle>
+                    <circle cx="50" cy="50" r="36" fill="none" stroke="#404a50" stroke-width="16" stroke-dasharray="11 8"></circle>
+                    <circle cx="50" cy="50" r="26" fill="#343c41"></circle>
+                    <path d="M28 62 L50 38" stroke="#e3623a" stroke-width="7" stroke-linecap="round"></path>
+                  </svg>
+                </div>
+              </div>
+              <div style="font-size:14px;color:var(--td-ink-2);margin-top:6px;">GY4L22891 · sidewall</div>
+            </div>
+            <div style="width:140px;">
+              <div style="position:relative;height:100px;border-radius:var(--td-r-sm);overflow:hidden;background:radial-gradient(118% 96% at 30% 16%, #5a646d 0%, #2e353a 56%, #171b1e 100%);box-shadow:inset 0 0 0 2px var(--td-fail);">
+                <div style="position:absolute;inset:0;display:grid;place-items:center;">
+                  <svg viewBox="0 0 100 100" style="width:74px;height:74px;">
+                    <circle cx="50" cy="50" r="45" fill="#191d20"></circle>
+                    <circle cx="50" cy="50" r="36" fill="none" stroke="#404a50" stroke-width="16" stroke-dasharray="11 8"></circle>
+                    <path d="M26 70 L58 34" stroke="#e3623a" stroke-width="9" stroke-linecap="round"></path>
+                  </svg>
+                </div>
+              </div>
+              <div style="font-size:14px;color:var(--td-fail-deep);font-weight:600;margin-top:6px;">BR7K48227 · rejected</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:14px;margin-top:22px;">
+            <a href="TD One - Branch Console.dc.html" style="display:inline-flex;align-items:center;gap:10px;background:var(--td-blue);color:#fff;font-size:17px;font-weight:600;padding:15px 22px;border-radius:var(--td-r-md);text-decoration:none;white-space:nowrap;">Send and go to the floor <span style="font-size:19px;line-height:1;">→</span></a>
+            <button onClick="{{ closeEmail }}" style="border:1px solid var(--td-line-strong);background:var(--td-paper);color:var(--td-ink);border-radius:var(--td-r-md);font-size:16px;font-weight:600;padding:15px 20px;cursor:pointer;">Keep editing</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1180,&quot;height&quot;:980}}">
+const POSITIONS = ['sidewall', 'tread', 'shoulder', 'bead'];
+
+const VISIT = [
+  { serial:'BR7K48225', make:'Bridgestone', size:'18.00R33', fleetNo:'DZ-11', repairable:true, position:'tread', sizeMm:44, category:'Minor' },
+  { serial:'BR7K48226', make:'Bridgestone', size:'40.00R57', fleetNo:'HT-118', repairable:true, position:'shoulder', sizeMm:120, category:'Intermediate' },
+  { serial:'MC9T31119', make:'Michelin', size:'40.00R57', fleetNo:'HT-119', repairable:true, position:'tread', sizeMm:61, category:'Intermediate' },
+  { serial:'GY4L22891', make:'Goodyear', size:'27.00R49', fleetNo:'LD-31', repairable:true, position:'sidewall', sizeMm:155, category:'Major' },
+  { serial:'BR7K48229', make:'Bridgestone', size:'24.00R35', fleetNo:'LD-07', repairable:true, position:'tread', sizeMm:35, category:'Minor' },
+  { serial:'BR7K48227', make:'Bridgestone', size:'40.00R57', fleetNo:'HT-120', repairable:false, position:'bead', reason:'Bead damage through the wire bundle, both beads.' },
+];
+
+class Component extends DCLogic {
+  state = {
+    step: 1, customer: 'Wattlebank Coal', pallet: '6', tyreN: 1,
+    photos: { plate: 'empty', damage: 'empty', whole: 'empty' }, pct: 0,
+    serial: '', repairable: null, position: null, reason: '', saved: [], email: false,
+  };
+
+  componentWillUnmount() { clearInterval(this.upload); }
+
+  onCustomer = (e) => this.setState({ customer: e.target.value });
+  onPallet = (e) => this.setState({ pallet: e.target.value.replace(/[^0-9]/g, '') });
+  onSerial = (e) => this.setState({ serial: e.target.value.toUpperCase() });
+  onReason = (e) => this.setState({ reason: e.target.value });
+  toStep2 = () => this.setState({ step: 2 });
+  toStep3 = () => this.setState({ step: 3 });
+  backToStep2 = () => this.setState({ step: 2 });
+  setYes = () => this.setState({ repairable: true });
+  setNo = () => this.setState({ repairable: false });
+  setPosition = (p) => () => this.setState({ position: p });
+  openEmail = () => this.setState({ email: true });
+  closeEmail = () => this.setState({ email: false });
+  stop = (e) => e.stopPropagation();
+
+  // PHASE 2: real capture and upload. Determinate progress, never a bare spinner.
+  capture = (key) => () => {
+    if (this.state.photos[key] !== 'empty') return;
+    this.setState((s) => ({ photos: { ...s.photos, [key]: 'busy' }, pct: 0 }));
+    clearInterval(this.upload);
+    this.upload = setInterval(() => {
+      this.setState((s) => {
+        const pct = s.pct + 20;
+        if (pct >= 100) { clearInterval(this.upload); return { photos: { ...s.photos, [key]: 'done' }, pct: 0 }; }
+        return { pct };
+      });
+    }, 130);
+  };
+
+  saveTyre = () => {
+    const s = this.state;
+    const card = { serial: s.serial || 'BR7K48225', repairable: s.repairable !== false, position: s.position || 'tread', reason: s.reason };
+    this.setState((st) => ({
+      saved: [card, ...st.saved], tyreN: st.tyreN + 1, serial: '', repairable: null, position: null, reason: '',
+      photos: { plate: 'empty', damage: 'empty', whole: 'empty' },
+    }));
+  };
+
+  renderVals() {
+    const s = this.state;
+    const done = Object.values(s.photos).filter((v) => v === 'done').length;
+
+    const steps = [
+      { label: 'Details', n: 1 }, { label: 'Photograph', n: 2 }, { label: 'Review and send', n: 3 },
+    ].map((d) => ({
+      label: d.label,
+      bar: d.n <= s.step ? 'var(--td-hazard)' : 'rgba(234,243,248,.3)',
+      text: d.n <= s.step ? '#fff' : 'rgba(234,243,248,.6)',
+    }));
+
+    const tiles = [
+      { key: 'plate', label: 'Serial plate' }, { key: 'damage', label: 'The damage' }, { key: 'whole', label: 'Whole tyre' },
+    ].map((t) => {
+      const st = s.photos[t.key];
+      return {
+        label: t.label, onTap: this.capture(t.key),
+        empty: st === 'empty', busy: st === 'busy', done: st === 'done',
+        isPlate: st === 'done' && t.key === 'plate',
+        isDamage: st === 'done' && t.key === 'damage',
+        isWhole: st === 'done' && t.key === 'whole',
+        border: st === 'done' ? 'var(--td-blue)' : 'var(--td-line-strong)',
+        bg: st === 'done' ? '#1b1f22' : 'var(--td-paper)',
+        pct: s.pct,
+      };
+    });
+
+    const missing = [];
+    if (done < 3) missing.push((3 - done) + (3 - done === 1 ? ' more photo' : ' more photos'));
+    if (!s.serial) missing.push('the serial');
+    if (s.repairable === null) missing.push('repairable, yes or no');
+    if (!s.position) missing.push('where the damage is');
+    if (s.repairable === false && !s.reason.trim()) missing.push('a reason');
+
+    const on = (v) => ({ border: v ? 'var(--td-blue)' : 'var(--td-line-strong)', bg: v ? 'var(--td-blue)' : 'var(--td-paper)', text: v ? '#fff' : 'var(--td-ink-2)' });
+    const yes = on(s.repairable === true);
+    const no = s.repairable === false
+      ? { border: 'var(--td-fail)', bg: 'var(--td-fail)', text: '#fff' }
+      : { border: 'var(--td-line-strong)', bg: 'var(--td-paper)', text: 'var(--td-ink-2)' };
+
+    return {
+      steps, isStep1: s.step === 1, isStep2: s.step === 2, isStep3: s.step === 3,
+      customer: s.customer, onCustomer: this.onCustomer, pallet: s.pallet, onPallet: this.onPallet,
+      toStep2: this.toStep2, toStep3: this.toStep3, backToStep2: this.backToStep2,
+      tyreN: s.tyreN, doneCount: s.saved.length, tiles,
+      photoCountLabel: done === 3 ? 'All three photos captured.' : done + ' of 3 photos on this tyre.',
+      queued: s.saved.length > 0,
+      serial: s.serial, onSerial: this.onSerial,
+      yesBorder: yes.border, yesBg: yes.bg, yesText: yes.text,
+      noBorder: no.border, noBg: no.bg, noText: no.text,
+      isReject: s.repairable === false, reason: s.reason, onReason: this.onReason,
+      positions: POSITIONS.map((p) => {
+        const st = on(s.position === p);
+        return { label: p, onTap: this.setPosition(p), border: st.border, bg: st.bg, text: st.text };
+      }),
+      blocked: missing.length > 0,
+      blockedMessage: missing.length ? 'Before you can save this tyre we still need ' + missing.join(', ') + '.' : '',
+      saveTyre: this.saveTyre,
+      saved: s.saved.map((c) => ({
+        serial: c.serial,
+        detail: c.repairable ? 'Repairable · ' + c.position : (c.reason || 'Not repairable'),
+        badge: c.repairable ? 'Saved' : 'Rejected',
+        badgeBg: c.repairable ? 'var(--td-pass-tint)' : 'var(--td-fail-tint)',
+        badgeText: c.repairable ? 'var(--td-pass-deep)' : 'var(--td-fail-deep)',
+      })),
+      visitCards: VISIT.map((j) => ({
+        serial: j.serial, make: j.make, size: j.size, fleetNo: j.fleetNo, rejected: !j.repairable,
+        border: j.repairable ? 'var(--td-line)' : 'rgba(192,42,34,.45)',
+        bg: j.repairable ? 'var(--td-paper)' : 'var(--td-fail-tint)',
+        badge: j.repairable ? j.category : 'Not repairable',
+        badgeBg: j.repairable ? 'var(--td-blue-tint)' : 'var(--td-fail-tint)',
+        badgeText: j.repairable ? 'var(--td-blue-deep)' : 'var(--td-fail-deep)',
+        detail: j.repairable ? j.position + ' · ' + j.sizeMm + ' mm measured on site' : j.reason,
+      })),
+      email: s.email, openEmail: this.openEmail, closeEmail: this.closeEmail, stop: this.stop,
+    };
+  }
+}
+
+</script>
+</body>
+</html>
