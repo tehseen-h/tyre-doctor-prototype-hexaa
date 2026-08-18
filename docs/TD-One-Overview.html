@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>TD One — what it is, and how to walk through it</title>
+<style>
+  @page { size: A4; margin: 20mm 18mm 20mm 18mm; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: #1b2a35;
+    font-size: 11pt;
+    line-height: 1.55;
+    background: #ffffff;
+  }
+  h1, h2, h3, h4 { font-family: Arial, Helvetica, sans-serif; margin: 0 0 8px; color: #0d2a45; }
+  .section { page-break-before: always; padding-top: 2mm; }
+  .section:first-child { page-break-before: avoid; }
+  .kicker {
+    font-family: Arial, Helvetica, sans-serif; font-size: 9pt; font-weight: 700; letter-spacing: 0.14em;
+    text-transform: uppercase; color: #b5760a; margin-bottom: 6px;
+  }
+  h2 { font-size: 20pt; border-bottom: 3px solid #0d2a45; padding-bottom: 8px; margin-bottom: 16px; }
+  h3 { font-size: 13.5pt; color: #0d2a45; margin-top: 20px; }
+  p { margin: 0 0 10px; }
+  ul, ol { margin: 0 0 12px; padding-left: 20px; }
+  li { margin-bottom: 5px; }
+  strong { color: #0d2a45; }
+  .quote {
+    background: #f3f6f9; border-left: 4px solid #0d2a45; padding: 12px 16px; margin: 14px 0;
+    font-style: italic; font-size: 11.5pt; color: #26313b;
+  }
+  .quote cite { display: block; margin-top: 6px; font-style: normal; font-size: 9pt; color: #6b7a84; }
+  .callout {
+    background: #fff6e2; border: 1px solid #f0d68a; border-radius: 6px; padding: 12px 16px; margin: 14px 0; font-size: 10.5pt;
+  }
+  .callout.pass { background: #eaf6ee; border-color: #b7ddc4; }
+  .callout.note { background: #eaf1fb; border-color: #b9d3ee; }
+  .not-list { background: #fdecea; border: 1px solid #e9b7b1; border-radius: 6px; padding: 12px 16px; margin: 14px 0; }
+  .not-list strong { color: #8c2a20; }
+  .grid2 { display: flex; gap: 16px; margin: 14px 0; }
+  .grid2 > div { flex: 1; }
+  .page-card {
+    border: 1px solid #d7dee4; border-radius: 8px; padding: 14px 16px; margin: 0 0 14px; break-inside: avoid;
+  }
+  .page-card h4 { margin: 0 0 4px; font-size: 12.5pt; }
+  .page-card .who { font-family: Arial, Helvetica, sans-serif; font-size: 9pt; color: #b5760a; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 6px; }
+  .page-card p { font-size: 10.5pt; margin-bottom: 6px; }
+  .page-card .lookfor { font-size: 9.5pt; color: #4d5a63; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 10pt; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid #e0e6ea; vertical-align: top; }
+  th { font-family: Arial, Helvetica, sans-serif; font-size: 9pt; text-transform: uppercase; letter-spacing: .03em; color: #0d2a45; border-bottom: 2px solid #0d2a45; }
+  .step-num {
+    display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%;
+    background: #0d2a45; color: #fff; font-family: Arial, Helvetica, sans-serif; font-size: 10.5pt; font-weight: 700;
+    margin-right: 8px; flex: none;
+  }
+  .step { display: flex; align-items: flex-start; margin-bottom: 12px; }
+  .step > div { flex: 1; padding-top: 1px; }
+  .step h4 { margin: 0 0 3px; font-size: 12pt; }
+  .qa { margin-bottom: 14px; break-inside: avoid; }
+  .qa .q { font-family: Arial, Helvetica, sans-serif; font-weight: 700; color: #0d2a45; font-size: 11pt; margin-bottom: 3px; }
+  .qa .q::before { content: "Q. "; color: #b5760a; }
+  .qa .a::before { content: "A. "; color: #6b7a84; font-weight: 700; }
+  .cover {
+    height: 245mm; display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .cover .logo { width: 190px; }
+  .cover .titleblock { margin-top: 40mm; }
+  .cover h1 { font-size: 34pt; line-height: 1.08; margin-bottom: 10px; }
+  .cover .subtitle { font-family: Arial, Helvetica, sans-serif; font-size: 13pt; color: #4d5a63; max-width: 90%; }
+  .cover .stripe { height: 6px; background: linear-gradient(90deg, #0d2a45, #f5a300); margin: 22px 0; width: 120px; }
+  .cover .footer-meta { font-family: Arial, Helvetica, sans-serif; font-size: 9.5pt; color: #8a97a0; border-top: 1px solid #e0e6ea; padding-top: 10px; }
+  .footer-note { font-family: Arial, Helvetica, sans-serif; font-size: 8.5pt; color: #9aa5ac; margin-top: 26px; border-top: 1px solid #e6ebee; padding-top: 8px; }
+  .badge {
+    display: inline-block; font-family: Arial, Helvetica, sans-serif; font-size: 8.5pt; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .04em; padding: 2px 8px; border-radius: 999px; margin-left: 6px;
+  }
+  .badge.tyre { background: #e7f1fb; color: #0a4d87; }
+  .badge.rim { background: #fbe9e3; color: #a53a17; }
+  .badge.both { background: #f2f2f2; color: #444; }
+  .toc { font-family: Arial, Helvetica, sans-serif; }
+  .toc ol { list-style: none; padding: 0; counter-reset: toc; }
+  .toc li { counter-increment: toc; padding: 9px 0; border-bottom: 1px dotted #d7dee4; font-size: 12pt; }
+  .toc li::before { content: counter(toc) ".  "; color: #b5760a; font-weight: 700; margin-right: 4px; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section class="cover section">
+  <div>
+    <img class="logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDU4IiBoZWlnaHQ9IjMzNiIgdmlld0JveD0iMCAwIDEwNTggMzM2IiBmaWxsPSJub25lIj48ZyBjbGlwLXBhdGg9InVybCgjY2xpcDBfNDUyNF8yKSI+PGc+PHBhdGggZD0iTTE3OC40OTEgMTg1LjY3NUgyMDEuODM5TDE4My40MTQgMjY1LjQ4M0gyMDguOTU2TDIyNy4zODMgMTg1LjY3NUgyNTAuODUyTDI1NS44MzUgMTY0LjA5NUgxODMuNDcyTDE3OC40OTEgMTg1LjY3NVoiIGZpbGw9IiMwZDJhNDUiPjwvcGF0aD48L2c+PGc+PHBhdGggZD0iTTMyNC42NDIgMTY0LjA5NUwyOTguMDQyIDE5OS45MzdMMjg4LjQ3NiAxNjQuMDk1SDI2MS4zOUwyNzkuNDYgMjI1LjgxOEwyNzAuMzAyIDI2NS40ODNIMjk1Ljc2NEwzMDQuNjQ2IDIyNy4wMTNMMzUyLjIwNCAxNjQuMDk1SDMyNC42NDJaIiBmaWxsPSIjMGQyYTQ1Ij48L3BhdGg+PC9nPjxnPjxwYXRoIGQ9Ik0zNzcuOTA3IDE4NC43MTJDMzgxLjIxMSAxODQuMzU3IDM4NC43NDcgMTg0LjE2IDM4Ny44ODMgMTg0LjE2QzM5NC4zODggMTg0LjE2IDM5OC4zMDcgMTg1LjEwOSAzOTkuODYgMTg3LjA2NEM0MDEuMDYxIDE4OC41NzMgNDAxLjE5MSAxOTEuMjczIDQwMC4yNTcgMTk1LjMxN0MzOTguMDU5IDIwNC44NDMgMzkyLjkwMSAyMDguMjE5IDM4MC41NDkgMjA4LjIxOUMzNzcuODI5IDIwOC4yMTkgMzc1LjE1NSAyMDguMjAxIDM3Mi41MjEgMjA4LjAzOUwzNzcuOTA3IDE4NC43MTJaTTQyNS4xODUgMTk2LjczM0M0MjcuNjUxIDE4Ni4wNTUgNDI2LjY4NyAxNzguMTQ1IDQyMi4yMzcgMTcyLjU1MkM0MTUuNjIxIDE2NC4yMzUgNDAyLjY3MyAxNjMuMTEyIDM5MC44OCAxNjMuMTEyQzM4MC4wNzYgMTYzLjExMiAzNjguMzUyIDE2NC4wODQgMzU4LjcxNSAxNjUuNzc5TDM1Ni43OCAxNjYuMTE5TDMzMy44NCAyNjUuNDg0SDM1OS4yNkwzNjcuNjM3IDIyOS4yQzM2OS43NzIgMjI5LjMxMiAzNzIuMjQ3IDIyOS40MTMgMzc0LjcwMyAyMjkuNDUzTDM4NS45NzUgMjY1LjQ4NEg0MTQuNTc1TDQwMS4yNDUgMjI2LjE5M0M0MTMuODIgMjIxLjY0NyA0MjEuNjY3IDIxMS45NzkgNDI1LjE4NSAxOTYuNzMzWiIgZmlsbD0iIzBkMmE0NSI+PC9wYXRoPjwvZz48Zz48cGF0aCBkPSJNNTY4LjU3NyAyNDQuNzIzQzU2Ni44MTcgMjQ0LjcyMyA1NjUuMDc1IDI0NC42MzggNTYzLjMxMiAyNDQuNDY2TDU3Ni45NzYgMTg1LjI4N0M1NzguODczIDE4NS4wODMgNTgxLjIyNSAxODQuODk5IDU4My43NTkgMTg0Ljg5OUM1OTEuODQ4IDE4NC44OTkgNTk2Ljk3MSAxODYuMzk0IDU5OS40MTcgMTg5LjQ2OEM2MDMuMjI1IDE5NC4yNTYgNjAwLjk5NyAyMDMuOTA2IDU5OC42MzkgMjE0LjEyM0M1OTQuMzg1IDIzMi41NSA1OTEuNTc2IDI0NC43MjMgNTY4LjU3NyAyNDQuNzIzWk01OTAuMDggMTYzLjExMkM1NzkuMjY0IDE2My4xMTIgNTY3LjIwOSAxNjQuMTQyIDU1Ny44MzEgMTY1Ljg2Nkw1NTUuOTE2IDE2Ni4yMTZMNTMzLjUyMyAyNjMuMjA4TDUzNi41NDEgMjYzLjc5MkM1NDUuMjE2IDI2NS40NjcgNTU2LjgyMSAyNjYuNDY4IDU2Ny41ODggMjY2LjQ2OEM1ODUuNzUyIDI2Ni40NjggNTk4LjI3MSAyNjIuMzExIDYwNi45ODcgMjUzLjM4NkM2MTQuNTExIDI0NS42ODMgNjE5LjM5MSAyMzQuNjk0IDYyMy44MzEgMjE1LjQ1OEM2MjguMTEzIDE5Ni45MDggNjI5LjQ2OCAxODIuNjcxIDYyMi4xNTMgMTczLjQ3NUM2MTYuNTI5IDE2Ni40MDYgNjA2LjMzOSAxNjMuMTEyIDU5MC4wOCAxNjMuMTEyWiIgZmlsbD0iIzBkMmE0NSI+PC9wYXRoPjwvZz48Zz48cGF0aCBkPSJNNjY3LjEwNyAyNDQuNTU5QzY2Mi4yOTkgMjQ0LjU1OSA2NTkuMTc2IDI0My41NzEgNjU3LjU2MiAyNDEuNTRDNjU0LjAzOSAyMzcuMTEyIDY1Ni41OCAyMjYuMTAzIDY1OS4wMzggMjE1LjQ1OEM2NjMuNjYyIDE5NS40MyA2NjYuNzk0IDE4NC45NzkgNjgyLjIzMSAxODQuOTc5QzY4Ny4wMTIgMTg0Ljk3OSA2OTAuMTIgMTg1Ljk2NCA2OTEuNzMxIDE4Ny45OUM2OTUuMjU4IDE5Mi40MjQgNjkyLjcxMSAyMDMuNDU1IDY5MC4yNDggMjE0LjEyM0M2ODUuNjMyIDIzNC4xMjMgNjgyLjUwNiAyNDQuNTU5IDY2Ny4xMDcgMjQ0LjU1OVpNNjg1LjkxIDE2My4xMTJDNjUyLjAwOCAxNjMuMTEyIDY0MS4wNTYgMTgxLjgxNiA2MzMuNTk5IDIxNC4xMjNDNjI4LjUxNiAyMzYuMTQyIDYyOS4wNTYgMjQ4Ljk0MiA2MzUuNDA3IDI1Ni45MjdDNjQwLjU4NiAyNjMuNDM2IDY0OS40ODYgMjY2LjQ2OCA2NjMuNDE4IDI2Ni40NjhDNjk3LjI4NiAyNjYuNDY4IDcwOC4yMyAyNDcuNzY0IDcxNS42ODggMjE1LjQ1OEM3MjAuNzcyIDE5My40MzIgNzIwLjIzNCAxODAuNjMgNzEzLjg4MiAxNzIuNjQ2QzcwOC43MDggMTY2LjE0MiA2OTkuODIgMTYzLjExMiA2ODUuOTEgMTYzLjExMloiIGZpbGw9IiMwZDJhNDUiPjwvcGF0aD48L2c+PGc+PHBhdGggZD0iTTc3OC44MzEgMTYzLjExM0M3NjIuMzE5IDE2My4xMTMgNzUwLjczOSAxNjcuMDkzIDc0Mi4zODcgMTc1LjY0MUM3MzQuNzM4IDE4My40NjkgNzI5LjU4OCAxOTQuOTc3IDcyNS4xNjggMjE0LjEyM0M3MjAuMDQ4IDIzNi4yOTcgNzIwLjU2NiAyNDguNjE0IDcyNi45NDggMjU2LjYzOUM3MzIuMjgzIDI2My4zNDUgNzQxLjYyMiAyNjYuNDY5IDc1Ni4zMzkgMjY2LjQ2OUM3NjUuODA2IDI2Ni40NjkgNzc1LjE1OSAyNjUuNDE4IDc4Mi42NzggMjYzLjUwOUw3ODQuNjYzIDI2My4wMDVMNzg3LjAzNCAyNDIuMDkzTDc4My4xNzggMjQyLjcxMUM3NzYuNjQ2IDI0My43NTkgNzY5Ljg5MiAyNDQuMzE0IDc2My42NDggMjQ0LjMxNEM3NTYuNSAyNDQuMzE0IDc1MS45NTQgMjQyLjk2NyA3NDkuNzUgMjQwLjE5N0M3NDYuMDUyIDIzNS41NDkgNzQ4LjMwNiAyMjUuNzkgNzUwLjY5MSAyMTUuNDU3Qzc1NS4yNzEgMTk1LjYxOCA3NTguNTk1IDE4NS4yNjYgNzc4LjY1IDE4NS4yNjZDNzg0Ljg3NSAxODUuMjY2IDc5MS4xOTUgMTg1LjgwMyA3OTcuNDM2IDE4Ni44NjNMNzk5LjkxNCAxODcuMjgzTDgwNi45MzEgMTY3LjAwMUw4MDMuOTI2IDE2Ni4xMzdDNzk3LjE0NiAxNjQuMTg3IDc4OC4yMzQgMTYzLjExMyA3NzguODMxIDE2My4xMTNaIiBmaWxsPSIjMGQyYTQ1Ij48L3BhdGg+PC9nPjxnPjxwYXRoIGQ9Ik04ODYuNzcyIDE2NC4wOTVIODE0LjQxTDgwOS40MjggMTg1LjY3NUg4MzIuNzc3TDgxNC4zNSAyNjUuNDgzSDgzOS44OTNMODU4LjMxOCAxODUuNjc1SDg4MS43OUw4ODYuNzcyIDE2NC4wOTVaIiBmaWxsPSIjMGQyYTQ1Ij48L3BhdGg+PC9nPjxnPjxwYXRoIGQ9Ik05MTIuODE3IDI0NC41NTlDOTA4LjAwOSAyNDQuNTU5IDkwNC44ODYgMjQzLjU3MSA5MDMuMjcyIDI0MS41NEM4OTkuNzQ5IDIzNy4xMTIgOTAyLjI5IDIyNi4xMDMgOTA0Ljc0OCAyMTUuNDU4QzkwOS4zNzIgMTk1LjQzIDkxMi41MDQgMTg0Ljk3OSA5MjcuOTQxIDE4NC45NzlDOTMyLjcyMiAxODQuOTc5IDkzNS44MyAxODUuOTY0IDkzNy40NDEgMTg3Ljk5Qzk0MC45NjkgMTkyLjQyNCA5MzguNDIxIDIwMy40NTUgOTM1Ljk1OCAyMTQuMTIzQzkzMS4zNDIgMjM0LjEyMyA5MjguMjE2IDI0NC41NTkgOTEyLjgxNyAyNDQuNTU5Wk05NTkuNTkyIDE3Mi42NDZDOTU0LjQxOCAxNjYuMTQyIDk0NS41MyAxNjMuMTEyIDkzMS42MiAxNjMuMTEyQzg5Ny43MTggMTYzLjExMiA4ODYuNzY2IDE4MS44MTYgODc5LjMwOSAyMTQuMTIzQzg3NC4yMjYgMjM2LjE0MiA4NzQuNzY2IDI0OC45NDIgODgxLjExNyAyNTYuOTI3Qzg4Ni4yOTYgMjYzLjQzNiA4OTUuMTk2IDI2Ni40NjggOTA5LjEyOCAyNjYuNDY4Qzk0Mi45OTYgMjY2LjQ2OCA5NTMuOTQgMjQ3Ljc2NCA5NjEuMzk4IDIxNS40NThDOTY2LjQ4MiAxOTMuNDMyIDk2NS45NDQgMTgwLjYzIDk1OS41OTIgMTcyLjY0NloiIGZpbGw9IiMwZDJhNDUiPjwvcGF0aD48L2c+PGc+PHBhdGggZD0iTTEwMDUuOTYgMTg0LjcxMkMxMDA5LjI2IDE4NC4zNTcgMTAxMi44IDE4NC4xNiAxMDE1LjkzIDE4NC4xNkMxMDIyLjQ0IDE4NC4xNiAxMDI2LjM2IDE4NS4xMDkgMTAyNy45MSAxODcuMDY0QzEwMjkuMTEgMTg4LjU3MyAxMDI5LjI0IDE5MS4yNzMgMTAyOC4zMSAxOTUuMzE3QzEwMjYuMTEgMjA0Ljg0MyAxMDIwLjk1IDIwOC4yMTkgMTAwOC42IDIwOC4yMTlDMTAwNS44OCAyMDguMjE5IDEwMDMuMjEgMjA4LjIwMSAxMDAwLjU3IDIwOC4wMzlMMTAwNS45NiAxODQuNzEyWk0xMDUwLjI5IDE3Mi41NTJDMTA0My42NyAxNjQuMjM1IDEwMzAuNzIgMTYzLjExMiAxMDE4LjkzIDE2My4xMTJDMTAwOC4xMyAxNjMuMTEyIDk5Ni40MDMgMTY0LjA4NCA5ODYuNzY2IDE2NS43NzlMOTg0LjgzMSAxNjYuMTE5TDk2MS44OTEgMjY1LjQ4NEg5ODcuMzExTDk5NS42ODcgMjI5LjJDOTk3LjgyMyAyMjkuMzEyIDEwMDAuMyAyMjkuNDEzIDEwMDIuNzUgMjI5LjQ1M0wxMDE0LjAzIDI2NS40ODRIMTA0Mi42MkwxMDI5LjMgMjI2LjE5M0MxMDQxLjg3IDIyMS42NDcgMTA0OS43MiAyMTEuOTc5IDEwNTMuMjQgMTk2LjczM0MxMDU1LjcgMTg2LjA1NSAxMDU0Ljc0IDE3OC4xNDUgMTA1MC4yOSAxNzIuNTUyWiIgZmlsbD0iIzBkMmE0NSI+PC9wYXRoPjwvZz48Zz48cGF0aCBkPSJNNDU5Ljc3NiAyMDMuMzAzTDQ2MS40MzQgMTk2LjExOUM0NjMuNTEzIDE4Ny4xMTUgNDY0LjcgMTg1LjUxMiA0NzQuOTIgMTg1LjUxMkg1MDMuNjE2TDUwOC40MTMgMTY0LjczTDUwNC44NzcgMTY0LjU1MUM0OTguMzI4IDE2NC4yMiA0ODUuODUzIDE2My44NSA0NzguOTYxIDE2My44NUM0NjMuMTQ2IDE2My44NSA0NDMuNDY1IDE2My44NSA0MzcuNTYyIDE4OS40MTlMNDI2LjE2NCAyMzguNzg2QzQyNC4xNzMgMjQ3LjQxMiA0MjQuOTMzIDI1My43NzkgNDI4LjQ4OSAyNTguMjQ4QzQzMy45OTIgMjY1LjE2NyA0NDQuNTcgMjY1LjczIDQ1Ni44MDkgMjY1LjczQzQ2My4wNSAyNjUuNzMgNDc1LjgxIDI2NS4zMzkgNDgzLjA1IDI2NC45ODhMNDg1LjI5MiAyNjQuODhMNDkwLjA5NiAyNDQuMDY3SDQ2MC4wMzJDNDU1LjQxNCAyNDQuMDY3IDQ1Mi43MTIgMjQzLjYxMiA0NTEuOTk3IDI0Mi43MTVDNDUwLjk3NCAyNDEuNDI3IDQ1Mi4xNDEgMjM2LjM3NCA0NTIuNTI0IDIzNC43MTJMNDU0Ljg1IDIyNC42MzhMNDU5Ljc3NiAyMDMuMzAzWiIgZmlsbD0iIzBkMmE0NSI+PC9wYXRoPjwvZz48Zz48cGF0aCBkPSJNNDYxLjc5MSAyMjQuNjM4SDQ5Mi43ODFMNDk3LjcwNiAyMDMuMzAzSDQ2Ni43NDlMNDYxLjc5MSAyMjQuNjM4WiIgZmlsbD0iIzBkMmE0NSI+PC9wYXRoPjwvZz48Zz48cGF0aCBkPSJNMTA0MC41NSAzMjEuNTQ5SDEwMzUuNVYzMTMuMDI4SDEwNDAuNDdDMTA0MS43NCAzMTMuMDI4IDEwNDIuNyAzMTMuNDA5IDEwNDMuMzcgMzE0LjE3MUMxMDQ0LjA1IDMxNC45MzUgMTA0NC4zOCAzMTUuOTYgMTA0NC4zOCAzMTcuMjUxQzEwNDQuMzggMzE4LjUzOSAxMDQ0LjA2IDMxOS41NzcgMTA0My40MyAzMjAuMzY4QzEwNDIuOCAzMjEuMTU3IDEwNDEuODQgMzIxLjU0OSAxMDQwLjU1IDMyMS41NDlaTTEwNDAuNzUgMzI2LjIwNUwxMDQzLjg3IDMzNS4yMDNIMTA0OS44MkwxMDQ2IDMyNC45NDNDMTA0OC42MyAzMjMuMjg1IDEwNDkuOTQgMzIwLjcwOSAxMDQ5Ljk0IDMxNy4yMDlDMTA0OS45NCAzMTEuMzE3IDEwNDYuNzkgMzA4LjM3MiAxMDQwLjQ3IDMwOC4zNzJIMTAzMC4wNlYzMzUuMjAzSDEwMzUuNVYzMjYuMjA1SDEwNDAuNzVaTTEwMjUuNTYgMzM1LjIwM1YzMzAuNDY3SDEwMTMuNjRWMzI0LjAzNkgxMDIzLjE5VjMxOS4zNzlIMTAxMy42NFYzMTMuMTA3SDEwMjUuNTZWMzA4LjM3MkgxMDA4LjJWMzM1LjIwM0gxMDI1LjU2Wk0xMDAyLjM2IDMzNS4yMDNWMzA4LjM3Mkg5OTYuOTE3VjMxOS4zNEg5ODYuOTM0VjMwOC4zNzJIOTgxLjQ5VjMzNS4yMDNIOTg2LjkzNFYzMjQuMDc1SDk5Ni45MTdWMzM1LjIwM0gxMDAyLjM2Wk05NjUuNTEgMzEzLjE4NVYzMzUuMjAzSDk3MC45NTdWMzEzLjE4NUg5NzguMDU4VjMwOC4zNzJIOTU4LjMzMVYzMTMuMTg1SDk2NS41MVpNOTU2LjIzOSAzMzUuMjAzVjMzMC40NjdIOTQ0LjMyNVYzMjQuMDM2SDk1My44NzNWMzE5LjM3OUg5NDQuMzI1VjMxMy4xMDdIOTU2LjIzOVYzMDguMzcySDkzOC44NzlWMzM1LjIwM0g5NTYuMjM5Wk05MjguMzg1IDMyNS41NzZWMzMwLjc4NEw5MjUuMTA5IDMzMC45NEM5MjIuNzE0IDMzMC45NCA5MjEuMTM4IDMzMC4zMjEgOTIwLjM3NCAzMjkuMDg3QzkxOS42MTEgMzI3Ljg0OSA5MTkuMjMxIDMyNS42ODcgOTE5LjIzMSAzMjIuNTk1QzkxOS4yMzEgMzE5LjUwNyA5MTkuNDIxIDMxNy4zMjMgOTE5LjgwMyAzMTYuMDQ1QzkyMC4xODUgMzE0Ljc3MiA5MjAuNzgyIDMxMy44OTYgOTIxLjU5NyAzMTMuNDIzQzkyMi40MTEgMzEyLjk0OSA5MjMuODI3IDMxMi43MTIgOTI1Ljg0MSAzMTIuNzEyQzkyNy44NTEgMzEyLjcxMiA5MzAuNDM3IDMxMi44ODMgOTMzLjU5MyAzMTMuMjI0TDkzMy43NDkgMzA5LjAwNEw5MzIuMzMgMzA4LjcyOEM5MjkuNDg3IDMwOC4xNzYgOTI2Ljg0NSAzMDcuODk5IDkyNC4zOTkgMzA3Ljg5OUM5MjAuNDc5IDMwNy44OTkgOTE3LjcwNSAzMDguOTc3IDkxNi4wNzUgMzExLjEzM0M5MTQuNDQzIDMxMy4yOTIgOTEzLjYyNyAzMTYuODAzIDkxMy42MjcgMzIxLjY2OUM5MTMuNjI3IDMyNi41MzYgOTE0LjQxIDMzMC4wODcgOTE1Ljk3NSAzMzIuMzIxQzkxNy41NDEgMzM0LjU1OSA5MjAuNDE1IDMzNS42NzYgOTI0LjU5NSAzMzUuNjc2QzkyNi45MzcgMzM1LjY3NiA5MjkuOTg5IDMzNS4zNzMgOTMzLjc0OSAzMzQuNzY4VjMyMC44NEg5MjUuOTM3VjMyNS41NzZIOTI4LjM4NVpNOTEwLjExNyAzMjEuOTA1QzkxMC4xMTcgMzE3LjE2OSA5MDkuMjgxIDMxMy42NTUgOTA3LjYxMSAzMTEuMzUxQzkwNS45NDEgMzA5LjA1MSA5MDMuMDY2IDMwNy44OTkgODk4Ljk4OSAzMDcuODk5Qzg5NC45MTMgMzA3Ljg5OSA4OTIuMDM4IDMwOS4wNTEgODkwLjM2OSAzMTEuMzUxQzg4OC42OTggMzEzLjY1NSA4ODcuODY1IDMxNy4xNjkgODg3Ljg2NSAzMjEuOTA1Qzg4Ny44NjUgMzI2LjY0IDg4OC42OTggMzMwLjExOSA4OTAuMzY5IDMzMi4zNDFDODkyLjAzOCAzMzQuNTY1IDg5NC45MTMgMzM1LjY3NiA4OTguOTg5IDMzNS42NzZDOTAzLjA2NiAzMzUuNjc2IDkwNS45NDEgMzM0LjU2NSA5MDcuNjExIDMzMi4zNDFDOTA5LjI4MSAzMzAuMTE5IDkxMC4xMTcgMzI2LjY0IDkxMC4xMTcgMzIxLjkwNVpNODkzLjQ2NyAzMjEuOTI1Qzg5My40NjcgMzE4LjY3NyA4OTMuODYyIDMxNi4zMTYgODk0LjY0OSAzMTQuODQzQzg5NS40MzkgMzEzLjM3MSA4OTYuODg2IDMxMi42MzMgODk4Ljk4OSAzMTIuNjMzQzkwMS4wOTQgMzEyLjYzMyA5MDIuNTQyIDMxMy4zNzEgOTAzLjMzIDMxNC44NDNDOTA0LjExOSAzMTYuMzE2IDkwNC41MTQgMzE4LjY3NyA5MDQuNTE0IDMyMS45MjVDOTA0LjUxNCAzMjUuMTczIDkwNC4xMjYgMzI3LjQ4OSA5MDMuMzUgMzI4Ljg2OUM5MDIuNTc0IDMzMC4yNTEgOTAxLjEyMSAzMzAuOTQgODk4Ljk4OSAzMzAuOTRDODk2Ljg1OCAzMzAuOTQgODk1LjQwNiAzMzAuMjUxIDg5NC42MzEgMzI4Ljg2OUM4OTMuODU1IDMyNy40ODkgODkzLjQ2NyAzMjUuMTczIDg5My40NjcgMzIxLjkyNVpNODczLjMwNSAzMTMuMTg1VjMzNS4yMDNIODc4Ljc1VjMxMy4xODVIODg1Ljg1MVYzMDguMzcySDg2Ni4xMjVWMzEzLjE4NUg4NzMuMzA1Wk04NDUuODg2IDMyMS41NDlIODQwLjgzNFYzMTMuMDI4SDg0NS44MDVDODQ3LjA2NyAzMTMuMDI4IDg0OC4wMzUgMzEzLjQwOSA4NDguNzA2IDMxNC4xNzFDODQ5LjM3NSAzMTQuOTM1IDg0OS43MSAzMTUuOTYgODQ5LjcxIDMxNy4yNTFDODQ5LjcxIDMxOC41MzkgODQ5LjM5NyAzMTkuNTc3IDg0OC43NjUgMzIwLjM2OEM4NDguMTM0IDMyMS4xNTcgODQ3LjE3NCAzMjEuNTQ5IDg0NS44ODYgMzIxLjU0OVpNODQ2LjA4MiAzMjYuMjA1TDg0OS4xOTggMzM1LjIwM0g4NTUuMTU3TDg1MS4zMjkgMzI0Ljk0M0M4NTMuOTU4IDMyMy4yODUgODU1LjI3NCAzMjAuNzA5IDg1NS4yNzQgMzE3LjIwOUM4NTUuMjc0IDMxMS4zMTcgODUyLjExOCAzMDguMzcyIDg0NS44MDUgMzA4LjM3Mkg4MzUuMzg5VjMzNS4yMDNIODQwLjgzNFYzMjYuMjA1SDg0Ni4wODJaTTgzMC44OTEgMzM1LjIwM1YzMzAuNDY3SDgxOC45NzdWMzI0LjAzNkg4MjguNTI1VjMxOS4zNzlIODE4Ljk3N1YzMTMuMTA3SDgzMC44OTFWMzA4LjM3Mkg4MTMuNTMxVjMzNS4yMDNIODMwLjg5MVpNODA3LjY5MyAzMzUuMjAzVjMwOC4zNzJIODAyLjI0OVYzMTkuMzRINzkyLjI2NlYzMDguMzcySDc4Ni44MjFWMzM1LjIwM0g3OTIuMjY2VjMyNC4wNzVIODAyLjI0OVYzMzUuMjAzSDgwNy42OTNaTTc3MC44NDMgMzEzLjE4NVYzMzUuMjAzSDc3Ni4yODdWMzEzLjE4NUg3ODMuMzg3VjMwOC4zNzJINzYzLjY2MVYzMTMuMTg1SDc3MC44NDNaTTc1Mi4wOTkgMzIxLjU0OUg3NDcuMDUxVjMxMy4wMjhINzUyLjAyMkM3NTMuMjg1IDMxMy4wMjggNzU0LjI1MSAzMTMuNDA5IDc1NC45MjEgMzE0LjE3MUM3NTUuNTkzIDMxNC45MzUgNzU1LjkyNyAzMTUuOTYgNzU1LjkyNyAzMTcuMjUxQzc1NS45MjcgMzE4LjUzOSA3NTUuNjE0IDMxOS41NzcgNzU0Ljk4MSAzMjAuMzY4Qzc1NC4zNTEgMzIxLjE1NyA3NTMuMzkgMzIxLjU0OSA3NTIuMDk5IDMyMS41NDlaTTc1Mi4yOTggMzI2LjIwNUw3NTUuNDE1IDMzNS4yMDNINzYxLjM3NEw3NTcuNTQ2IDMyNC45NDNDNzYwLjE3NSAzMjMuMjg1IDc2MS40OTEgMzIwLjcwOSA3NjEuNDkxIDMxNy4yMDlDNzYxLjQ5MSAzMTEuMzE3IDc1OC4zMzUgMzA4LjM3MiA3NTIuMDIyIDMwOC4zNzJINzQxLjYwNVYzMzUuMjAzSDc0Ny4wNTFWMzI2LjIwNUg3NTIuMjk4Wk03MjEuMDEgMzA4LjM3Mkg3MTUuNTY3VjMyNi4xMjdDNzE1LjU2NyAzMjkuNDE1IDcxNi40MTQgMzMxLjgyOSA3MTguMTExIDMzMy4zNjdDNzE5LjgwNyAzMzQuOTA3IDcyMi4zNjYgMzM1LjY3NiA3MjUuNzg1IDMzNS42NzZDNzI5LjIwMyAzMzUuNjc2IDczMS43NjIgMzM0LjkwNyA3MzMuNDU4IDMzMy4zNjdDNzM1LjE1NSAzMzEuODI5IDczNi4wMDUgMzI5LjQxNSA3MzYuMDA1IDMyNi4xMjdWMzA4LjM3Mkg3MzAuNTU4VjMyNi4yNDVDNzMwLjU1OCAzMjkuMzc1IDcyOC45NjkgMzMwLjk0IDcyNS43ODUgMzMwLjk0QzcyMi42MDEgMzMwLjk0IDcyMS4wMSAzMjkuMzc1IDcyMS4wMSAzMjYuMjQ1VjMwOC4zNzJaTTcwMC4yOTUgMzM1LjIwM1YzMjUuNzMySDcwOS44NDNWMzIwLjk5N0g3MDAuMjk1VjMxMy4xMDdINzExLjk3NVYzMDguMzcySDY5NC44NTNWMzM1LjIwM0g3MDAuMjk1Wk02ODEuNTE4IDMyMS45MDVDNjgxLjUxOCAzMTcuMTY5IDY4MC42ODIgMzEzLjY1NSA2NzkuMDExIDMxMS4zNTFDNjc3LjM0MiAzMDkuMDUxIDY3NC40NjcgMzA3Ljg5OSA2NzAuMzkgMzA3Ljg5OUM2NjYuMzE0IDMwNy44OTkgNjYzLjQzOSAzMDkuMDUxIDY2MS43NyAzMTEuMzUxQzY2MC4wOTkgMzEzLjY1NSA2NTkuMjYzIDMxNy4xNjkgNjU5LjI2MyAzMjEuOTA1QzY1OS4yNjMgMzI2LjY0IDY2MC4wOTkgMzMwLjExOSA2NjEuNzcgMzMyLjM0MUM2NjMuNDM5IDMzNC41NjUgNjY2LjMxNCAzMzUuNjc2IDY3MC4zOSAzMzUuNjc2QzY3NC40NjcgMzM1LjY3NiA2NzcuMzQyIDMzNC41NjUgNjc5LjAxMSAzMzIuMzQxQzY4MC42ODIgMzMwLjExOSA2ODEuNTE4IDMyNi42NCA2ODEuNTE4IDMyMS45MDVaTTY2NC44NjYgMzIxLjkyNUM2NjQuODY2IDMxOC42NzcgNjY1LjI2MSAzMTYuMzE2IDY2Ni4wNSAzMTQuODQzQzY2Ni44NDEgMzEzLjM3MSA2NjguMjg1IDMxMi42MzMgNjcwLjM5IDMxMi42MzNDNjcyLjQ5NCAzMTIuNjMzIDY3My45NDEgMzEzLjM3MSA2NzQuNzMgMzE0Ljg0M0M2NzUuNTIxIDMxNi4zMTYgNjc1LjkxNSAzMTguNjc3IDY3NS45MTUgMzIxLjkyNUM2NzUuOTE1IDMyNS4xNzMgNjc1LjUyNSAzMjcuNDg5IDY3NC43NTEgMzI4Ljg2OUM2NzMuOTc0IDMzMC4yNTEgNjcyLjUyMiAzMzAuOTQgNjcwLjM5IDMzMC45NEM2NjguMjU5IDMzMC45NCA2NjYuODA1IDMzMC4yNTEgNjY2LjAzIDMyOC44NjlDNjY1LjI1NCAzMjcuNDg5IDY2NC44NjYgMzI1LjE3MyA2NjQuODY2IDMyMS45MjVaTTY0OS45NTMgMzI1LjU3NlYzMzAuNzg0TDY0Ni42NzkgMzMwLjk0QzY0NC4yODYgMzMwLjk0IDY0Mi43MDYgMzMwLjMyMSA2NDEuOTQ1IDMyOS4wODdDNjQxLjE4MSAzMjcuODQ5IDY0MC43OTkgMzI1LjY4NyA2NDAuNzk5IDMyMi41OTVDNjQwLjc5OSAzMTkuNTA3IDY0MC45OTEgMzE3LjMyMyA2NDEuMzcxIDMxNi4wNDVDNjQxLjc1MyAzMTQuNzcyIDY0Mi4zNTEgMzEzLjg5NiA2NDMuMTY2IDMxMy40MjNDNjQzLjk4MSAzMTIuOTQ5IDY0NS4zOTUgMzEyLjcxMiA2NDcuNDA5IDMxMi43MTJDNjQ5LjQxOSAzMTIuNzEyIDY1Mi4wMDUgMzEyLjg4MyA2NTUuMTYxIDMxMy4yMjRMNjU1LjMxOCAzMDkuMDA0TDY1My44OTggMzA4LjcyOEM2NTEuMDU4IDMwOC4xNzYgNjQ4LjQxNSAzMDcuODk5IDY0NS45NjkgMzA3Ljg5OUM2NDIuMDQ5IDMwNy44OTkgNjM5LjI3NCAzMDguOTc3IDYzNy42NDMgMzExLjEzM0M2MzYuMDExIDMxMy4yOTIgNjM1LjE5NyAzMTYuODAzIDYzNS4xOTcgMzIxLjY2OUM2MzUuMTk3IDMyNi41MzYgNjM1Ljk3OSAzMzAuMDg3IDYzNy41NDUgMzMyLjMyMUM2MzkuMTEgMzM0LjU1OSA2NDEuOTgzIDMzNS42NzYgNjQ2LjE2NSAzMzUuNjc2QzY0OC41MDUgMzM1LjY3NiA2NTEuNTU3IDMzNS4zNzMgNjU1LjMxOCAzMzQuNzY4VjMyMC44NEg2NDcuNTA2VjMyNS41NzZINjQ5Ljk1M1oiIGZpbGw9IiMwZDJhNDUiPjwvcGF0aD48L2c+PGc+PHBhdGggZD0iTTE4Ni42NjMgNDguOTI2QzE4Ni4wOTQgNDkuMTU0IDE4NS41MDUgNDkuNDc2NyAxODQuODc4IDQ5LjkxNEwxNTEuMjY3IDczLjcyNDdDMTQ5LjUyNSA3NC45NTkzIDE0Ny4xODYgNzQuOTM4IDE0NS40NjYgNzMuNjcxM0wxMjIuNDEgNTYuNjkxM0MxMTguNDA1IDUzLjg4MiAxMTUuMTM4IDQ3LjEyMiAxMTUuMTM4IDQxLjY1NFY2LjQxNEMxMTUuMTM4IDAuOTQ1OTk2IDExOC40MDUgLTEuMjAwNjcgMTIyLjQxIDEuNjA5OTlMMTg2LjY0NSA0OC4zMzhMMTg2LjY2MyA0OC45MjZaIiBmaWxsPSIjMGQyYTQ1Ij48L3BhdGg+PC9nPjxnPjxwYXRoIGQ9Ik03MC4wNzc5IDExMC44NjlDNzMuMzU5MiAxMDguNTQzIDc3Ljg5NjUgMTEwLjg4OSA3Ny44OTY1IDExNC45MVYxOTguMDk4Qzc3Ljg5NjUgMjAzLjU4NiA3NC42MTI1IDIwNS42MzcgNzAuNTg3MiAyMDIuNjM3TDQ3LjU1NTIgMTg1LjU2NkM0My41MTEyIDE4Mi41NjcgNDAuMjI1OSAxNzUuNjM3IDQwLjIyNTkgMTcwLjE0OVYxNjEuNzM0QzQwLjIyNTkgMTU2LjU1IDM2Ljk5NzkgMTU1LjAxMyAzMy40MDk5IDE1NS4wMTNIOS40NzUyMkwxMC42MTc5IDE1My43MjZDMTAuODY4NiAxNTMuNDQ1IDExLjE0OTkgMTUzLjE5MyAxMS40NTY2IDE1Mi45NzVMNzAuMDc3OSAxMTAuODY5WiIgZmlsbD0iIzBkMmE0NSI+PC9wYXRoPjwvZz48Zz48cGF0aCBkPSJNMTA4LjYxOCA2Ny45NjkyVjQuNDYyNTNDMTA4LjYxOCA0LjQyMjUzIDEwOC42MTggNC4zODEyMSAxMDguNjE4IDQuMzQxMjFDMTA4LjU4NSAwLjM5ODUzOSAxMDQuMDE0IC0xLjgwNDEzIDEwMC43OTggMC40NzU4N0w5LjIwODk0IDY1LjQ1MTlDNS4yMjIyOCA2OC4yODEyIDEuOTU2OTQgNzUuMDU5OSAxLjk1Njk0IDgwLjUwOTJWMTQ0LjMwN0MxLjk1Njk0IDE0OS43NTYgNS4yMjIyOCAxNTEuOTIgOS4yMDg5NCAxNDkuMDkxTDQyLjg3NDMgMTI1LjIyNEw3OS44MDM2IDk5LjA0MTJMMTAyLjA2NiA4My4yMTg1QzEwMi4wNjYgODMuMjE4NSAxMDguNjE4IDc3LjkzMzIgMTA4LjYxOCA2Ny45NjkyWiIgZmlsbD0iIzBkMmE0NSI+PC9wYXRoPjwvZz48Zz48cGF0aCBkPSJNMTkyLjI3MyAxMjEuNDAyVjU3Ljg5NTVDMTkyLjI3MyA1Ny44NTU1IDE5Mi4yNzMgNTcuODE0MiAxOTIuMjczIDU3Ljc3NDJDMTkyLjI0IDUzLjgzMTUgMTg3LjY2OSA1MS42Mjg4IDE4NC40NTMgNTMuOTA4OEw5Mi44NjM2IDExOC44ODVDODguODc2OSAxMjEuNzE0IDg1LjYxMTYgMTI4LjQ5MyA4NS42MTE2IDEzMy45NDJWMTk3LjczOUM4NS42MTE2IDIwMy4xODkgODguODc2OSAyMDUuMzUzIDkyLjg2MzYgMjAyLjUyM0wxMjYuNTI5IDE3OC42NTdMMTYzLjQ1OCAxNTIuNDc0TDE4NS43MjEgMTM2LjY1MUMxODUuNzIxIDEzNi42NTEgMTkyLjI3MyAxMzEuMzY2IDE5Mi4yNzMgMTIxLjQwMloiIGZpbGw9IiMwZDJhNDUiPjwvcGF0aD48L2c+PC9nPjxkZWZzPjxjbGlwUGF0aCBpZD0iY2xpcDBfNDUyNF8yIj48cmVjdCB3aWR0aD0iMTA1OCIgaGVpZ2h0PSIzMzYiIGZpbGw9IiMwZDJhNDUiPjwvcmVjdD48L2NsaXBQYXRoPjwvZGVmcz48L3N2Zz4=" alt="Tyre Doctor" />
+  </div>
+  <div class="titleblock">
+    <div class="kicker">Prototype overview — prepared for review</div>
+    <h1>TD One — Workshop</h1>
+    <div class="stripe"></div>
+    <div class="subtitle">
+      A clickable, working prototype that puts one mining tyre or rim repair job on one screen — from
+      the mine site to dispatch — built for Tyre Doctor, an Australian mining tyre and rim repair business.
+      This document explains what the problem was, what was asked for, what this prototype actually does,
+      and how to walk someone through it.
+    </div>
+  </div>
+  <div class="footer-meta">
+    TD One (Workshop) — internal review document · Not a finished product · No prices, no live data, no real customer information
+  </div>
+</section>
+
+<!-- TABLE OF CONTENTS -->
+<section class="section toc">
+  <h2>What's in this document</h2>
+  <ol>
+    <li><span>The problem, in Tyre Doctor's own words</span></li>
+    <li><span>What they actually asked for</span></li>
+    <li><span>What this prototype is — and isn't</span></li>
+    <li><span>What each screen shows</span></li>
+    <li><span>How to walk through it, step by step</span></li>
+    <li><span>Questions to be ready for</span></li>
+    <li><span>Known gaps — said plainly</span></li>
+  </ol>
+  <p style="margin-top:30px;">
+    Read this before a meeting about TD One and you should be able to explain, in plain words, what it is,
+    why it exists, and how to click through it yourself — without needing anyone else in the room to fill in gaps.
+  </p>
+</section>
+
+<!-- 1. THE PROBLEM -->
+<section class="section">
+  <div class="kicker">Section 1</div>
+  <h2>The problem, in Tyre Doctor's own words</h2>
+
+  <p>
+    Tyre Doctor is a second-generation, family-owned Australian business. They repair the giant tyres used on
+    mining haul trucks, loaders and dozers — a single tyre weighs about <strong>six tonnes</strong> and costs
+    enough that mines pay specialists to repair it rather than replace it. They also crack-test steel wheel rims,
+    which is safety-critical work: a cracked rim under pressure can fail explosively. They run this out of
+    <strong>eight workshop branches</strong> across Australia.
+  </p>
+
+  <p>Today, the information for one repair job is scattered across four different places:</p>
+  <ol>
+    <li>A row in a spreadsheet (Smartsheet)</li>
+    <li>Photos in a WhatsApp thread, found again later by quote number</li>
+    <li>A paper sheet, handwritten on the workshop floor and photographed</li>
+    <li>The quote itself, sitting in their accounting/ERP system, NetSuite</li>
+  </ol>
+
+  <div class="quote">
+    "At the moment it's going into four different things and we're pulling it together at the end."
+    <cite>— Tyre Doctor, describing how a job's information is currently tracked</cite>
+  </div>
+
+  <p>What that actually causes, day to day:</p>
+  <ul>
+    <li>The mine calls sales asking <strong>"where's my tyre?"</strong> — sales then has to call the workshop to find out, because nobody has one place to look.</li>
+    <li>At the end of a job, someone has to manually rebuild the whole story of the repair from four different sources, to write a report.</li>
+    <li>The operations superintendent builds a branch-performance spreadsheet by hand, in his own time, because there's no system that already knows this.</li>
+  </ul>
+
+  <div class="quote">
+    "Out of them six tyres, there's five we can repair."
+    <cite>— Tyre Doctor, describing how one site visit produces a whole batch of separate jobs at once</cite>
+  </div>
+
+  <p>
+    That one line matters more than it looks: <strong>one visit to a mine site is one pile of tyres, which becomes
+    many separate repair jobs, but still just one quote and one pickup.</strong> Whatever gets built has to keep
+    that batch-to-individual-job relationship straight, or the numbers won't match what Tyre Doctor actually does.
+  </p>
+</section>
+
+<!-- 2. WHAT THEY ASKED FOR -->
+<section class="section">
+  <div class="kicker">Section 2</div>
+  <h2>What they actually asked for</h2>
+
+  <p>
+    Tyre Doctor's own description of the goal was simple: they want something like a <strong>pizza tracker</strong> —
+    the kind of screen that shows exactly which stage an order is at, in plain language, without anyone having
+    to phone and ask. Applied here, that means: one tyre or rim, one file, visible the whole way from the mine
+    site to dispatch — to the workshop, to sales, and to the mine itself.
+  </p>
+
+  <div class="callout">
+    <strong>The hardest requirement they gave, in their own words:</strong><br/><br/>
+    "You're not dealing with the most tech-savvy guys, so it's got to be simple and easy to use, otherwise
+    they just put it aside and go back to a piece of paper."
+  </div>
+
+  <p>
+    That one sentence is the real design brief. It's not a request for more features — it's a warning that if
+    this isn't obviously faster and easier than a phone photo and a paper sheet, the workshop floor will quietly
+    stop using it and go back to what they know. Every screen in this prototype was built with that warning in mind:
+    big touch targets, one clear action per screen, plain English instead of jargon, and nothing that adds a step
+    without removing a bigger one.
+  </p>
+
+  <h3>What was explicitly out of scope</h3>
+  <p>Tyre Doctor was just as clear about what this should <em>not</em> do:</p>
+  <div class="not-list">
+    <ul style="margin-bottom:0;">
+      <li><strong>No prices anywhere.</strong> Quoting stays in NetSuite. This product only ever shows a quote <em>number</em> and a status.</li>
+      <li><strong>No claim of being "connected" or "synced" to anything.</strong> If a field looks like it came from NetSuite, it's because a person typed it in — not because two systems are talking to each other.</li>
+      <li><strong>No AI, anywhere</strong> — no auto-detection, no "AI found this", no confidence scores.</li>
+      <li><strong>No on-site fleet inspection tool.</strong> That's the fitters' daily tread-and-pressure rounds, and it's explicitly a later, separate piece of work.</li>
+      <li><strong>No login.</strong> A simple "who are you today?" role picker stands in for it in this prototype.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 3. WHAT THIS PROTOTYPE IS -->
+<section class="section">
+  <div class="kicker">Section 3</div>
+  <h2>What this prototype is — and isn't</h2>
+
+  <div class="callout pass">
+    <strong>It IS:</strong> a clickable, working front-end that shows exactly how the finished product would
+    behave — real interactions, a real state machine, a real spreadsheet-reading feature, real printable
+    certificates — all running in a web browser with no setup.
+  </div>
+
+  <div class="callout">
+    <strong>It is NOT:</strong> connected to Tyre Doctor's actual NetSuite, Smartsheet, or email systems. There
+    is no server and no database — it's a front end only, seeded with realistic made-up data so it can be
+    clicked through convincingly. Building the real backend, and connecting it to Tyre Doctor's existing
+    systems, is the next phase of work, not something this prototype claims to already do.
+  </div>
+
+  <h3>The two repair "rails"</h3>
+  <p>Everything in TD One follows one of two paths, because Tyre Doctor actually does two different services:</p>
+
+  <table>
+    <tr><th>Tyre repair</th><th>Rim testing (NDT)</th></tr>
+    <tr>
+      <td>Triaged at the mine → collected → received → washed → inspected → cut out → repaired → cooked
+      (hot-cured) → quoted → dispatched.</td>
+      <td>Notified → received → blasted → crack-tested → clean rims are blasted/tested/painted; cracked
+      rims are repaired and re-tested → certified (two certificates) → dispatched.</td>
+    </tr>
+  </table>
+
+  <p>
+    The single most important behaviour in the whole product is the <strong>escalation</strong>: if, once a
+    tyre is actually inspected or cut open, the damage turns out worse than what was quoted, that one tyre
+    <strong>pauses</strong> — sales is told immediately — while every other tyre in the same batch keeps
+    moving. Nothing waits on the whole batch just because one tyre needs a second look.
+  </p>
+</section>
+
+<!-- 4. WHAT EACH SCREEN SHOWS -->
+<section class="section">
+  <div class="kicker">Section 4</div>
+  <h2>What each screen shows</h2>
+  <p>In the order you'd naturally click through them:</p>
+
+  <div class="page-card">
+    <div class="who">Anyone</div>
+    <h4>1. Landing page</h4>
+    <p>The front door. States the problem in one sentence and has one button: "Open the workshop." A second
+    link, "See the customer view", shows what a mine sees — useful to show the contrast early.</p>
+    <p class="lookfor">Look for: how little it asks of a first-time visitor before they're inside the product.</p>
+  </div>
+
+  <div class="page-card">
+    <div class="who">Anyone</div>
+    <h4>2. Who are you today? <span class="badge both">Role picker</span></h4>
+    <p>Stands in for a login. Instead of a username and password, a person just taps who they are today —
+    workshop supervisor, repairer, NDT technician, sales, and so on — and lands on the screen that role
+    actually uses.</p>
+    <p class="lookfor">Look for: this is a deliberate simplification for the demo, not a claim that the real
+    product will never need proper accounts.</p>
+  </div>
+
+  <div class="page-card">
+    <div class="who">Workshop floor</div>
+    <h4>3. Branch Console <span class="badge both">The main screen</span></h4>
+    <p>The actual "pizza tracker." Everything currently on the floor, laid out as lanes matching where it
+    physically is — just arrived, being washed, being inspected, in the oven, ready to go — plus a matching
+    set of lanes for rims being crack-tested. A "Needs a person" band at the top surfaces anything a human
+    has to make a decision on. Search finds any job instantly by quote number or serial.</p>
+    <p class="lookfor">Look for: click any card to open its full history; nothing here shows a price.</p>
+  </div>
+
+  <div class="page-card">
+    <div class="who">Repair manager, at the mine</div>
+    <h4>4–6. Field capture <span class="badge tyre">Tyre</span></h4>
+    <p>The phone screen used out at the mine, before a tyre ever reaches a workshop: visit details, then a
+    fast repeating loop (three photos per tyre, serial, repairable yes/no), then a visit summary that's sent
+    to sales. Built to survive a bad mobile signal — work queues quietly and sends itself, it never tells the
+    fitter they're "offline."</p>
+    <p class="lookfor">Look for: this is the screen the "must be simple" warning applies to most directly.</p>
+  </div>
+
+  <div class="page-card">
+    <div class="who">Workshop floor</div>
+    <h4>7–9. Job File, stage actions, and escalation</h4>
+    <p>One tyre's entire life on one page: every stage it has passed through, who did it, when, and the photo
+    that proves it — plus the cook record and what was actually measured versus what was originally quoted.
+    "Advance this tyre" moves it to its next stage and only asks for what that exact stage needs. "Flag worse
+    than quoted" is the escalation described above — it opens a real email preview showing exactly what sales
+    would receive.</p>
+    <p class="lookfor">Look for: the required fields differ per stage — the product won't let a stage be skipped
+    without a supervisor's logged reason.</p>
+  </div>
+
+  <div class="page-card">
+    <div class="who">Supervisor / NDT technician</div>
+    <h4>10–12. Rim intake, NDT bay, certificates <span class="badge rim">Rim</span></h4>
+    <p>Rim intake actually reads a real spreadsheet file the mine sends over — no shortcuts, it genuinely
+    parses the rows, sorting each rim into "ready to test" or "needs a person to look at it first" (duplicate
+    entry, missing data, odd serial, etc.), each with a plain-English reason. Every rim then goes through
+    crack testing and, on a pass, gets two numbered, watermarked certificates.</p>
+    <p class="lookfor">Look for: the certificates carry a visible "PLACEHOLDER TEMPLATE" watermark — Tyre
+    Doctor's real certificate design hasn't been supplied yet, so this is honestly marked as a stand-in.</p>
+  </div>
+
+  <div class="page-card">
+    <div class="who">Superintendent / branch managers</div>
+    <h4>13–14. Job report and Branch Performance</h4>
+    <p>A printable, one-page report of a single job's whole story. Separately, a cross-branch view: repair
+    mix per branch, hours spent, and how long jobs sit at each stage — the same numbers the superintendent
+    currently builds by hand, generated automatically instead.</p>
+  </div>
+
+  <div class="page-card">
+    <div class="who">The mine (customer)</div>
+    <h4>15. Customer Tracker <span class="badge both">External, no login</span></h4>
+    <p>What a mine sees if given a link: plain milestones only — received, being prepared, cooking, boxed up,
+    dispatched — with a few photos and certificates once issued. No price, no internal detail, and nothing
+    that hasn't actually happened yet.</p>
+  </div>
+
+  <div class="page-card">
+    <div class="who">Bonus, added after the initial build</div>
+    <h4>16. Process flow diagram</h4>
+    <p>A separate, editable diagram (reachable from a "Process flow" link in the header on most screens) that
+    lays out this exact process left to right, matching the real state machine the app runs on — not a
+    separate guess at it. It opens collapsed to a high-level view; click any step to open its detail, or use
+    "Expand all detail" / "Show high level" to toggle everything at once. It can be edited directly (add,
+    rename, delete, reconnect steps, add sticky notes) and downloaded as an image or a re-loadable file —
+    useful for talking through the process in a meeting without touching the running prototype.</p>
+  </div>
+</section>
+
+<!-- 5. WALKTHROUGH -->
+<section class="section">
+  <div class="kicker">Section 5</div>
+  <h2>How to walk through it, step by step</h2>
+  <p>A suggested order for demonstrating the whole thing in one sitting, about 10–15 minutes:</p>
+
+  <div class="step">
+    <span class="step-num">1</span>
+    <div><h4>Open the workshop</h4>
+    <p>Start at Landing, click "Open the workshop", then pick <strong>Workshop supervisor</strong> on the
+    Who-are-you screen. You land on the Branch Console for Mackay, the busiest branch.</p></div>
+  </div>
+
+  <div class="step">
+    <span class="step-num">2</span>
+    <div><h4>Show the floor, not a form</h4>
+    <p>Point out the lanes (on the way → wash → inspect → oven → ready) and the "Needs a person" band. Click
+    "Show me around" to run the guided tour if you want the room to see it narrated. Tap "Mark received" on a
+    tyre to show a live status change with an undo option.</p></div>
+  </div>
+
+  <div class="step">
+    <span class="step-num">3</span>
+    <div><h4>Open one job's whole story</h4>
+    <p>Click any tyre card to open its Job File. Walk through the story spine (each stage, timestamped, with
+    its photo), the cook record, and "what we measured." Click "Advance this tyre" to show a stage actually
+    being completed, including a required photo or measurement.</p></div>
+  </div>
+
+  <div class="step">
+    <span class="step-num">4</span>
+    <div><h4>Show the escalation — this is the important one</h4>
+    <p>Open a tyre that's already flagged (or flag one live), and click through to "See what sales gets
+    told." This is the single behaviour Tyre Doctor cares most about: one tyre pauses, everything else keeps
+    moving, and sales gets a clear notification with no phone call needed.</p></div>
+  </div>
+
+  <div class="step">
+    <span class="step-num">5</span>
+    <div><h4>Go to the mine site</h4>
+    <p>Switch to Field (phone-width screen). Do a quick capture: three photos, serial, repairable yes/no,
+    save, and show the "waiting for signal" queue banner — the message that reassures a fitter their work is
+    safe even with no bars.</p></div>
+  </div>
+
+  <div class="step">
+    <span class="step-num">6</span>
+    <div><h4>Bring in a real spreadsheet</h4>
+    <p>Go to Rim intake and actually drop in the sample rim-returns file. Show the real 18-rows-in,
+    13-jobs-created, 5-held split, and open one held row to show the plain-English reason. Walk one rim
+    through NDT to its two certificates (point out the watermark).</p></div>
+  </div>
+
+  <div class="step">
+    <span class="step-num">7</span>
+    <div><h4>Zoom out to the branch and the mine's own view</h4>
+    <p>Open Branch Performance to show the cross-branch numbers, then open the Customer Tracker link to show
+    exactly what a mine would see — and how much less detail it deliberately shows than the workshop view.</p></div>
+  </div>
+
+  <div class="step">
+    <span class="step-num">8</span>
+    <div><h4>Reset and hand over the keyboard</h4>
+    <p>Tap "Reset demo" (twice, to confirm) to put everything back to its starting state, then let the room
+    click through it themselves if there's time.</p></div>
+  </div>
+</section>
+
+<!-- 6. QUESTIONS TO BE READY FOR -->
+<section class="section">
+  <div class="kicker">Section 6</div>
+  <h2>Questions to be ready for</h2>
+
+  <div class="qa">
+    <div class="q">Is this connected to our real NetSuite / Smartsheet / email?</div>
+    <div class="a">No. This is a front-end prototype with made-up but realistic data, so it can be clicked
+    through convincingly. Every quote number, photo and job in it is invented. Wiring it to Tyre Doctor's
+    actual systems is a separate, later phase.</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Does it show prices?</div>
+    <div class="a">No, deliberately. Quoting stays in NetSuite; this product only ever holds a quote number
+    and a status (Initial / Revised / Final).</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Is there any AI in this?</div>
+    <div class="a">No. Nothing is auto-detected or auto-classified. Every field is either typed by a person
+    or calculated from rules Tyre Doctor gave us (like the damage-size thresholds), and every one of those
+    rules is written down and shown with its source.</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Does this replace the fitters' daily tyre inspection rounds?</div>
+    <div class="a">No — that's explicitly out of scope for this piece of work. This only covers a tyre or rim
+    once it's been flagged for repair or testing.</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Why isn't there a proper login?</div>
+    <div class="a">For this prototype stage, a simple role picker does the same demonstration job as a login
+    without the overhead of building real accounts before the workflow itself is agreed. A real login is a
+    normal, expected part of building the finished product.</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Are the certificates the real Tyre Doctor design?</div>
+    <div class="a">No — we haven't been given Tyre Doctor's real certificate template yet, so every certificate
+    in this prototype is clearly watermarked "PLACEHOLDER TEMPLATE" rather than presenting a guess as the real thing.</div>
+  </div>
+
+  <div class="qa">
+    <div class="q">How long would the real, connected version take to build?</div>
+    <div class="a">Not something this document estimates — that depends on scope decisions (which systems it
+    connects to, hosting, who manages it) that haven't been made yet. This prototype exists to make those
+    decisions concrete, not to replace them.</div>
+  </div>
+</section>
+
+<!-- 7. KNOWN GAPS -->
+<section class="section">
+  <div class="kicker">Section 7</div>
+  <h2>Known gaps — said plainly</h2>
+  <p>
+    In the spirit of not overselling this: a short, honest list of what's simplified or not yet finished in
+    this pass, so nobody is surprised by it live.
+  </p>
+  <ul>
+    <li><strong>No backend.</strong> Refreshing the browser resets nothing mid-session, but there's no
+    database — this is a front end only, by design, at this stage.</li>
+    <li><strong>Certificates are a placeholder design</strong>, watermarked as such, until Tyre Doctor's real
+    template is available.</li>
+    <li><strong>Keyboard-only navigation between cards on the floor view isn't built yet</strong> — the floor
+    screens are designed mouse/tap-first, matching how they'll actually be used on the shop floor.</li>
+    <li><strong>The guided tour on the rim-intake screen covers 2 of the 3 steps originally planned</strong> —
+    the third lived on a screen that was split out into its own page during the build.</li>
+  </ul>
+  <div class="footer-note">
+    TD One (Workshop) — prototype overview. Prepared to help someone outside this project understand what it
+    is, why it exists, and how to talk about it confidently in a meeting.
+  </div>
+</section>
+
+</body>
+</html>
