@@ -12,7 +12,7 @@ import { nodeTypes } from './nodeTypes';
 import { EditPanel } from './EditPanel';
 import type { Selection } from './EditPanel';
 import {
-  buildDefaultNodes, buildDefaultEdges, groupIds,
+  buildDefaultNodes, buildDefaultEdges, groupIds, computeGroupOffsets, computeRailBaseY,
 } from '../../data/processFlowDefaults';
 import type { FlowNode } from '../../data/processFlowDefaults';
 import {
@@ -74,7 +74,7 @@ function ProcessFlowInner() {
   }, [expandedGroups]);
 
   const refit = useCallback(() => {
-    setTimeout(() => fitView({ duration: 300, padding: 0.12 }), 30);
+    setTimeout(() => fitView({ duration: 300, padding: 0.12, maxZoom: 1 }), 30);
   }, [fitView]);
 
   /** Zoom to just these node ids, rather than the whole diagram — used so
@@ -84,6 +84,36 @@ function ProcessFlowInner() {
     if (!ids.length) return;
     setTimeout(() => fitView({ nodes: ids.map((id) => ({ id })), duration: 350, padding: 0.25, maxZoom: 1.1 }), 30);
   }, [fitView]);
+
+/** Re-lays-out every group and its children along their rail for a given
+   * expand/collapse state — collapsed groups pack tightly, an expanded one
+   * claims the width its real stage cards need, and every group after it
+   * shifts over to make room. The gap between the tyre rail and the rim
+   * rail below it opens up the same way, only as far as the tallest
+   * currently-expanded tyre-rail group needs. Without this, groups and rails
+   * keep the wide fixed spacing needed for the *widest possible* expansion
+   * even while collapsed, which is what made the default high-level view
+   * zoom out to tiny cards with dead space between them. */
+  const reflowGroups = useCallback((nds: FlowNode[], nextExpanded: Record<string, boolean>): FlowNode[] => {
+    const offsets = computeGroupOffsets(nextExpanded);
+    const baseY = computeRailBaseY(nextExpanded);
+    return nds.map((n) => {
+      const rail = (n.data as { rail?: 'tyre' | 'rim' }).rail;
+      if (n.type === 'lane' && rail) {
+        return { ...n, position: { ...n.position, y: baseY[rail] - 92 } };
+      }
+      if (n.type === 'group') {
+        const x = offsets[n.id];
+        if (x === undefined || !rail) return n;
+        return { ...n, position: { x, y: baseY[rail] } };
+      }
+      const groupId = (n.data as { groupId?: string }).groupId;
+      if (!groupId || offsets[groupId] === undefined || !rail) return n;
+      const localX = (n.data as { localX?: number }).localX ?? 0;
+      const localY = (n.data as { localY?: number }).localY ?? 0;
+      return { ...n, position: { x: offsets[groupId] + localX, y: baseY[rail] + localY } } as FlowNode;
+    });
+  }, []);
 
   // Map every stage node to the phase group it belongs to, so visibility of both
   // nodes and edges can be derived from expandedGroups rather than hand-tracked.
@@ -148,10 +178,12 @@ function ProcessFlowInner() {
   const onNodeClick: NodeMouseHandler = useCallback((_e, node) => {
     if (node.type === 'group') {
       const willExpand = !expandedGroups[node.id];
+      const nextExpanded = { ...expandedGroups, [node.id]: willExpand };
       const childIds = nodes.filter((n) => (n.data as { groupId?: string }).groupId === node.id).map((n) => n.id);
-      setExpandedGroups((prev) => {
-        const next = { ...prev, [node.id]: willExpand };
-        persist(nodes, edges, next);
+      setExpandedGroups(nextExpanded);
+      setNodes((nds) => {
+        const next = reflowGroups(nds, nextExpanded);
+        persist(next, edges, nextExpanded);
         return next;
       });
       // Expanding zooms into just this card's own area; collapsing zooms back
@@ -167,7 +199,7 @@ function ProcessFlowInner() {
         return next;
       });
     }
-  }, [edges, nodes, persist, expandedGroups, fitToNodeIds]);
+  }, [edges, nodes, persist, expandedGroups, fitToNodeIds, reflowGroups]);
 
   const onEdgeClick: EdgeMouseHandler = useCallback((_e, edge) => {
     setSelection({ type: 'edge', edge });
@@ -250,12 +282,13 @@ function ProcessFlowInner() {
     const nextExpanded = Object.fromEntries(groupIds().map((id) => [id, !collapsed]));
     setExpandedGroups(nextExpanded);
     setNodes((nds) => {
-      const next = nds.map((n) => (n.type === 'stage' ? ({ ...n, data: { ...n.data, collapsed } }) as FlowNode : n));
+      const withCollapsed = nds.map((n) => (n.type === 'stage' ? ({ ...n, data: { ...n.data, collapsed } }) as FlowNode : n));
+      const next = reflowGroups(withCollapsed, nextExpanded);
       persist(next, edges, nextExpanded);
       return next;
     });
     refit();
-  }, [edges, persist, refit]);
+  }, [edges, persist, refit, reflowGroups]);
 
   const resetToDefault = useCallback(() => {
     clearSavedFlow();

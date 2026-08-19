@@ -24,6 +24,10 @@ export interface StageNodeData extends Record<string, unknown> {
   notes?: string;
   collapsed?: boolean;
   groupId?: string;
+  /** Position relative to the parent group's own origin — used to re-lay-out
+   * a group's children whenever that group's collapsed/expanded width changes. */
+  localX?: number;
+  localY?: number;
 }
 
 export interface NoteNodeData extends Record<string, unknown> {
@@ -53,28 +57,38 @@ export type LaneFlowNode = Node<LaneNodeData, 'lane'>;
 export type GroupFlowNode = Node<GroupNodeData, 'group'>;
 export type FlowNode = StageFlowNode | NoteFlowNode | LaneFlowNode | GroupFlowNode;
 
-const GROUP_COL = 1150;
-const TYRE_GROUP_Y = 140;
-const RIM_GROUP_Y = 1400;
+const TYRE_GROUP_Y = 40;
+
+export const GROUP_CARD_WIDTH = 260;
+export const STAGE_CARD_WIDTH = 236;
+const GROUP_MARGIN = 40;
+const GROUP_GAP = 90;
+const GROUP_RIGHT_PADDING = 60;
+
+// A collapsed group/stage card's real rendered height is close to this; an
+// expanded group's height is measured from its tallest child instead. Both
+// are estimates used only to size the gap between the two rails — being a
+// little generous here is harmless, being stingy would cause overlap.
+const GROUP_CARD_HEIGHT = 130;
+const STAGE_CARD_HEIGHT = 110;
+const RAIL_GAP = 160;
 
 interface GroupDef {
   id: string;
   label: string;
   summary: string;
   rail: FlowRail;
-  x: number;
-  y: number;
   stageIds: string[];
 }
 
 const GROUPS: GroupDef[] = [
-  { id: 'g-tyre-intake', label: 'Mine site & sales', summary: 'Triaged at the mine, quoted, collected', rail: 'tyre', x: 40, y: TYRE_GROUP_Y, stageIds: ['triaged', 'initial_quote_sent', 'collected', 'not_repairable'] },
-  { id: 'g-tyre-floor', label: 'Workshop floor', summary: 'Received, washed, inspected, cut out', rail: 'tyre', x: 40 + GROUP_COL, y: TYRE_GROUP_Y, stageIds: ['received', 'washed', 'inspected', 'cut_out', 'escalation'] },
-  { id: 'g-tyre-cure', label: 'Repair & cure', summary: 'Repaired, then hot-cured in the oven', rail: 'tyre', x: 40 + GROUP_COL * 2, y: TYRE_GROUP_Y, stageIds: ['repaired', 'cooked'] },
-  { id: 'g-tyre-dispatch', label: 'Quote & dispatch', summary: 'Final quote, released to the mine', rail: 'tyre', x: 40 + GROUP_COL * 3, y: TYRE_GROUP_Y, stageIds: ['final_quote_sent', 'dispatched', 'closed'] },
-  { id: 'g-rim-intake', label: 'Rim intake', summary: "The mine's rim list, received, blasted", rail: 'rim', x: 40, y: RIM_GROUP_Y, stageIds: ['notified', 'rim_received', 'blasted'] },
-  { id: 'g-rim-ndt', label: 'Crack testing (NDT)', summary: 'Pass → BTP · Fail → repair & re-test', rail: 'rim', x: 40 + GROUP_COL, y: RIM_GROUP_Y, stageIds: ['ndt_tested', 'btp', 'rim_repaired', 'retested'] },
-  { id: 'g-rim-dispatch', label: 'Certify & dispatch', summary: 'Two certificates, released to the mine', rail: 'rim', x: 40 + GROUP_COL * 2, y: RIM_GROUP_Y, stageIds: ['certified', 'rim_dispatched', 'rim_closed'] },
+  { id: 'g-tyre-intake', label: 'Mine site & sales', summary: 'Triaged at the mine, quoted, collected', rail: 'tyre', stageIds: ['triaged', 'initial_quote_sent', 'collected', 'not_repairable'] },
+  { id: 'g-tyre-floor', label: 'Workshop floor', summary: 'Received, washed, inspected, cut out', rail: 'tyre', stageIds: ['received', 'washed', 'inspected', 'cut_out', 'escalation'] },
+  { id: 'g-tyre-cure', label: 'Repair & cure', summary: 'Repaired, then hot-cured in the oven', rail: 'tyre', stageIds: ['repaired', 'cooked'] },
+  { id: 'g-tyre-dispatch', label: 'Quote & dispatch', summary: 'Final quote, released to the mine', rail: 'tyre', stageIds: ['final_quote_sent', 'dispatched', 'closed'] },
+  { id: 'g-rim-intake', label: 'Rim intake', summary: "The mine's rim list, received, blasted", rail: 'rim', stageIds: ['notified', 'rim_received', 'blasted'] },
+  { id: 'g-rim-ndt', label: 'Crack testing (NDT)', summary: 'Pass → BTP · Fail → repair & re-test', rail: 'rim', stageIds: ['ndt_tested', 'btp', 'rim_repaired', 'retested'] },
+  { id: 'g-rim-dispatch', label: 'Certify & dispatch', summary: 'Two certificates, released to the mine', rail: 'rim', stageIds: ['certified', 'rim_dispatched', 'rim_closed'] },
 ];
 
 // Position of each stage relative to its group's own (x, y).
@@ -124,13 +138,74 @@ const NOTES: Record<string, string> = {
   certified: `${RULES.markingAfterRepair.label} — source: ${RULES.markingAfterRepair.source}. Next NDT due uses the ${RULES.ndtInterval.value.toLocaleString()} ${RULES.ndtInterval.unit} interval.`,
 };
 
-function stageNode(id: string, group: GroupDef, kind: StageKind = 'stage'): StageFlowNode {
+/** How wide a group's own card is if it's currently collapsed, or how much
+ * horizontal room its real stage cards need if it's expanded. Used both to
+ * lay groups out along their rail and to know how far a click should zoom in. */
+export function groupContentWidth(groupId: string, expanded: boolean): number {
+  if (!expanded) return GROUP_CARD_WIDTH;
+  const group = GROUPS.find((g) => g.id === groupId);
+  if (!group) return GROUP_CARD_WIDTH;
+  let maxRight = GROUP_CARD_WIDTH;
+  for (const id of group.stageIds) {
+    const local = LOCAL_POSITION[id] ?? { x: 0, y: 180 };
+    maxRight = Math.max(maxRight, local.x + STAGE_CARD_WIDTH);
+  }
+  return maxRight + GROUP_RIGHT_PADDING;
+}
+
+/** Lays every group out left-to-right along its own rail: collapsed groups
+ * pack tightly together, and only the group(s) currently expanded claim the
+ * extra width their real stage cards need — an accordion, not a fixed grid. */
+export function computeGroupOffsets(expandedGroups: Record<string, boolean>): Record<string, number> {
+  const offsets: Record<string, number> = {};
+  const rails: Record<FlowRail, GroupDef[]> = { tyre: [], rim: [] };
+  for (const g of GROUPS) rails[g.rail].push(g);
+  for (const rail of ['tyre', 'rim'] as const) {
+    let x = GROUP_MARGIN;
+    for (const g of rails[rail]) {
+      offsets[g.id] = x;
+      x += groupContentWidth(g.id, Boolean(expandedGroups[g.id])) + GROUP_GAP;
+    }
+  }
+  return offsets;
+}
+
+/** How much vertical room a group's own content needs — same idea as
+ * groupContentWidth, but for the gap between the tyre rail and the rim rail
+ * below it, so that gap only opens up when something in the tyre rail
+ * actually needs the room. */
+function groupContentHeight(groupId: string, expanded: boolean): number {
+  if (!expanded) return GROUP_CARD_HEIGHT;
+  const group = GROUPS.find((g) => g.id === groupId);
+  if (!group) return GROUP_CARD_HEIGHT;
+  let maxBottom = GROUP_CARD_HEIGHT;
+  for (const id of group.stageIds) {
+    const local = LOCAL_POSITION[id] ?? { x: 0, y: 180 };
+    maxBottom = Math.max(maxBottom, local.y + STAGE_CARD_HEIGHT);
+  }
+  return maxBottom;
+}
+
+/** The tyre rail always starts at a fixed y; the rim rail's y is pushed down
+ * only as far as the tallest currently-expanded tyre-rail group needs —
+ * collapsed, the two rails sit close together instead of leaving a gap sized
+ * for the deepest possible expansion. */
+export function computeRailBaseY(expandedGroups: Record<string, boolean>): Record<FlowRail, number> {
+  const tyreGroups = GROUPS.filter((g) => g.rail === 'tyre');
+  let maxTyreHeight = GROUP_CARD_HEIGHT;
+  for (const g of tyreGroups) {
+    maxTyreHeight = Math.max(maxTyreHeight, groupContentHeight(g.id, Boolean(expandedGroups[g.id])));
+  }
+  return { tyre: TYRE_GROUP_Y, rim: TYRE_GROUP_Y + maxTyreHeight + RAIL_GAP };
+}
+
+function stageNode(id: string, group: GroupDef, offsetX: number, baseY: number, kind: StageKind = 'stage'): StageFlowNode {
   const src = (group.rail === 'tyre' ? TYRE_STAGES : RIM_STAGES).find((s) => s.id === id) ?? TYRE_TERMINAL;
   const local = LOCAL_POSITION[id] ?? { x: 0, y: 180 };
   return {
     id,
     type: 'stage',
-    position: { x: group.x + local.x, y: group.y + local.y },
+    position: { x: offsetX + local.x, y: baseY + local.y },
     data: {
       kind: src.gate ? 'gate' : kind,
       label: src.label,
@@ -142,21 +217,27 @@ function stageNode(id: string, group: GroupDef, kind: StageKind = 'stage'): Stag
       notes: NOTES[id],
       collapsed: true,
       groupId: group.id,
+      localX: local.x,
+      localY: local.y,
     },
   };
 }
 
 export function buildDefaultNodes(): FlowNode[] {
   const nodes: FlowNode[] = [];
+  const offsets = computeGroupOffsets({});
+  const baseY = computeRailBaseY({});
 
-  nodes.push({ id: 'lane-tyre', type: 'lane', position: { x: 40, y: TYRE_GROUP_Y - 92 }, data: { kind: 'lane', label: 'TYRE REPAIR RAIL — mine site to dispatch', rail: 'tyre' } });
-  nodes.push({ id: 'lane-rim', type: 'lane', position: { x: 40, y: RIM_GROUP_Y - 92 }, data: { kind: 'lane', label: 'RIM REPAIR RAIL — mine site to dispatch', rail: 'rim' } });
+  nodes.push({ id: 'lane-tyre', type: 'lane', position: { x: GROUP_MARGIN, y: baseY.tyre - 92 }, data: { kind: 'lane', label: 'TYRE REPAIR RAIL — mine site to dispatch', rail: 'tyre' } });
+  nodes.push({ id: 'lane-rim', type: 'lane', position: { x: GROUP_MARGIN, y: baseY.rim - 92 }, data: { kind: 'lane', label: 'RIM REPAIR RAIL — mine site to dispatch', rail: 'rim' } });
 
   for (const group of GROUPS) {
+    const offsetX = offsets[group.id];
+    const y = baseY[group.rail];
     nodes.push({
       id: group.id,
       type: 'group',
-      position: { x: group.x, y: group.y },
+      position: { x: offsetX, y },
       data: {
         kind: 'group', label: group.label, rail: group.rail, summary: group.summary,
         count: group.stageIds.length,
@@ -168,7 +249,7 @@ export function buildDefaultNodes(): FlowNode[] {
         nodes.push({
           id: 'escalation',
           type: 'stage',
-          position: { x: group.x + LOCAL_POSITION.escalation.x, y: group.y + LOCAL_POSITION.escalation.y },
+          position: { x: offsetX + LOCAL_POSITION.escalation.x, y: y + LOCAL_POSITION.escalation.y },
           data: {
             kind: 'decision',
             label: 'Escalation — worse than quoted',
@@ -180,10 +261,12 @@ export function buildDefaultNodes(): FlowNode[] {
             notes: `${RULES.pauseBehaviour.label} — source: ${RULES.pauseBehaviour.source}. Shown here converging forward for clarity — in the product the job resumes at whichever stage triggered it, not necessarily "Repaired".`,
             collapsed: true,
             groupId: group.id,
+            localX: LOCAL_POSITION.escalation.x,
+            localY: LOCAL_POSITION.escalation.y,
           },
         });
       } else {
-        nodes.push(stageNode(stageId, group, stageId === 'not_repairable' ? 'terminal' : 'stage'));
+        nodes.push(stageNode(stageId, group, offsetX, y, stageId === 'not_repairable' ? 'terminal' : 'stage'));
       }
     }
   }

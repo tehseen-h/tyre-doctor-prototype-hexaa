@@ -3,7 +3,10 @@ import type { Edge } from '@xyflow/react';
 import { toPng } from 'html-to-image';
 import type { FlowNode } from '../../data/processFlowDefaults';
 
-const STORAGE_KEY = 'td-one-process-flow-v1';
+// v3: bumped because the group layout changed from a fixed wide grid to an
+// accordion (collapsed groups pack tight; only an expanded one claims extra
+// width) — a v1/v2 saved flow's baked-in positions would fight the new layout.
+const STORAGE_KEY = 'td-one-process-flow-v3';
 
 export interface SavedFlow {
   nodes: FlowNode[];
