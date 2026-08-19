@@ -57,7 +57,7 @@ export function WhoAreYou() {
               key={role.id}
               type="button"
               onClick={() => { setRoleId(role.id); navigate(ENTRY_ROUTE[role.entry]); }}
-              style={{ textAlign: 'left', border: 'none', padding: 0, background: 'none', cursor: 'pointer' }}
+              style={{ textAlign: 'left', border: 'none', padding: 0, background: 'none', cursor: 'pointer', whiteSpace: 'normal', width: '100%' }}
             >
               <Card variant="reduced" style={{ padding: '30px 22px 22px', display: 'flex', flexDirection: 'column', gap: 11, minHeight: 206 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -66,7 +66,7 @@ export function WhoAreYou() {
                   {roleId === role.id && <span style={{ marginLeft: 'auto', fontSize: 13, fontWeight: 600, color: 'var(--td-blue-deep)' }}>current</span>}
                 </div>
                 <h3 style={{ fontFamily: 'var(--td-display)', fontWeight: 600, fontSize: 29, lineHeight: 1.06, margin: 0 }}>{role.label}</h3>
-                <p style={{ margin: 0, fontSize: 15, lineHeight: 1.5, color: 'var(--td-ink-2)' }}>{role.does}</p>
+                <p style={{ margin: 0, fontSize: 15, lineHeight: 1.5, color: 'var(--td-ink-2)', whiteSpace: 'normal' }}>{role.does}</p>
                 <span style={{ marginTop: 'auto', display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 16, fontWeight: 600, color: 'var(--td-blue)' }}>
                   {ENTRY_LABEL[role.entry]} <span style={{ fontSize: 19, lineHeight: 1 }}>→</span>
                 </span>
