@@ -12,7 +12,7 @@ import { nodeTypes } from './nodeTypes';
 import { EditPanel } from './EditPanel';
 import type { Selection } from './EditPanel';
 import {
-  buildDefaultNodes, buildDefaultEdges,
+  buildDefaultNodes, buildDefaultEdges, groupIds,
 } from '../../data/processFlowDefaults';
 import type { FlowNode } from '../../data/processFlowDefaults';
 import {
@@ -63,14 +63,55 @@ function ResetFlowButton({ onReset }: { onReset: () => void }) {
 function ProcessFlowInner() {
   const [nodes, setNodes] = useState<FlowNode[]>(saved?.nodes ?? buildDefaultNodes());
   const [edges, setEdges] = useState<Edge[]>(saved?.edges ?? buildDefaultEdges());
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(saved?.expandedGroups ?? {});
   const [selection, setSelection] = useState<Selection | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { screenToFlowPosition, getNodes } = useReactFlow();
+  const { screenToFlowPosition, fitView } = useReactFlow();
   const { toast, show, dismiss } = useToast();
 
-  const persist = useCallback((nextNodes: FlowNode[], nextEdges: Edge[]) => {
-    saveFlow(nextNodes, nextEdges);
-  }, []);
+  const persist = useCallback((nextNodes: FlowNode[], nextEdges: Edge[], nextExpanded?: Record<string, boolean>) => {
+    saveFlow(nextNodes, nextEdges, nextExpanded ?? expandedGroups);
+  }, [expandedGroups]);
+
+  const refit = useCallback(() => {
+    setTimeout(() => fitView({ duration: 300, padding: 0.12 }), 30);
+  }, [fitView]);
+
+  /** Zoom to just these node ids, rather than the whole diagram — used so
+   * expanding one phase card zooms into that card's own area instead of
+   * staying zoomed out to fit every other (still-collapsed) card too. */
+  const fitToNodeIds = useCallback((ids: string[]) => {
+    if (!ids.length) return;
+    setTimeout(() => fitView({ nodes: ids.map((id) => ({ id })), duration: 350, padding: 0.25, maxZoom: 1.1 }), 30);
+  }, [fitView]);
+
+  // Map every stage node to the phase group it belongs to, so visibility of both
+  // nodes and edges can be derived from expandedGroups rather than hand-tracked.
+  const nodeGroupOf = useMemo(() => {
+    const map: Record<string, string> = {};
+    for (const n of nodes) {
+      const groupId = (n.data as { groupId?: string }).groupId;
+      if (groupId) map[n.id] = groupId;
+    }
+    return map;
+  }, [nodes]);
+
+  const visibleNodes = useMemo(() => nodes.map((n) => {
+    if (n.type === 'group') {
+      return { ...n, data: { ...n.data, expanded: Boolean(expandedGroups[n.id]) } };
+    }
+    const groupId = nodeGroupOf[n.id];
+    if (groupId) return { ...n, hidden: !expandedGroups[groupId] };
+    return n;
+  }), [nodes, nodeGroupOf, expandedGroups]);
+
+  const visibleEdges = useMemo(() => edges.map((ed) => {
+    const sourceGroup = nodeGroupOf[ed.source];
+    const targetGroup = nodeGroupOf[ed.target];
+    const sourceHidden = sourceGroup ? !expandedGroups[sourceGroup] : false;
+    const targetHidden = targetGroup ? !expandedGroups[targetGroup] : false;
+    return { ...ed, hidden: sourceHidden || targetHidden };
+  }), [edges, nodeGroupOf, expandedGroups]);
 
   const onNodesChange = useCallback((changes: NodeChange[]) => {
     setNodes((nds) => {
@@ -105,6 +146,19 @@ function ProcessFlowInner() {
   }, [nodes, persist]);
 
   const onNodeClick: NodeMouseHandler = useCallback((_e, node) => {
+    if (node.type === 'group') {
+      const willExpand = !expandedGroups[node.id];
+      const childIds = nodes.filter((n) => (n.data as { groupId?: string }).groupId === node.id).map((n) => n.id);
+      setExpandedGroups((prev) => {
+        const next = { ...prev, [node.id]: willExpand };
+        persist(nodes, edges, next);
+        return next;
+      });
+      // Expanding zooms into just this card's own area; collapsing zooms back
+      // out to the full set of phase cards, since there's nothing local left to look at.
+      fitToNodeIds(willExpand ? [node.id, ...childIds] : groupIds());
+      return;
+    }
     setSelection({ type: 'node', node: node as FlowNode });
     if (node.type === 'stage') {
       setNodes((nds) => {
@@ -113,7 +167,7 @@ function ProcessFlowInner() {
         return next;
       });
     }
-  }, [edges, persist]);
+  }, [edges, nodes, persist, expandedGroups, fitToNodeIds]);
 
   const onEdgeClick: EdgeMouseHandler = useCallback((_e, edge) => {
     setSelection({ type: 'edge', edge });
@@ -193,12 +247,15 @@ function ProcessFlowInner() {
   }, [screenToFlowPosition, edges, persist]);
 
   const setAllCollapsed = useCallback((collapsed: boolean) => {
+    const nextExpanded = Object.fromEntries(groupIds().map((id) => [id, !collapsed]));
+    setExpandedGroups(nextExpanded);
     setNodes((nds) => {
       const next = nds.map((n) => (n.type === 'stage' ? ({ ...n, data: { ...n.data, collapsed } }) as FlowNode : n));
-      persist(next, edges);
+      persist(next, edges, nextExpanded);
       return next;
     });
-  }, [edges, persist]);
+    refit();
+  }, [edges, persist, refit]);
 
   const resetToDefault = useCallback(() => {
     clearSavedFlow();
@@ -206,23 +263,25 @@ function ProcessFlowInner() {
     const defEdges = buildDefaultEdges();
     setNodes(defNodes);
     setEdges(defEdges);
+    setExpandedGroups({});
     setSelection(null);
     show('Restored the default process flow.', false);
-  }, [show]);
+    refit();
+  }, [show, refit]);
 
   const handleExportPng = useCallback(async () => {
     try {
-      await exportFlowAsPng(getNodes() as FlowNode[]);
+      await exportFlowAsPng(visibleNodes.filter((n) => !n.hidden));
       show('Downloaded the diagram as an image.', false);
     } catch {
       show('Could not export an image — try again after the diagram finishes loading.', false);
     }
-  }, [getNodes, show]);
+  }, [visibleNodes, show]);
 
   const handleExportJson = useCallback(() => {
-    exportFlowAsJson(nodes, edges);
+    exportFlowAsJson(nodes, edges, expandedGroups);
     show('Downloaded the diagram as a file you can re-import later.', false);
-  }, [nodes, edges, show]);
+  }, [nodes, edges, expandedGroups, show]);
 
   const handleImportClick = useCallback(() => fileInputRef.current?.click(), []);
 
@@ -232,15 +291,18 @@ function ProcessFlowInner() {
     if (!file) return;
     try {
       const parsed = await readFlowFromFile(file);
+      const nextExpanded = parsed.expandedGroups ?? {};
       setNodes(parsed.nodes as FlowNode[]);
       setEdges(parsed.edges);
+      setExpandedGroups(nextExpanded);
       setSelection(null);
-      persist(parsed.nodes as FlowNode[], parsed.edges);
+      persist(parsed.nodes as FlowNode[], parsed.edges, nextExpanded);
       show('Loaded that diagram.', false);
+      refit();
     } catch (err) {
       show(err instanceof Error ? err.message : 'Could not read that file.', false);
     }
-  }, [persist, show]);
+  }, [persist, show, refit]);
 
   const minimapNodeColor = useMemo(() => (node: RFNode) => {
     const data = node.data as Record<string, unknown>;
@@ -292,8 +354,8 @@ function ProcessFlowInner() {
       <div style={{ flex: '1 1 auto', display: 'flex', minHeight: 0 }}>
         <div style={{ flex: '1 1 auto', minWidth: 0 }}>
           <ReactFlow
-            nodes={nodes}
-            edges={edges}
+            nodes={visibleNodes}
+            edges={visibleEdges}
             nodeTypes={nodeTypes}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}

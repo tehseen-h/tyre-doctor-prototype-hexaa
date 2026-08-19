@@ -25,9 +25,10 @@ export function EditPanel({
       <aside style={panelStyle}>
         <div style={{ fontFamily: 'var(--td-display)', fontWeight: 700, fontSize: 18, marginBottom: 8 }}>Nothing selected</div>
         <p style={{ fontSize: 13.5, color: 'var(--td-ink-2)', lineHeight: 1.5 }}>
-          Click a step to open or close its detail (watch the ▸ arrow) — the same click also brings its fields up here to edit.
-          Click a note or a connecting line to edit it. Drag from the dot on any edge of a card to draw a new connection.
-          Drag a blank patch of canvas to add space; scroll or pinch to zoom.
+          This opens as a handful of big phase cards — click one to reveal the real steps inside it.
+          Click one of those steps to open or close its own detail (watch the ▸ arrow) — the same click also
+          brings its fields up here to edit. Click a note or a connecting line to edit it. Drag from the dot
+          on any edge of a card to draw a new connection. Drag a blank patch of canvas to add space; scroll or pinch to zoom.
         </p>
       </aside>
     );
@@ -70,6 +71,21 @@ export function EditPanel({
         <Button variant="fail" size="md" onClick={onDelete} style={{ marginTop: 18, width: '100%', justifyContent: 'center' }}>
           Delete this note
         </Button>
+      </aside>
+    );
+  }
+
+  if (node.type === 'group') {
+    return (
+      <aside style={panelStyle}>
+        <PanelHeader title="Phase group" onClose={onClose} />
+        <label style={labelStyle} htmlFor="group-label">Phase name</label>
+        <input id="group-label" style={inputStyle} value={String(data.label ?? '')} onChange={(e) => onUpdateNode(node.id, { label: e.target.value })} />
+        <label style={labelStyle} htmlFor="group-summary">One-line summary</label>
+        <input id="group-summary" style={inputStyle} value={String(data.summary ?? '')} onChange={(e) => onUpdateNode(node.id, { summary: e.target.value })} />
+        <p style={{ fontSize: 12.5, color: 'var(--td-ink-2)', marginTop: 14, lineHeight: 1.5 }}>
+          Click this card on the canvas again to open or close the real steps inside it.
+        </p>
       </aside>
     );
   }

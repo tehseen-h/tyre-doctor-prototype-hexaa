@@ -8,6 +8,7 @@ const STORAGE_KEY = 'td-one-process-flow-v1';
 export interface SavedFlow {
   nodes: FlowNode[];
   edges: Edge[];
+  expandedGroups?: Record<string, boolean>;
   savedAt: string;
 }
 
@@ -23,8 +24,8 @@ export function loadSavedFlow(): SavedFlow | null {
   }
 }
 
-export function saveFlow(nodes: FlowNode[], edges: Edge[]): void {
-  const payload: SavedFlow = { nodes, edges, savedAt: new Date().toISOString() };
+export function saveFlow(nodes: FlowNode[], edges: Edge[], expandedGroups?: Record<string, boolean>): void {
+  const payload: SavedFlow = { nodes, edges, expandedGroups, savedAt: new Date().toISOString() };
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
 }
 
@@ -44,8 +45,8 @@ function downloadBlob(content: string, filename: string, mime: string): void {
   URL.revokeObjectURL(url);
 }
 
-export function exportFlowAsJson(nodes: FlowNode[], edges: Edge[]): void {
-  const payload: SavedFlow = { nodes, edges, savedAt: new Date().toISOString() };
+export function exportFlowAsJson(nodes: FlowNode[], edges: Edge[], expandedGroups?: Record<string, boolean>): void {
+  const payload: SavedFlow = { nodes, edges, expandedGroups, savedAt: new Date().toISOString() };
   downloadBlob(JSON.stringify(payload, null, 2), 'td-one-process-flow.json', 'application/json');
 }
 

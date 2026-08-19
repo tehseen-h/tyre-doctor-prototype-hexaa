@@ -1,6 +1,6 @@
 import { Handle, Position } from '@xyflow/react';
 import type { NodeProps } from '@xyflow/react';
-import type { StageFlowNode, NoteFlowNode, LaneFlowNode, FlowWorld } from '../../data/processFlowDefaults';
+import type { StageFlowNode, NoteFlowNode, LaneFlowNode, GroupFlowNode, FlowWorld } from '../../data/processFlowDefaults';
 
 const WORLD_STYLE: Record<FlowWorld, { bg: string; ink: string; label: string }> = {
   field: { bg: 'var(--td-hazard-tint)', ink: 'var(--td-hazard-deep)', label: 'Mine site' },
@@ -136,6 +136,58 @@ export function NoteNode({ data, selected }: NodeProps<NoteFlowNode>) {
   );
 }
 
+const RAIL_STYLE: Record<'tyre' | 'rim', { border: string; tint: string; ink: string }> = {
+  tyre: { border: 'var(--td-blue)', tint: 'var(--td-blue-tint)', ink: 'var(--td-blue-deep)' },
+  rim: { border: 'var(--td-heat)', tint: '#fbe9e3', ink: 'var(--td-heat-deep)' },
+};
+
+export function GroupNode({ data, selected }: NodeProps<GroupFlowNode>) {
+  const rail = RAIL_STYLE[data.rail];
+  const expanded = Boolean(data.expanded);
+  return (
+    <div
+      style={{
+        width: 260,
+        background: expanded ? rail.tint : 'var(--td-paper)',
+        border: `3px solid ${rail.border}`,
+        borderRadius: 'var(--td-r-lg)',
+        boxShadow: selected ? '0 0 0 4px var(--td-blue-tint), var(--td-lift)' : 'var(--td-lift)',
+        padding: '16px 18px 17px',
+        fontFamily: 'var(--td-body)',
+        cursor: 'pointer',
+      }}
+    >
+      <Handle id="left" type="target" position={Position.Left} style={TARGET_CATCH_STYLE} />
+      <Handle id="left" type="source" position={Position.Left} isConnectableStart isConnectableEnd style={HANDLE_STYLE} />
+      <Handle id="right" type="target" position={Position.Right} style={TARGET_CATCH_STYLE} />
+      <Handle id="right" type="source" position={Position.Right} isConnectableStart isConnectableEnd style={HANDLE_STYLE} />
+      <Handle id="bottom" type="target" position={Position.Bottom} style={TARGET_CATCH_STYLE} />
+      <Handle id="bottom" type="source" position={Position.Bottom} isConnectableStart isConnectableEnd style={HANDLE_STYLE} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+        <span
+          aria-hidden="true"
+          style={{
+            flex: 'none', width: 24, height: 24, borderRadius: '50%', display: 'grid', placeItems: 'center',
+            background: rail.border, color: '#fff', fontSize: 12, fontWeight: 700,
+            transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 160ms ease',
+          }}
+        >
+          ▸
+        </span>
+        <div style={{ fontFamily: 'var(--td-display)', fontWeight: 700, fontSize: 20, lineHeight: 1.1, color: rail.ink }}>{data.label}</div>
+      </div>
+      <p style={{ margin: '9px 0 0', fontSize: 12.5, color: 'var(--td-ink-2)', lineHeight: 1.4 }}>{data.summary}</p>
+      <div style={{
+        display: 'inline-block', marginTop: 9, fontSize: 10.5, fontWeight: 800, letterSpacing: '.04em', textTransform: 'uppercase',
+        color: rail.ink, background: '#fff', border: `1px solid ${rail.border}`, borderRadius: 999, padding: '2px 9px',
+      }}
+      >
+        {data.count} step{data.count === 1 ? '' : 's'} · {expanded ? 'click to collapse' : 'click to expand'}
+      </div>
+    </div>
+  );
+}
+
 export function LaneNode({ data }: NodeProps<LaneFlowNode>) {
   return (
     <div style={{ fontFamily: 'var(--td-display)', fontWeight: 700, fontSize: 15, letterSpacing: '.06em', textTransform: 'uppercase', color: data.rail === 'tyre' ? 'var(--td-blue-deep)' : 'var(--td-heat-deep)', whiteSpace: 'nowrap' }}>
@@ -144,4 +196,4 @@ export function LaneNode({ data }: NodeProps<LaneFlowNode>) {
   );
 }
 
-export const nodeTypes = { stage: StageNode, note: NoteNode, lane: LaneNode };
+export const nodeTypes = { stage: StageNode, note: NoteNode, lane: LaneNode, group: GroupNode };
